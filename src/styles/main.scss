@@ -1,1 +1,50 @@
 @import "variables";
+@import "components/footer";
+@import "components/aside";
+@font-face {
+    font-family: Inter;
+    src: url(../assets/fonts/Inter-VariableFont.ttf);
+}
+
+body {
+    background: $background-color;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    font-family: Inter;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.hide {
+opacity: 0;
+transition: all 0.5s ease-out;
+}
+
+#root {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    max-width: 1920px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 50px;
+}
+
+#container {
+    height: 90vh;
+}
+
+main {
+width: 60%;
+}
