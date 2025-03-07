@@ -22,7 +22,9 @@ aside {
         }
     }
 
-    div ul{
+    #smart-navbar{
+    transition: all 0.3s ease-in;
+    ul{
         list-style-type: none;
         margin: 0;
         padding: 0;
@@ -62,6 +64,7 @@ aside {
             &:hover:before {
                 width: 60px;
                 background-color: $secondary-color;
+                }
             }
         }
     }
