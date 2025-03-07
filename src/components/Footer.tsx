@@ -42,17 +42,6 @@ const Footer = () => {
           </li>
           <li>
             <NavLink
-              to={"/plans"}
-              // Check if the navlink is active, If the navlink is active return "footer-navbar-active" class to the element, Else remove it
-              className={({ isActive }) =>
-                isActive ? "footer-navbar-active" : ""
-              }
-            >
-              Plans
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
               to={"/contact-me"}
               // Check if the navlink is active, If the navlink is active return "footer-navbar-active" class to the element, Else remove it
               className={({ isActive }) =>

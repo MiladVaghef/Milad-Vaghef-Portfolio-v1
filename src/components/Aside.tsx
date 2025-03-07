@@ -18,9 +18,6 @@ const Aside = () => {
     } else if (location.pathname === "/projects") {
       setSmartNavbarTexts(["Front-End", "Wordpress", "User Interfaces"]);
       setSmartNavbarLinks(["#", "#", "#"]);
-    } else if (location.pathname === "/plans") {
-      setSmartNavbarTexts(["Front-End", "Wordpress", "User Interfaces"]);
-      setSmartNavbarLinks(["#", "#", "#"]);
     }
   }, [location.pathname]);
 
@@ -30,12 +27,11 @@ const Aside = () => {
 
     // Check if the element exists
     if (navbarElement) {
-      // If the current path is "/", "/home", "/projects", or "/plans", remove the "hide" class
+      // If the current path is "/", "/home" or "/projects" remove the "hide" class
       if (
         location.pathname === "/" ||
         location.pathname === "/home" ||
-        location.pathname === "/projects" ||
-        location.pathname === "/plans"
+        location.pathname === "/projects"
       ) {
         navbarElement.classList.remove("hide");
       } else {
