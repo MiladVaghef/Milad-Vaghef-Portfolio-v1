@@ -4,7 +4,9 @@ import { PathRoutes } from "./PathRoutes";
 const App = () => {
   return (
     <Router>
-      <PathRoutes></PathRoutes>
+      <div id="container" className="row">
+        <PathRoutes></PathRoutes>
+      </div>
     </Router>
   );
 };
