@@ -1,79 +1,81 @@
 footer {
-    height: 10vh;
-    max-height: 90px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  height: 10vh;
+  max-height: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #footer-logo {
-    width: 25%;
-    display: flex;
-    align-items: center;
-    img {
+  width: 25%;
+  display: flex;
+  align-items: center;
+  img {
     width: 150px;
-}}
+  }
+}
 
 #footer-navbar {
-    width: 50%;
+  width: 50%;
 
-    .footer-navbar-active {
+  .footer-navbar-active {
+    color: $primary-color;
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    gap: 6%;
+    justify-content: center;
+
+    li a {
+      font-weight: 500;
+      text-decoration: none;
+      color: $text-color;
+      font-size: 15px;
+      padding: 10px 10px 10px 10px;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -1px;
+        width: 0;
+        height: 2px;
+        transition: width 0.3s ease-in-out;
+        background-color: $primary-color;
+        transform: translateX(-50%);
+      }
+
+      &:hover {
         color: $primary-color;
-
-        &::after {
-            width: 100%;
-        }
+      }
     }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-        gap: 6%;
-        justify-content: center;
-
-        li a {
-            font-weight: 500;
-            text-decoration: none;
-            color: $text-color;
-            font-size: 15px;
-            padding: 10px 10px 10px 10px;
-            position: relative;
-            transition: all 0.3s ease-in-out;
-            display: flex;
-
-            &::after {
-                content: '';
-                position: absolute;
-                left: 50%;
-                bottom: -1px;
-                width: 0;
-                height: 2px;
-                transition: width 0.3s ease-in-out;
-                background-color: $primary-color;
-                transform: translateX(-50%);
-            }
-
-            &:hover {
-                color: $primary-color;
-            }
-        }
-    }
+  }
 }
 
 #footer-social-media {
-    width: 25%;
-    display: flex;
-    justify-content: end;
-    gap: 3%;
-    svg {
-        fill: $text-color;
-        width: 20px;
-        height: 20px;
-        transition: all 0.3s ease-in-out;
-        padding: 10px;
-        cursor: pointer;
-            &:hover {
-                fill: $primary-color;
-                transition: all 0.3s ease-in-out;
-        }
-}}
+  width: 25%;
+  display: flex;
+  justify-content: end;
+  gap: 3%;
+  svg {
+    fill: $text-color;
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease-in-out;
+    padding: 10px;
+    cursor: pointer;
+    &:hover {
+      fill: $primary-color;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+}
