@@ -11,8 +11,9 @@ import NotFound from "./pages/NotFound";
 
 export const PathRoutes = () => {
   return (
-    <main>
+    <main className="column">
       <Routes>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/projects" element={<Projects />}></Route>
         <Route path="/contact-me" element={<Contact />}></Route>
