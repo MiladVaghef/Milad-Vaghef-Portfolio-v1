@@ -1,0 +1,30 @@
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.hide {
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.blue-text {
+  color: $primary-color;
+}
+
+.semi-bold {
+  font-weight: 600;
+}
+
+.light {
+  font-weight: 300;
+}
