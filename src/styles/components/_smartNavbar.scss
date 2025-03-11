@@ -1,0 +1,45 @@
+#smart-navbar {
+  transition: all 0.3s ease-in;
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    gap: 22px;
+    .aside-nabar-active {
+      padding-left: 70px;
+      &:before {
+        width: 60px;
+        background-color: $secondary-color;
+      }
+    }
+
+    li a {
+      padding: 7px;
+      color: $text-color;
+      text-decoration: none;
+      padding-left: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        padding-left: 70px;
+      }
+
+      &:before {
+        content: "";
+        position: absolute;
+        background-color: $secondary-text-color;
+        width: 30px;
+        height: 2px;
+        bottom: 50%;
+        left: 0;
+        transition: all 0.3s ease-in-out;
+      }
+      &:hover:before {
+        width: 60px;
+        background-color: $secondary-color;
+      }
+    }
+  }
+}

@@ -1,9 +1,10 @@
 @import "variables";
 @import "components/footer";
 @import "components/aside";
+@import "components/smartNavbar";
 @font-face {
-    font-family: Inter;
-    src: url(../assets/fonts/Inter-VariableFont.ttf);
+  font-family: Inter;
+  src: url(../assets/fonts/Inter-VariableFont.ttf);
 }
 
 body {
