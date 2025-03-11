@@ -1,0 +1,13 @@
+#home {
+  max-width: 900px;
+  gap: 60px;
+  padding-bottom: 60px;
+  #biography {
+    gap: 20px;
+    text-align: justify;
+    p {
+      margin: 0;
+      line-height: 135%;
+    }
+  }
+}
