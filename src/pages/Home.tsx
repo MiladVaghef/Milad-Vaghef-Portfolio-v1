@@ -42,7 +42,17 @@ const Home = () => {
           high-quality, innovative designs that exceed client expectations.
         </p>
       </div>
-
+      <div id="home-row-projects" className="column">
+        {projectsData.map((project, index) => (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProjectsRow key={index} {...project} />{" "}
+          </Suspense>
+        ))}
+        <div id="all-projects-link" className="row semi-bold">
+          <NavLink to={"/projects"}>View Full Project</NavLink>
+          <Icon name="right-arrow"></Icon>
+        </div>
+      </div>
     </div>
   );
 };

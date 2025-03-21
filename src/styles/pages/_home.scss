@@ -11,4 +11,16 @@
       font-size: 14px;
     }
   }
+  #home-row-projects {
+    gap: 40px;
+    #all-projects-link {
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+      a {
+        color: $text-color;
+        font-size: 12px;
+      }
+    }
+  }
 }

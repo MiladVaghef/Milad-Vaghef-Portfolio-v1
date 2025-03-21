@@ -6,7 +6,8 @@ type IconType =
   | "linkedin"
   | "whatsapp"
   | "email"
-  | "path-link";
+  | "path-link"
+  | "right-arrow";
 
 // Define the props for the Icon component
 interface IconProps {
@@ -170,7 +171,24 @@ const Icon = ({ name }: IconProps) => {
           />
         </svg>
       );
+    case "right-arrow":
+      return (
+        <svg
+          width="15"
+          height="14"
+          viewBox="0 0 15 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6.15039 2.91675L9.15456 5.83341C9.31422 5.98292 9.4415 6.16352 9.52847 6.36419C9.61551 6.56486 9.66037 6.78133 9.66037 7.00008C9.66037 7.21883 9.61551 7.43513 9.52847 7.6358C9.4415 7.83652 9.31422 8.01724 9.15456 8.16675L6.15039 11.0834"
+            stroke="black"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      );
   }
 };
-
 export default Icon;

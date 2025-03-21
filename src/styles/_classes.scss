@@ -21,10 +21,22 @@
   color: $primary-color;
 }
 
+.light {
+  font-weight: 300;
+}
+
+
 .semi-bold {
   font-weight: 600;
 }
 
-.light {
-  font-weight: 300;
+.tech {
+  list-style: none;
+  text-align: center;
+  width: fit-content;
+  padding: 2.5px 16px;
+  background-color: $primary-color;
+  color: $secondary-text-color;
+  border-radius: 15px;
+  font-size: 12px;
 }
