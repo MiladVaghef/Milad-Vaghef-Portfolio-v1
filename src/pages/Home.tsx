@@ -1,3 +1,12 @@
+import { lazy, Suspense } from "react";
+import { projectsData } from "../data/projects";
+import { workHistoryData } from "../data/workHistory";
+import { NavLink } from "react-router-dom";
+import Icon from "../components/Icon";
+
+const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
+const WorkHistory = lazy(() => import("../components/WorkHistory"));
+
 const Home = () => {
   return (
     <div id="home" className="column">
@@ -52,6 +61,13 @@ const Home = () => {
           <NavLink to={"/projects"}>View Full Project</NavLink>
           <Icon name="right-arrow"></Icon>
         </div>
+      </div>
+      <div id="home-work-history" className="column-reverse">
+        {workHistoryData.map((workData, index) => (
+          <Suspense fallback={<div>Loading...</div>}>
+            <WorkHistory key={index} {...workData} />{" "}
+          </Suspense>
+        ))}
       </div>
     </div>
   );

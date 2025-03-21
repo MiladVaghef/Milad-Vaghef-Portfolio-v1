@@ -8,6 +8,11 @@
   flex-direction: column;
 }
 
+.column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 .fit-content {
   width: fit-content;
 }
@@ -25,6 +30,9 @@
   font-weight: 300;
 }
 
+.medium {
+  font-weight: 500;
+}
 
 .semi-bold {
   font-weight: 600;

@@ -1,0 +1,32 @@
+.work-history {
+  width: fit-content;
+  color: $text-color;
+  gap: 20px;
+  .work-history-time {
+    min-width: 262px;
+    opacity: 75%;
+    font-size: 13px;
+  }
+  .work-history-info {
+    gap: 20px;
+
+    .work-history-title {
+      gap: 3px;
+      .work-history-role {
+        font-size: 14px;
+        opacity: 75%;
+      }
+    }
+
+    .work-history-desc {
+      font-size: 14px;
+      max-width: 370px;
+      margin: 0;
+    }
+    ul {
+      padding: 0;
+      margin: 0;
+      gap: 10px;
+    }
+  }
+}
