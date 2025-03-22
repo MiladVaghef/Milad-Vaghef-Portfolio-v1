@@ -10,28 +10,37 @@ const Aside = () => {
   const [SmartNavbarTexts, setSmartNavbarTexts] = useState<string[]>([""]);
   const [SmartNavbarLinks, setSmartNavbarLinks] = useState<string[]>([""]);
 
-  // Update SmartNavbarTexts based on the current path
   useEffect(() => {
-    if (location.pathname === "/home" || location.pathname === "/") {
-      setSmartNavbarTexts(["About", "Projects", "Work History"]);
-      setSmartNavbarLinks(["#", "#", "#"]);
-    } else if (location.pathname === "/projects") {
-      setSmartNavbarTexts(["Front-End", "Wordpress", "User Interfaces"]);
-      setSmartNavbarLinks(["#", "#", "#"]);
+    switch (location.pathname) {
+      case "/":
+      case "/home":
+        setSmartNavbarTexts(["About", "Projects", "Work History"]);
+        setSmartNavbarLinks(["#", "#", "#"]);
+        break;
+      case "/projects":
+        setSmartNavbarTexts(["Front-End", "Wordpress", "User Interfaces"]);
+        setSmartNavbarLinks(["#", "#", "#"]);
+        break;
+      default:
+        // Handle unmatched routes (like "*")
+        setSmartNavbarTexts(["About", "Projects", "Work History"]);
+        setSmartNavbarLinks(["#", "#", "#"]);
+        break;
     }
   }, [location.pathname]);
 
-  // Add/remove the "hide" class based on the current path
   useEffect(() => {
     const navbarElement = document.getElementById("smart-navbar");
 
     // Check if the element exists
     if (navbarElement) {
-      // If the current path is "/", "/home" or "/projects" remove the "hide" class
+      // Define the valid routes
+      const validRoutes = ["/", "/home", "/projects"];
+
+      // If the current path is "/", "/home", "/projects", or an unmatched route, remove the "hide" class
       if (
-        location.pathname === "/" ||
-        location.pathname === "/home" ||
-        location.pathname === "/projects"
+        validRoutes.includes(location.pathname) || // Matches "/", "/home", "/projects"
+        !validRoutes.includes(location.pathname) // Matches unmatched routes (like "*")
       ) {
         navbarElement.classList.remove("hide");
       } else {

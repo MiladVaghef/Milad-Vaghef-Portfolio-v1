@@ -6,8 +6,6 @@ import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 // Import contact component
 import Contact from "./pages/Contact";
-// Import notfound component
-import NotFound from "./pages/NotFound";
 
 export const PathRoutes = () => {
   return (
@@ -17,7 +15,7 @@ export const PathRoutes = () => {
         <Route path="/home" element={<Home />}></Route>
         <Route path="/projects" element={<Projects />}></Route>
         <Route path="/contact-me" element={<Contact />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
+        <Route path="*" element={<Home />}></Route>
       </Routes>
     </main>
   );

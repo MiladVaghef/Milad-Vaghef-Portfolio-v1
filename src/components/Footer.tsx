@@ -22,7 +22,7 @@ const Footer = () => {
               to={"/home"}
               // Check if the navlink is active or the URL is on the root, Ff one of these conditions is true return "footer-navbar-active" class to the element, If none of conditions is true remove the class.
               className={({ isActive }) => {
-                const checkPath = location.pathname === "/";
+                const checkPath = location.pathname === "/" || "*";
                 return isActive || checkPath ? "footer-navbar-active" : "";
               }}
             >
