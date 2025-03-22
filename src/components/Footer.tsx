@@ -1,13 +1,14 @@
-// Import react-router-dom
 import { NavLink, useLocation } from "react-router-dom";
-// Import Icons
 import Icon from "./Icon";
-// Import logo
 import Logo from "./Logo";
 
 const Footer = () => {
   // This const is used to check the url
   const location = useLocation();
+
+  // Define valid routes
+  const validRoutes = ["/", "/home", "/projects", "/contact-me"];
+
   return (
     <footer className="row">
       {/* Logo section */}
@@ -19,11 +20,11 @@ const Footer = () => {
         <ul className="row">
           <li>
             <NavLink
-              to={"/home"}
-              // Check if the navlink is active or the URL is on the root, Ff one of these conditions is true return "footer-navbar-active" class to the element, If none of conditions is true remove the class.
+              to="/home"
               className={({ isActive }) => {
-                const checkPath = location.pathname === "/" || "*";
-                return isActive || checkPath ? "footer-navbar-active" : "";
+                // Check if the current path is NOT in the validRoutes array
+                const isInvalidPath = !validRoutes.includes(location.pathname);
+                return isActive || isInvalidPath ? "footer-navbar-active" : "";
               }}
             >
               Home
@@ -31,8 +32,7 @@ const Footer = () => {
           </li>
           <li>
             <NavLink
-              to={"/projects"}
-              // Check if the navlink is active, If the navlink is active return "footer-navbar-active" class to the element, Else remove it
+              to="/projects"
               className={({ isActive }) =>
                 isActive ? "footer-navbar-active" : ""
               }
@@ -42,8 +42,7 @@ const Footer = () => {
           </li>
           <li>
             <NavLink
-              to={"/contact-me"}
-              // Check if the navlink is active, If the navlink is active return "footer-navbar-active" class to the element, Else remove it
+              to="/contact-me"
               className={({ isActive }) =>
                 isActive ? "footer-navbar-active" : ""
               }
