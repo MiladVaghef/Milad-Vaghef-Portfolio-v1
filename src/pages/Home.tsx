@@ -8,6 +8,8 @@ const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
 
 const Home = () => {
+  const limitedProjects = projectsData.slice(0, 4);
+
   return (
     <div id="home" className="column">
       <div id="biography" className="column">
@@ -52,9 +54,9 @@ const Home = () => {
         </p>
       </div>
       <div id="home-row-projects" className="column">
-        {projectsData.map((project, index) => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <ProjectsRow key={index} {...project} />{" "}
+        {limitedProjects.map((project, index) => (
+          <Suspense key={index} fallback={<div>Loading...</div>}>
+            <ProjectsRow {...project} />
           </Suspense>
         ))}
         <div id="all-projects-link" className="row semi-bold">
@@ -64,8 +66,8 @@ const Home = () => {
       </div>
       <div id="home-work-history" className="column-reverse">
         {workHistoryData.map((workData, index) => (
-          <Suspense fallback={<div>Loading...</div>}>
-            <WorkHistory key={index} {...workData} />{" "}
+          <Suspense key={index} fallback={<div>Loading...</div>}>
+            <WorkHistory {...workData} />
           </Suspense>
         ))}
       </div>
