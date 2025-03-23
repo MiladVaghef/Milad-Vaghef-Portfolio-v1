@@ -1,13 +1,12 @@
 import { NavLink, useLocation } from "react-router-dom";
 import Icon from "./Icon";
 import Logo from "./Logo";
+import { VALID_PATHS, ValidPath } from "../config/routes";
 
 const Footer = () => {
   // This const is used to check the url
   const location = useLocation();
-
-  // Define valid routes
-  const validRoutes = ["/", "/home", "/projects", "/contact-me"];
+  const isInvalidPath = !VALID_PATHS.includes(location.pathname as ValidPath);
 
   return (
     <footer className="row">
@@ -21,11 +20,11 @@ const Footer = () => {
           <li>
             <NavLink
               to="/home"
-              className={({ isActive }) => {
-                // Check if the current path is NOT in the validRoutes array
-                const isInvalidPath = !validRoutes.includes(location.pathname);
-                return isActive || isInvalidPath ? "footer-navbar-active" : "";
-              }}
+              className={
+                ["/", "/home"].includes(location.pathname) || isInvalidPath
+                  ? "footer-navbar-active"
+                  : ""
+              }
             >
               Home
             </NavLink>
