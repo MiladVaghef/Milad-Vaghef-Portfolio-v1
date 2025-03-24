@@ -1,35 +1,38 @@
 import { useLocation } from "react-router-dom";
-import SmartNavbar from "./SmartNavbar.tsx";
+import SmartNavbar from "./SmartNavbar";
 import { useEffect, useState } from "react";
 import { VALID_PATHS, ValidPath } from "../config/routes";
+import { InViewSections } from "../App";
 
-const Aside = () => {
+interface AsideProps {
+  inViewSections: InViewSections;
+}
+
+const Aside = ({ inViewSections }: AsideProps) => {
   const location = useLocation();
   const isInvalidPath = !VALID_PATHS.includes(location.pathname as ValidPath);
-
-  // Initialize state for SmartNavbar content
   const [SmartNavbarTexts, setSmartNavbarTexts] = useState<string[]>([""]);
   const [SmartNavbarLinks, setSmartNavbarLinks] = useState<string[]>([""]);
-
-  // Initialize state for navbar visibility
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
-  // Update SmartNavbar content based on the current path
   useEffect(() => {
-        setSmartNavbarLinks(["#", "#", "#"]);
     if (
       location.pathname === "/" ||
       location.pathname === "/home" ||
       isInvalidPath
     ) {
       setSmartNavbarTexts(["About", "Projects", "Work History"]);
+      setSmartNavbarLinks([
+        "#biography",
+        "#home-row-projects",
+        "#home-work-history",
+      ]);
     } else if (location.pathname === "/projects") {
       setSmartNavbarTexts(["Front-End", "Wordpress", "User Interfaces"]);
       setSmartNavbarLinks(["#", "#", "#"]);
     }
   }, [location.pathname, isInvalidPath]);
 
-  // Update navbar visibility based on the current path
   useEffect(() => {
     const validRoutes = ["/", "/home", "/projects"];
     setIsNavbarVisible(
@@ -39,7 +42,6 @@ const Aside = () => {
 
   return (
     <aside className="column">
-      {/* Profile Section */}
       <section>
         <h1>Milad Vaghef</h1>
         <h2 className="column">
@@ -52,9 +54,12 @@ const Aside = () => {
         </p>
       </section>
 
-      {/* SmartNavbar Section */}
       <div id="smart-navbar" className={isNavbarVisible ? "" : "hide"}>
-        <SmartNavbar names={SmartNavbarTexts} links={SmartNavbarLinks} />
+        <SmartNavbar
+          names={SmartNavbarTexts}
+          links={SmartNavbarLinks}
+          inViewSections={inViewSections}
+        />
       </div>
     </aside>
   );
