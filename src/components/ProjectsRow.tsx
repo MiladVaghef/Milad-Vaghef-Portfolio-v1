@@ -53,7 +53,9 @@ const ProjectsRow = ({
           <p className="light">{desc}</p>
           <ul className="row">
             {tech.map((tech, index) => (
-              <li key={index}>{tech}</li>
+              <li className="tech" key={index}>
+                {tech}
+              </li>
             ))}
           </ul>
         </div>
