@@ -1,0 +1,100 @@
+.projects-column-container {
+  gap: 30px;
+  .projects-column-category {
+    justify-content: center;
+    gap: 4%;
+    .category-active {
+      color: $primary-color;
+      &::after {
+        width: 100%;
+      }
+    }
+    button {
+      font-size: 15px;
+      background-color: unset;
+      border: unset;
+      padding: 10px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      &::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -1px;
+        width: 0;
+        height: 2px;
+        transition: width 0.3s ease-in-out;
+        background-color: $primary-color;
+        transform: translateX(-50%);
+      }
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  .projects-column-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 5px;
+    justify-items: center;
+
+    a {
+      width: fit-content;
+      color: $text-color;
+      .projects-column {
+        max-width: 365px;
+        gap: 15px;
+        img {
+          width: 100%;
+          margin-bottom: 5px;
+          box-shadow: 0px 0px 4px 0px #00000047;
+          border-radius: 5px;
+        }
+      }
+      .projects-column-title {
+        transition: all 0.15s ease-in-out;
+        justify-content: start;
+        align-items: center;
+        gap: 12px;
+        svg {
+          transition: all 0.15s ease-in-out;
+          width: 9px;
+          height: 9px;
+          transform: translateX(-0px) translateY(0px);
+          path {
+            transition: all 0.15s ease-in-out;
+            stroke: $text-color;
+          }
+        }
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+        gap: 10px;
+        margin-top: 15px;
+      }
+    }
+  }
+}
+
+a .projects-column:hover {
+  .projects-column-title {
+    color: $primary-color;
+    transition: all 0.15s ease-in-out;
+    svg {
+      transition: all 0.15s ease-in-out;
+      transform: translateX(3px) translateY(-3px);
+      path {
+        transition: all 0.15s ease-in-out;
+        stroke: $primary-color;
+      }
+    }
+  }
+}

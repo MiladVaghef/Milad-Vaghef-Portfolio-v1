@@ -5,6 +5,7 @@ import cyberWorldLanding from '../assets/images/projects/cyber-world-landing.png
 
 
 export interface Project {
+  category: string;
   activeLink: boolean;
   image: string;
   alt: string;
@@ -16,6 +17,7 @@ export interface Project {
 
 export const projectsData: Project[] = [
   {
+    category: "Wordpress",
     activeLink: true,
     link: "https://customade.ir",
     image: customadeLanding,
@@ -25,6 +27,7 @@ export const projectsData: Project[] = [
     tech: ["Wordpress", "Woocommerce", "Elementor"],
   },
   {
+    category:"Figma",
     activeLink: true,
     link: "",
     image: bushehrKhormaLanding,
@@ -34,6 +37,7 @@ export const projectsData: Project[] = [
     tech: ["Figma"],
   },
   {
+    category:"Front-End",
     activeLink: true,
     link: "#",
     image: miladVaghefLanding,
@@ -43,6 +47,7 @@ export const projectsData: Project[] = [
     tech: ["JavaScript","TypeScript","React","Scss"],
   },
   {
+    category:"Figma",
     activeLink: true,
     link: "#",
     image: cyberWorldLanding,
