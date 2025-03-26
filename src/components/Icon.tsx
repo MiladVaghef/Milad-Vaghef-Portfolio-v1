@@ -1,5 +1,5 @@
 // The valid icon names that can be used for "name" prop
-type IconType =
+export type IconType =
   | "instagram"
   | "telegram"
   | "github"
