@@ -1,0 +1,17 @@
+#contact {
+  gap: 60px;
+  justify-content: center;
+  align-items: center;
+  #contact-box-holder {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 35px;
+  }
+  #contact-note {
+    opacity: 70%;
+    font-size: 14px;
+  }
+}

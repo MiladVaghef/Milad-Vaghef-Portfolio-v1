@@ -1,19 +1,46 @@
-import Icon, { IconType } from "./Icon"; // Make sure to export IconType from Icon.tsx
+import Icon, { IconType } from "./Icon";
 
 interface dataProps {
-  icon: IconType; // Change from string to IconType
+  isAvailable: boolean;
+  isFollowable: boolean;
+  icon: IconType;
   title: string;
   message: string;
   link: string;
   linkText: string;
 }
 
-const SocialMedia = ({ icon, title, message, link, linkText }: dataProps) => {
+const SocialMedia = ({
+  isAvailable,
+  isFollowable,
+  icon,
+  title,
+  message,
+  link,
+  linkText,
+}: dataProps) => {
   return (
-    <div className="social-media-box column">
+    <div
+      className={
+        isAvailable === false
+          ? "not-available social-media-box column"
+          : "social-media-box column"
+      }
+    >
       <div className="social-media-top row">
         <div className="icon-box">
           <Icon name={icon}></Icon>
+        </div>
+        <div className="social-media-button-container">
+          {isAvailable === false ? (
+            <button className="not-available-button semi-bold">
+              Not Available
+            </button>
+          ) : isFollowable ? (
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              <button className="primary-button semi-bold">Follow</button>
+            </a>
+          ) : null}
         </div>
       </div>
       <div className="social-media-title column">

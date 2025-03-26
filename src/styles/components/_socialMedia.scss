@@ -1,0 +1,50 @@
+.social-media-box {
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0px 0px 4px 0px #00000047;
+  border-radius: 12px;
+  max-width: 275px;
+  width: 100%;
+  .social-media-top {
+    margin: 15px 9px;
+    justify-content: space-between;
+
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      box-shadow: 0px 0px 4px 0px #00000047;
+      border-radius: 9px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 65%;
+      svg {
+        width: 26px;
+        height: 26px;
+        fill: black;
+      }
+    }
+    .social-media-button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .social-media-title {
+    margin: 11px 9px;
+    gap: 10px;
+    p {
+      margin: 0;
+      font-size: 13px;
+    }
+  }
+  .social-media-contact {
+    margin: 20px 9px;
+    a {
+      color: $primary-color;
+      text-decoration: underline;
+      text-decoration-color: $primary-color;
+      font-size: 14px;
+    }
+  }
+}
