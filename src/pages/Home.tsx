@@ -1,10 +1,10 @@
 import { lazy, Suspense } from "react";
+import Icon from "../components/Icon";
+import { InViewSections } from "../App";
+import { NavLink } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
-import { NavLink } from "react-router-dom";
-import Icon from "../components/Icon";
-import { useInView } from "react-intersection-observer";
-import { InViewSections } from "../App";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -94,10 +94,21 @@ const Home = ({ setInViewSections }: HomeProps) => {
         </div>
 
         <div id="home-row-projects" className="column" ref={projectsRef}>
-          {limitedProjects.map((project, index) => (
-            <Suspense key={index} fallback={<div>Loading...</div>}>
-              <ProjectsRow {...project} />
-            </Suspense>
+          {limitedProjects.map((project, rowprojectslazy) => (
+            // Add a parent div with unique key
+            <div key={rowprojectslazy}>
+              {/* Or use index if no unique ID */}
+              <Suspense
+                fallback={
+                  <div className="row-projects-lazy row">
+                    <div className="lazy-animation"></div>
+                    <span className="lazy-animation"></span>
+                  </div>
+                }
+              >
+                <ProjectsRow {...project} />
+              </Suspense>
+            </div>
           ))}
           <div id="all-projects-link" className="row semi-bold">
             <NavLink to={"/projects"}>View Full Project</NavLink>
@@ -107,7 +118,15 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
         <div id="home-work-history" className="column-reverse" ref={workRef}>
           {workHistoryData.map((workData, index) => (
-            <Suspense key={index} fallback={<div>Loading...</div>}>
+            <Suspense
+              key={index}
+              fallback={
+                <div className="work-history-lazy row">
+                  <div className="lazy-animation"></div>
+                  <span className="lazy-animation"></span>
+                </div>
+              }
+            >
               <WorkHistory {...workData} />
             </Suspense>
           ))}

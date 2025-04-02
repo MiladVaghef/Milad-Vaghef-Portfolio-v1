@@ -1,15 +1,15 @@
 @import "variables";
-@import "components/footer";
-@import "components/aside";
-@import "pages/home";
-@import "pages/contact";
 @import "classes";
 @import "scrollbar";
-@import "components/projectsRow";
-@import "components/projectsColumn";
+@import "components/footer";
+@import "components/aside";
 @import "components/smartNavbar";
+@import "components/projectsRow";
 @import "components/workHistory";
 @import "components/socialMedia";
+@import "components/projectsColumn";
+@import "pages/home";
+@import "pages/contact";
 
 @font-face {
   font-family: Inter;

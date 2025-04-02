@@ -30,3 +30,17 @@
     }
   }
 }
+
+.work-history-lazy {
+  height: 190px;
+  gap: 20px;
+  div {
+    width: 262px;
+    height: 30px;
+    border-radius: 3px;
+  }
+  span {
+    width: 370px;
+    border-radius: 3px;
+  }
+}

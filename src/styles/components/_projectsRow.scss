@@ -55,3 +55,16 @@ a .projects-row:hover {
     }
   }
 }
+
+.row-projects-lazy {
+  gap: 20px;
+  height: 147.44px;
+  div {
+    width: 262px;
+    border-radius: 3px;
+  }
+  span {
+    width: 370px;
+    border-radius: 3px;
+  }
+}
