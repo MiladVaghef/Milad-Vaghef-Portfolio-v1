@@ -9,7 +9,12 @@ const Contact = () => {
       <div id="contact-box-holder">
         {" "}
         {socialMediaData.map((mediaData, index) => (
-          <Suspense key={index} fallback={<div>Loading social media...</div>}>
+          <Suspense
+            key={index}
+            fallback={
+              <div className="social-media-box-lazy lazy-animation"></div>
+            }
+          >
             <SocialMedia {...mediaData} />
           </Suspense>
         ))}
