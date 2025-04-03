@@ -51,6 +51,9 @@
   color: $secondary-text-color;
   border-radius: 15px;
   font-size: 12px;
+  @include max-size(1080px) {
+    padding: 2px 12px;
+  }
 }
 
 .not-available {

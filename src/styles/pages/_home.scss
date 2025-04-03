@@ -2,6 +2,9 @@
   display: flex;
   justify-content: flex-end;
   padding-right: 20px;
+  @include max-size(1280px) {
+    padding-right: unset;
+  }
   #home-holder {
     max-width: 900px;
     gap: 60px;

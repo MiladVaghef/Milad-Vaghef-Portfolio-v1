@@ -12,6 +12,9 @@ footer {
   align-items: center;
   img {
     width: 150px;
+    @include max-size(1280px) {
+      width: 125px;
+    }
   }
 }
 
@@ -41,6 +44,9 @@ footer {
       position: relative;
       transition: all 0.3s ease-in-out;
       display: flex;
+      @include max-size(1280px){
+        font-size: 14px;
+      }
 
       &::after {
         content: "";
@@ -73,6 +79,10 @@ footer {
     transition: all 0.3s ease-in-out;
     padding: 10px;
     cursor: pointer;
+    @include max-size(1280px){
+      width: 18px;
+      height: 18px;
+    }
     &:hover {
       fill: $primary-color;
       transition: all 0.3s ease-in-out;

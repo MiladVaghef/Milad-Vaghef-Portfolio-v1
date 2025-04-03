@@ -1,3 +1,5 @@
+@import "../responsive";
+
 aside {
   width: 30%;
   padding-top: 50px;
@@ -9,15 +11,24 @@ aside {
       margin: 0;
       font-size: 36px;
       font-weight: 700;
+      @include max-size(1280px) {
+        font-size: 32px;
+      }
     }
     h2 {
       span {
         font-size: 20px;
         font-weight: 600;
+        @include max-size(1280px) {
+          font-size: 17px;
+        }
       }
     }
     p {
       width: 80%;
+      @include max-size(1280px) {
+        font-size: 13px;
+      }
     }
   }
 }

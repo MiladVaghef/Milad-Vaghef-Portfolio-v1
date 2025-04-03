@@ -7,6 +7,9 @@
     box-shadow: 0px 0px 4px 0px #00000047;
     margin-left: 5px;
     border-radius: 5px;
+    @include max-size(1080px) {
+      width: 232px;
+    }
   }
   div {
     gap: 20px;
@@ -16,6 +19,9 @@
       justify-content: start;
       align-items: center;
       gap: 12px;
+      @include max-size(1080px) {
+        font-size: 15px;
+      }
       svg {
         transition: all 0.15s ease-in-out;
         width: 9px;
@@ -32,6 +38,9 @@
       max-width: 370px;
       line-height: 115%;
       margin: 0;
+      @include max-size(1080px) {
+        font-size: 12px;
+      }
     }
     ul {
       padding: 0;
@@ -62,6 +71,9 @@ a .projects-row:hover {
   div {
     width: 262px;
     border-radius: 5px;
+    @include max-size(1080px) {
+      width: 232px;
+    }
   }
   span {
     width: 370px;

@@ -39,9 +39,7 @@ const ProjectsColumn = () => {
         {filteredProjects.map((project, index) => (
           <a href={project.link} target="_blank">
             <div key={index} className="projects-column column">
-              <div>
-                <img src={project.image} alt={project.alt} className="" />
-              </div>
+              <img src={project.image} alt={project.alt} className="" />
               <div className="projects-column-title row">
                 <span className="medium">{project.title}</span>
                 <Icon name="path-link"></Icon>
