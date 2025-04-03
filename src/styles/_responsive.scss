@@ -1,10 +1,15 @@
-@mixin max-size($size) {
-  @media (max-width: $size) {
-    @content;
-  }
-}
-@mixin min-size($size) {
-  @media (min-width: $size) {
-    @content;
+// Define breakpoints in a map
+$breakpoints: (
+  "mobile": 480px,
+  "tablet": 1024px,
+  "laptop": 1280px,
+);
+
+// Universal mixin for breakpoints
+@mixin device($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
   }
 }
