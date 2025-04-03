@@ -1,7 +1,9 @@
 .projects-column-container {
   gap: 30px;
+  align-items: center;
   .projects-column-category {
     justify-content: center;
+    width: 100%;
     gap: 4%;
     .category-active {
       color: $primary-color;
@@ -17,7 +19,6 @@
       cursor: pointer;
       position: relative;
       transition: all 0.3s ease-in-out;
-      display: flex;
       &::after {
         content: "";
         position: absolute;
@@ -40,17 +41,13 @@
     grid-template-columns: 1fr 1fr;
     padding: 5px;
     justify-items: center;
+    gap: 5%;
     a {
       width: fit-content;
       color: $text-color;
       .projects-column {
-        max-width: 375px;
-        @include device("laptop") {
-          width: 29vw;
-          max-width: 375px;
-          min-width: 295px;
-        }
         gap: 15px;
+        max-width: 400px;
         img {
           width: 100%;
           margin-bottom: 5px;
@@ -87,8 +84,8 @@
       ul {
         padding: 0;
         margin: 0;
-        gap: 10px;
-        margin-top: 15px;
+        gap: 7px;
+        margin-top: 5px;
         flex-wrap: wrap;
       }
     }
