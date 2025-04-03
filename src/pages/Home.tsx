@@ -95,21 +95,19 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
         <div id="home-row-projects" className="column" ref={projectsRef}>
           {limitedProjects.map((project, rowprojectslazy) => (
-            // Add a parent div with unique key
-            <div key={rowprojectslazy}>
-              {/* Or use index if no unique ID */}
-              <Suspense
-                fallback={
-                  <div className="row-projects-lazy row">
-                    <div className="lazy-animation"></div>
-                    <span className="lazy-animation"></span>
-                  </div>
-                }
-              >
-                <ProjectsRow {...project} />
-              </Suspense>
-            </div>
+            <Suspense
+              key={rowprojectslazy}
+              fallback={
+                <div className="row-projects-lazy row">
+                  <div className="lazy-animation"></div>
+                  <span className="lazy-animation"></span>
+                </div>
+              }
+            >
+              <ProjectsRow {...project} />
+            </Suspense>
           ))}
+
           <div id="all-projects-link" className="row semi-bold">
             <NavLink to={"/projects"}>View Full Project</NavLink>
             <Icon name="right-arrow"></Icon>
