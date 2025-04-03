@@ -4,7 +4,7 @@ import miladVaghefLanding from "../assets/images/projects/milad-vaghef-landing.p
 import cyberWorldLanding from "../assets/images/projects/cyber-world-landing.png";
 
 export interface Project {
-  category: string[];
+  category: string;
   activeLink: boolean;
   image: string;
   alt: string;
@@ -16,7 +16,7 @@ export interface Project {
 
 export const projectsData: Project[] = [
   {
-    category: ["Wordpress"],
+    category: "Wordpress",
     activeLink: true,
     link: "https://customade.ir",
     image: customadeLanding,
@@ -26,7 +26,7 @@ export const projectsData: Project[] = [
     tech: ["Wordpress", "Woocommerce", "Elementor"],
   },
   {
-    category: ["Figma"],
+    category: "Figma",
     activeLink: true,
     link: "",
     image: bushehrKhormaLanding,
@@ -36,7 +36,7 @@ export const projectsData: Project[] = [
     tech: ["Figma"],
   },
   {
-    category: ["Front-End", "Figma"],
+    category: "Front-End",
     activeLink: true,
     link: "#",
     image: miladVaghefLanding,
@@ -46,7 +46,7 @@ export const projectsData: Project[] = [
     tech: ["JavaScript", "TypeScript", "React", "Scss"],
   },
   {
-    category: ["Figma"],
+    category: "Figma",
     activeLink: true,
     link: "#",
     image: cyberWorldLanding,
