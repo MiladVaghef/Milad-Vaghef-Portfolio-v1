@@ -1,6 +1,5 @@
 @import "variables";
 @import "classes";
-@import "scrollbar";
 @import "components/footer";
 @import "components/aside";
 @import "components/smartNavbar";
@@ -50,4 +49,21 @@ main {
   overflow-x: hidden;
   padding-right: 30px;
   scroll-behavior: smooth;
+  &::-webkit-scrollbar {
+    width: 0.5vw;
+    max-width: 7px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 20px;
+    transition: all 0.3s ease-in;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $secondary-color;
+    border-radius: 20px;
+  }
 }
