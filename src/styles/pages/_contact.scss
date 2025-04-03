@@ -13,7 +13,7 @@
   #contact-note {
     opacity: 70%;
     font-size: 14px;
-    @include max-size(1508px) {
+    @media (max-width: 1508px) {
       padding-bottom: 60px;
     }
   }

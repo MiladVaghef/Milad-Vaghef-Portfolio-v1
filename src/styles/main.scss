@@ -37,9 +37,9 @@ a {
   max-width: 1480px;
   padding-left: 50px;
   padding-right: 50px;
-  @include max-size(1280px) {
-    padding-left: 30px;
-    padding-right: 30px;
+  @include device("laptop") {
+    padding-left: 35px;
+    padding-right: 35px;
   }
 }
 

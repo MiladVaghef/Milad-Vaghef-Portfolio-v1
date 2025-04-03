@@ -22,7 +22,7 @@
       font-weight: 500;
       position: relative;
       transition: all 0.3s ease-in-out;
-      @include max-size(1280px) {
+      @include device("laptop") {
         font-size: 13px;
       }
       &:hover {
