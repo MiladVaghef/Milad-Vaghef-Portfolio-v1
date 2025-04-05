@@ -17,7 +17,7 @@ export const socialMediaData: socialMedia[] = [
     icon: "whatsapp",
     title: "Whatsapp",
     message: "Leave me a message",
-    link: "#",
+    link: "https://wa.me/989017867178",
     linkText: "+98 901 786 7178",
   },
   {
@@ -26,7 +26,7 @@ export const socialMediaData: socialMedia[] = [
     icon: "email",
     title: "Email",
     message: "Mail to me",
-    link: "#",
+    link: "mailto:miladvaghefdev@gmail.com",
     linkText: "miladvaghefdev@gmail.com",
   },
   {
@@ -35,7 +35,7 @@ export const socialMediaData: socialMedia[] = [
     icon: "telegram",
     title: "Telegram",
     message: "Message me anytime",
-    link: "#",
+    link: "https://t.me/miladvaghef",
     linkText: "@miladvaghef",
   },
   {
@@ -53,7 +53,7 @@ export const socialMediaData: socialMedia[] = [
     icon: "github",
     title: "Github",
     message: "Check how I code",
-    link: "#",
+    link: "https://github.com/MiladVaghef",
     linkText: "@miladvaghef",
   },
   {
@@ -62,7 +62,7 @@ export const socialMediaData: socialMedia[] = [
     icon: "instagram",
     title: "Instagram",
     message: "Know me some more",
-    link: "#",
+    link: "http://instagram.com/_u/miladvaghef",
     linkText: "@miladvaghef",
   },
 ];
