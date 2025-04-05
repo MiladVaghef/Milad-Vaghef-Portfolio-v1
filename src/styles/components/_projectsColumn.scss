@@ -4,6 +4,9 @@
   @include device("tablet") {
     margin-top: 60px;
   }
+  @include device("tablet") {
+    margin-bottom: 160px;
+  }
   .projects-column-category {
     justify-content: center;
     width: 100%;
@@ -45,8 +48,6 @@
     padding: 5px;
     justify-items: center;
     gap: 5%;
-    @include device("tablet") {
-      padding-bottom: 160px;
     }
     a {
       width: fit-content;
