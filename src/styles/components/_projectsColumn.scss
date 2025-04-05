@@ -2,10 +2,8 @@
   gap: 30px;
   align-items: center;
   @include device("tablet") {
-    margin-top: 60px;
-  }
-  @include device("tablet") {
     margin-bottom: 160px;
+    margin-top: 60px;
   }
   @include device("mobile") {
     margin-bottom: 260px;
