@@ -16,6 +16,9 @@
       padding-bottom: 140px;
       max-width: unset;
     }
+    @include device("mobile") {
+      padding-bottom: 100px;
+    }
     #biography {
       gap: 20px;
       text-align: justify;

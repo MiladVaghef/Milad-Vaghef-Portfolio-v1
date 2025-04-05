@@ -119,7 +119,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <Suspense
               key={index}
               fallback={
-                <div className="work-history-lazy row">
+                <div className="work-history-lazy">
                   <div className="lazy-animation"></div>
                   <span className="lazy-animation"></span>
                 </div>

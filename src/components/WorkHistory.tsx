@@ -14,7 +14,7 @@ const WorkHistory = ({
   tech,
 }: workHistoryProps) => {
   return (
-    <div className="work-history row">
+    <div className="work-history">
       <div className="work-history-time">{timeline}</div>
       <div className="work-history-info column">
         <div className="work-history-title column">

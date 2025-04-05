@@ -45,6 +45,10 @@ a {
     padding-left: 35px;
     padding-right: 35px;
   }
+  @include device("mobile") {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
 
 #container {

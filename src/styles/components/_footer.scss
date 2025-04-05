@@ -1,6 +1,5 @@
 footer {
   height: 10vh;
-  min-height: 75px;
   max-height: 90px;
   display: flex;
   justify-content: space-between;
@@ -11,9 +10,15 @@ footer {
     left: 0;
     width: 100%;
     background-color: #f4f4f4;
+    min-height: 75px;
+    backdrop-filter: blur(20px);
+    background-color: #f4f4f4d6;
   }
   @media (max-width: 850px) {
     justify-content: center;
+  }
+  @include device("mobile") {
+    max-height: 70px;
   }
 }
 
@@ -54,8 +59,12 @@ footer {
     padding: 0;
     gap: 6%;
     justify-content: center;
+    margin: 0;
     @media (max-width: 850px) {
       gap: 17%;
+    }
+    @media (max-width: 450px) {
+      gap: 10%;
     }
     li a {
       font-weight: 500;
@@ -68,6 +77,9 @@ footer {
       display: flex;
       @include device("laptop") {
         font-size: 14px;
+      }
+      @media (max-width: 350px) {
+        font-size: 12px;
       }
 
       &::after {

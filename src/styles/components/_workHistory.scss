@@ -1,7 +1,12 @@
 .work-history {
   width: fit-content;
   color: $text-color;
+  display: flex;
+  flex-direction: row;
   gap: 20px;
+  @include device("mobile") {
+    flex-direction: column;
+  }
   .work-history-time {
     min-width: 262px;
     opacity: 75%;
@@ -34,18 +39,27 @@
       @include device("laptop") {
         font-size: 12px;
       }
+      @include device("mobile") {
+        max-width: unset;
+      }
     }
     ul {
       padding: 0;
       margin: 0;
       gap: 10px;
+      flex-wrap: wrap;
     }
   }
 }
 
 .work-history-lazy {
   height: 190px;
+  display: flex;
   gap: 20px;
+  flex-direction: row;
+  @include device("mobile") {
+    flex-direction: column;
+  }
   div {
     width: 262px;
     height: 30px;
@@ -53,9 +67,16 @@
     @include device("laptop") {
       min-width: 232px;
     }
+    @include device("mobile") {
+      width: 100%;
+      height: 100%;
+    }
   }
   span {
     width: 370px;
     border-radius: 3px;
+    @include device("mobile") {
+      display: none;
+    }
   }
 }

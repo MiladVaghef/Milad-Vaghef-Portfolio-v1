@@ -7,10 +7,22 @@
   @include device("tablet") {
     margin-bottom: 160px;
   }
+  @include device("mobile") {
+    margin-bottom: 260px;
+  }
+  @media (max-width: 516px) {
+    margin-bottom: 220px;
+  }
   .projects-column-category {
     justify-content: center;
     width: 100%;
     gap: 4%;
+    @include device("mobile") {
+      gap: 7%;
+    }
+    @media (max-width: 315px) {
+      gap: 12%;
+    }
     .category-active {
       color: $primary-color;
       &::after {
@@ -25,6 +37,11 @@
       cursor: pointer;
       position: relative;
       transition: all 0.3s ease-in-out;
+      @media (max-width: 315px) {
+        padding: 0;
+        padding-bottom: 10px;
+        font-size: 13px;
+      }
       &::after {
         content: "";
         position: absolute;
@@ -48,6 +65,10 @@
     padding: 5px;
     justify-items: center;
     gap: 5%;
+    @include device("mobile") {
+      padding-bottom: 0;
+      grid-template-columns: 1fr;
+      gap: 3%;
     }
     a {
       width: fit-content;
@@ -55,6 +76,9 @@
       .projects-column {
         gap: 15px;
         max-width: 400px;
+        @include device("mobile") {
+          max-width: unset;
+        }
         img {
           width: 100%;
           margin-bottom: 5px;

@@ -22,7 +22,7 @@ const ProjectsRow = ({
   if (activeLink === true) {
     return (
       <a href={link} className="fit-content" target="_blank">
-        <div className="projects-row row">
+        <div className="projects-row">
           <img src={image} alt={alt} />
           <div className="column">
             <div className="projects-row-title row">
@@ -43,7 +43,7 @@ const ProjectsRow = ({
     );
   } else {
     return (
-      <div className="projects-row row">
+      <div className="projects-row">
         <img src={image} alt={alt} />
         <div className="column">
           <div className="projects-row-title row">
