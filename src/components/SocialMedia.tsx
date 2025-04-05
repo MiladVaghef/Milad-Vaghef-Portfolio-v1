@@ -20,14 +20,15 @@ const SocialMedia = ({
   linkText,
 }: dataProps) => {
   return (
-    <a href={link} className="social-media-container">
-      <div
-        className={
-          isAvailable === false
-            ? "not-available social-media-box column"
-            : "social-media-box column"
-        }
-      >
+    <a
+      href={link}
+      className={
+        isAvailable === false
+          ? "not-available social-media-container"
+          : "social-media-container"
+      }
+    >
+      <div className="social-media-box column">
         <div className="social-media-top row">
           <div className="icon-box">
             <Icon name={icon}></Icon>
