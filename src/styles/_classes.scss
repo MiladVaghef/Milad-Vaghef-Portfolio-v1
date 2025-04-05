@@ -81,6 +81,11 @@
   cursor: pointer;
 }
 
+.slide-down {
+  transition: all 0.3s ease-in-out;
+  transform: translateX(0) translateY(100px);
+}
+
 .lazy-animation {
   animation-name: fading-blink;
   animation-duration: 2s;

@@ -1,20 +1,60 @@
+import { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import Icon from "./Icon";
 import Logo from "./Logo";
 import { VALID_PATHS, ValidPath } from "../config/routes";
 
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
+
 const Footer = () => {
-  // This const is used to check the url
+  const width = useWindowWidth();
   const location = useLocation();
   const isInvalidPath = !VALID_PATHS.includes(location.pathname as ValidPath);
+  const [showFooter, setShowFooter] = useState(true);
+  const lastScrollY = useRef(window.scrollY);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show footer when scrolling down, hide when scrolling up
+      if (currentScrollY > lastScrollY.current + 2) {
+        // Scrolling down
+        setShowFooter(true);
+      } else if (currentScrollY < lastScrollY.current - 2) {
+        // Scrolling up
+        setShowFooter(false);
+      }
+
+      // Always update last scroll position
+      lastScrollY.current = currentScrollY;
+
+      // Ensure footer is hidden at the very top
+      if (currentScrollY === 0) {
+        setShowFooter(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <footer className="row">
-      {/* Logo section */}
+    <footer className={`row${showFooter && width < 851 ? " slide-down" : ""}`}>
       <div id="footer-logo">
-        <Logo></Logo>
+        <Logo />
       </div>
-      {/* Navbar section*/}
       <nav id="footer-navbar">
         <ul className="row">
           <li>
@@ -51,11 +91,10 @@ const Footer = () => {
           </li>
         </ul>
       </nav>
-      {/* Social media icons section */}
       <div id="footer-social-media">
-        <Icon name="instagram"></Icon>
-        <Icon name="linkedin"></Icon>
-        <Icon name="github"></Icon>
+        <Icon name="instagram" />
+        <Icon name="linkedin" />
+        <Icon name="github" />
       </div>
     </footer>
   );

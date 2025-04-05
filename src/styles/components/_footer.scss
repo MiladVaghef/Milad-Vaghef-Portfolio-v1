@@ -4,6 +4,8 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(0) translateY(0);
   @include device("tablet") {
     position: fixed;
     bottom: 0;
