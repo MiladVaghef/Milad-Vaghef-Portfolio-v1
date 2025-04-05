@@ -2,6 +2,7 @@ import customadeLanding from "../assets/images/projects/customade-landing.png";
 import bushehrKhormaLanding from "../assets/images/projects/bushehr-khorma-landing.png";
 import miladVaghefLanding from "../assets/images/projects/milad-vaghef-landing.png";
 import cyberWorldLanding from "../assets/images/projects/cyber-world-landing.png";
+import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
 
 export interface Project {
   category: string;
@@ -54,6 +55,15 @@ export const projectsData: Project[] = [
     title: "Cyber World - Characters Showcase",
     desc: "My designs are not limited to website boundaries. I can design user interfaces for any device and application, regardless of the concept.",
     tech: ["Figma", "Auto Layout", "Concept"],
+  {
+    category: "Front-End",
+    activeLink: true,
+    link: "#",
+    image: netflixLoginPage,
+    alt: "Netflix Login Page",
+    title: "Netflix - Login Page",
+    desc: "A very clean and easy to use Netflix login page. As simple as it sounds.",
+    tech: ["JavaScript", "Css"],
   },
   {
     category: "Figma",
