@@ -48,6 +48,16 @@ export const projectsData: Project[] = [
   {
     category: "Figma",
     activeLink: true,
+    link: "#",
+    image: cyberWorldLanding,
+    alt: "Milad Vaghef Landing",
+    title: "Cyber World - Characters Showcase",
+    desc: "My designs are not limited to website boundaries. I can design user interfaces for any device and application, regardless of the concept.",
+    tech: ["Figma", "Auto Layout", "Concept"],
+  },
+  {
+    category: "Figma",
+    activeLink: true,
     link: "https://customade.ir",
     image: customadeLanding,
     alt: "Customade Landing",
@@ -64,15 +74,5 @@ export const projectsData: Project[] = [
     title: "Milad Vaghef - Portfolio",
     desc: "Well there’s not much to say, I like minimal designs for portfolio. I can design similar websites for your need.",
     tech: ["Figma", "Components", "Auto Layout", "Responsive"],
-  },
-  {
-    category: "Figma",
-    activeLink: true,
-    link: "#",
-    image: cyberWorldLanding,
-    alt: "Milad Vaghef Landing",
-    title: "Cyber World - Characters Showcase",
-    desc: "My designs are not limited to website boundaries. I can design user interfaces for any device and application, regardless of the concept.",
-    tech: ["Figma", "Auto Layout", "Concept"],
   },
 ];
