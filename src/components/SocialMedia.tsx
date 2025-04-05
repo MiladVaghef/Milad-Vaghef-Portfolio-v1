@@ -20,39 +20,41 @@ const SocialMedia = ({
   linkText,
 }: dataProps) => {
   return (
-    <div
-      className={
-        isAvailable === false
-          ? "not-available social-media-box column"
-          : "social-media-box column"
-      }
-    >
-      <div className="social-media-top row">
-        <div className="icon-box">
-          <Icon name={icon}></Icon>
+    <a href={link} className="social-media-container">
+      <div
+        className={
+          isAvailable === false
+            ? "not-available social-media-box column"
+            : "social-media-box column"
+        }
+      >
+        <div className="social-media-top row">
+          <div className="icon-box">
+            <Icon name={icon}></Icon>
+          </div>
+          <div className="social-media-button-container">
+            {isAvailable === false ? (
+              <button className="not-available-button semi-bold">
+                Not Available
+              </button>
+            ) : isFollowable ? (
+              <a href={link} target="_blank" rel="noopener noreferrer">
+                <button className="primary-button semi-bold">Follow</button>
+              </a>
+            ) : null}
+          </div>
         </div>
-        <div className="social-media-button-container">
-          {isAvailable === false ? (
-            <button className="not-available-button semi-bold">
-              Not Available
-            </button>
-          ) : isFollowable ? (
-            <a href={link} target="_blank" rel="noopener noreferrer">
-              <button className="primary-button semi-bold">Follow</button>
-            </a>
-          ) : null}
+        <div className="social-media-title column">
+          <span className="medium">{title}</span>
+          <p>{message}</p>
+        </div>
+        <div className="social-media-contact">
+          <a href={link} className="medium">
+            {linkText}
+          </a>
         </div>
       </div>
-      <div className="social-media-title column">
-        <span className="medium">{title}</span>
-        <p>{message}</p>
-      </div>
-      <div className="social-media-contact">
-        <a href={link} className="medium">
-          {linkText}
-        </a>
-      </div>
-    </div>
+    </a>
   );
 };
 
