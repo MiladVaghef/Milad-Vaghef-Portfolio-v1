@@ -25,6 +25,10 @@ body {
   justify-content: center;
   font-family: Inter;
   -webkit-tap-highlight-color: transparent;
+  &::selection {
+    background-color: $primary-color;
+    color: white;
+  }
   @include device("tablet") {
     height: 100%;
   }
