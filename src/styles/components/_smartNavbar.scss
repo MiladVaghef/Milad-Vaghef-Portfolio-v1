@@ -1,5 +1,8 @@
 #smart-navbar {
   transition: all 0.3s ease-in;
+  @include device("tablet") {
+    display: none;
+  }
   ul {
     list-style-type: none;
     margin: 0;

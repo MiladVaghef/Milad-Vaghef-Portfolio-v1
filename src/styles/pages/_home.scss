@@ -5,13 +5,23 @@
   @include device("laptop") {
     padding-right: unset;
   }
+  @include device("tablet") {
+    justify-content: unset;
+  }
   #home-holder {
     max-width: 900px;
     gap: 60px;
     padding-bottom: 60px;
+    @include device("tablet") {
+      padding-bottom: 140px;
+      max-width: unset;
+    }
     #biography {
       gap: 20px;
       text-align: justify;
+      @include device("tablet") {
+        text-align: unset;
+      }
       p {
         margin: 0;
         line-height: 135%;

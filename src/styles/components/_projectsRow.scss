@@ -10,6 +10,9 @@
     @include device(1080px) {
       width: 232px;
     }
+    @include device("tablet") {
+      margin-left: 0;
+    }
   }
   div {
     gap: 20px;

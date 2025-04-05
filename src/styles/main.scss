@@ -9,6 +9,7 @@
 @import "components/socialMedia";
 @import "components/projectsColumn";
 @import "pages/home";
+@import "pages/projects";
 @import "pages/contact";
 
 @font-face {
@@ -23,6 +24,9 @@ body {
   display: flex;
   justify-content: center;
   font-family: Inter;
+  @include device("tablet") {
+    height: 100%;
+  }
 }
 
 a {
@@ -45,6 +49,12 @@ a {
 
 #container {
   height: 90vh;
+  flex-direction: row;
+  display: flex;
+  @include device("tablet") {
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 main {
@@ -54,6 +64,13 @@ main {
   overflow-x: hidden;
   padding-right: 30px;
   scroll-behavior: smooth;
+  @include device("tablet") {
+    width: 100%;
+    margin-top: 0;
+    padding-right: 0;
+    overflow-y: unset;
+    overflow-x: unset;
+  }
   &::-webkit-scrollbar {
     width: 0.5vw;
     max-width: 7px;

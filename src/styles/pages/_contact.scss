@@ -9,12 +9,18 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 35px;
+    @include device("tablet") {
+      margin-top: 60px;
+    }
   }
   #contact-note {
     opacity: 70%;
     font-size: 14px;
     @media (max-width: 1508px) {
       padding-bottom: 60px;
+    }
+    @include device("tablet") {
+      padding-bottom: 120px;
     }
   }
 }

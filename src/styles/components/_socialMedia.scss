@@ -5,6 +5,9 @@
   border-radius: 12px;
   max-width: 275px;
   width: 100%;
+  @media (max-width: 705px) {
+    max-width: unset;
+  }
   .social-media-top {
     margin: 15px 9px;
     justify-content: space-between;
@@ -53,4 +56,7 @@
   width: 295px;
   height: 218px;
   border-radius: 12px;
+  @media (max-width: 705px) {
+    min-width: 100%;
+  }
 }

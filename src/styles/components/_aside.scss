@@ -6,6 +6,11 @@ aside {
   padding-bottom: 50px;
   gap: 100px;
   color: $text-color;
+  @include device("tablet") {
+    gap: 0px;
+    width: 100%;
+    padding-top: 60px;
+  }
   section {
     h1 {
       margin: 0;
@@ -28,6 +33,9 @@ aside {
       width: 80%;
       @include device("laptop") {
         font-size: 13px;
+      }
+      @include device("tablet") {
+        max-width: 380px;
       }
     }
   }

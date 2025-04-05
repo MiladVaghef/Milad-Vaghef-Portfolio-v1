@@ -8,12 +8,27 @@ interface AsideProps {
   inViewSections: InViewSections;
 }
 
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
+
 const Aside = ({ inViewSections }: AsideProps) => {
   const location = useLocation();
   const isInvalidPath = !VALID_PATHS.includes(location.pathname as ValidPath);
   const [SmartNavbarTexts, setSmartNavbarTexts] = useState<string[]>([""]);
   const [SmartNavbarLinks, setSmartNavbarLinks] = useState<string[]>([""]);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+
+  const width = useWindowWidth();
 
   useEffect(() => {
     if (
@@ -41,7 +56,11 @@ const Aside = ({ inViewSections }: AsideProps) => {
   }, [location.pathname, isInvalidPath]);
 
   return (
-    <aside className="column">
+    <aside
+      className={
+        width < 1025 && location.pathname !== "/home" ? "remove" : "column"
+      }
+    >
       <section>
         <h1>Milad Vaghef</h1>
         <h2 className="column">

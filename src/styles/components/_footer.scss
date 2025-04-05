@@ -1,15 +1,32 @@
 footer {
   height: 10vh;
+  min-height: 75px;
   max-height: 90px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @include device("tablet") {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f4f4f4;
+  }
+  @media (max-width: 850px) {
+    justify-content: center;
+  }
 }
 
 #footer-logo {
   width: 25%;
   display: flex;
   align-items: center;
+  @include device("tablet") {
+    padding-left: 35px;
+  }
+  @media (max-width: 850px) {
+    display: none;
+  }
   img {
     width: 150px;
     @include device("laptop") {
@@ -20,6 +37,9 @@ footer {
 
 #footer-navbar {
   width: 50%;
+  @media (max-width: 850px) {
+    width: 100%;
+  }
 
   .footer-navbar-active {
     color: $primary-color;
@@ -34,7 +54,9 @@ footer {
     padding: 0;
     gap: 6%;
     justify-content: center;
-
+    @media (max-width: 850px) {
+      gap: 17%;
+    }
     li a {
       font-weight: 500;
       text-decoration: none;
@@ -44,7 +66,7 @@ footer {
       position: relative;
       transition: all 0.3s ease-in-out;
       display: flex;
-      @include device("laptop"){
+      @include device("laptop") {
         font-size: 14px;
       }
 
@@ -72,6 +94,12 @@ footer {
   display: flex;
   justify-content: end;
   gap: 3%;
+  @include device("tablet") {
+    padding-right: 35px;
+  }
+  @media (max-width: 850px) {
+    display: none;
+  }
   svg {
     fill: $text-color;
     width: 20px;
@@ -79,7 +107,7 @@ footer {
     transition: all 0.3s ease-in-out;
     padding: 10px;
     cursor: pointer;
-    @include device("laptop"){
+    @include device("laptop") {
       width: 18px;
       height: 18px;
     }

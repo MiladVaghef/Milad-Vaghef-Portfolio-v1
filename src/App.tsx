@@ -20,7 +20,7 @@ const App = () => {
 
   return (
     <Router>
-      <div id="container" className="row">
+      <div id="container">
         <Aside inViewSections={inViewSections} />
         <PathRoutes setInViewSections={setInViewSections} />
       </div>
