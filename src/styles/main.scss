@@ -24,6 +24,7 @@ body {
   display: flex;
   justify-content: center;
   font-family: Inter;
+  -webkit-tap-highlight-color: transparent;
   @include device("tablet") {
     height: 100%;
   }
