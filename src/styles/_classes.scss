@@ -48,7 +48,7 @@
   width: fit-content;
   padding: 2.5px 16px;
   background-color: $primary-color;
-  color: $secondary-text-color;
+  color: white;
   border-radius: 15px;
   font-size: 12px;
   @include device("laptop") {
@@ -62,7 +62,7 @@
   width: fit-content;
   padding: 2.5px 16px;
   background-color: rgb(255, 149, 0);
-  color: $secondary-text-color;
+  color: white;
   border-radius: 15px;
   font-size: 12px;
   font-weight: 600;
