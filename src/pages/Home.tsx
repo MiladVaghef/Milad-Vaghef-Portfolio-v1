@@ -10,7 +10,7 @@ const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
 
 interface HomeProps {
-  setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
+  setInViewSections?: React.Dispatch<React.SetStateAction<InViewSections>>;
 }
 
 const Home = ({ setInViewSections }: HomeProps) => {
@@ -21,7 +21,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const { ref: bioRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections((prev) => ({
+      setInViewSections?.((prev) => ({
         ...prev,
         "#biography": entry.intersectionRatio,
       }));
@@ -32,7 +32,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const { ref: projectsRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections((prev) => ({
+      setInViewSections?.((prev) => ({
         ...prev,
         "#home-row-projects": entry.intersectionRatio,
       }));
@@ -43,7 +43,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const { ref: workRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections((prev) => ({
+      setInViewSections?.((prev) => ({
         ...prev,
         "#home-work-history": entry.intersectionRatio,
       }));
