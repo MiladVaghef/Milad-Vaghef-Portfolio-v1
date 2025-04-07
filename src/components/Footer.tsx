@@ -92,9 +92,13 @@ const Footer = () => {
         </ul>
       </nav>
       <div id="footer-social-media">
-        <Icon name="instagram" />
+        <a href="http://instagram.com/_u/miladvaghef" target="_blank">
+          <Icon name="instagram" />
+        </a>
         <Icon name="linkedin" />
-        <Icon name="github" />
+        <a href="https://github.com/MiladVaghef" target="_blank">
+          <Icon name="github" />
+        </a>
       </div>
     </footer>
   );
