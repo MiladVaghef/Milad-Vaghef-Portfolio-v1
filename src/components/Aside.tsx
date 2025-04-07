@@ -43,8 +43,8 @@ const Aside = ({ inViewSections }: AsideProps) => {
         "#home-work-history",
       ]);
     } else if (location.pathname === "/projects") {
-      setSmartNavbarTexts(["Wordpress", "Front-End", "Figma"]);
-      setSmartNavbarLinks(["#Wordpress", "#Front-End", "#Figma"]);
+      setSmartNavbarTexts(["Wordpress", "Figma", "Front-End"]);
+      setSmartNavbarLinks(["#Wordpress", "#Figma", "#Front-End"]);
     }
   }, [location.pathname, isInvalidPath]);
 

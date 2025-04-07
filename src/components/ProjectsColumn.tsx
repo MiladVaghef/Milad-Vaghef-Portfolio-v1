@@ -5,11 +5,11 @@ import Icon from "./Icon";
 
 const ProjectsColumn = () => {
   const location = useLocation();
-  const categoryOrder = ["Wordpress", "Front-End", "Figma"];
+  const categoryOrder = ["Wordpress", "Figma", "Front-End"];
   const [activeTab, setActiveTab] = useState(categoryOrder[0]);
 
   useEffect(() => {
-    const categoryOrder = ["Wordpress", "Front-End", "Figma"];
+    const categoryOrder = ["Wordpress", "Figma", "Front-End"];
     const hash = location.hash.replace("#", "");
     if (categoryOrder.includes(hash)) {
       setActiveTab(hash);
