@@ -58,7 +58,11 @@ const Aside = ({ inViewSections }: AsideProps) => {
   return (
     <aside
       className={
-        width < 1025 && location.pathname !== "/home" ? "remove" : "column"
+        width < 1025 &&
+        location.pathname !== "/home" &&
+        location.pathname !== "/"
+          ? "remove"
+          : "column"
       }
     >
       <section>
