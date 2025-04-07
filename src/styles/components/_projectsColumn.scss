@@ -2,14 +2,8 @@
   gap: 30px;
   align-items: center;
   @include device("tablet") {
-    margin-bottom: 160px;
+    margin-bottom: 80px;
     margin-top: 60px;
-  }
-  @include device("mobile") {
-    margin-bottom: 260px;
-  }
-  @media (max-width: 516px) {
-    margin-bottom: 220px;
   }
   .projects-column-category {
     justify-content: center;
