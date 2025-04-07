@@ -21,51 +21,39 @@ const ProjectsRow = ({
   desc,
   tech,
 }: DataProps) => {
-  if (activeLink === true) {
-    return (
-      <a href={link} className="fit-content" target="_blank">
-        <div className="projects-row">
-          <img src={image} alt={alt} />
-          <div className="column">
-            <div className="projects-row-title row">
-              <span>{title}</span>
-              {activeLink && <Icon name="path-link"></Icon>}
-            </div>
-            <p className="light">{desc}</p>
-            <ul className="row">
-              {tech.map((tech, index) => (
-                <li className="tech" key={index}>
-                  {tech}
-                </li>
-              ))}
-              <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
-            </ul>
-          </div>
-        </div>{" "}
-      </a>
-    );
-  } else {
-    return (
-      <div className="projects-row">
-        <img src={image} alt={alt} />
-        <div className="column">
-          <div className="projects-row-title row">
-            <span>{title}</span>
-            {activeLink && <Icon name="path-link"></Icon>}
-          </div>
-          <p className="light">{desc}</p>
-          <ul className="row">
-            {tech.map((tech, index) => (
-              <li className="tech" key={index}>
-                {tech}
-              </li>
-            ))}
-            <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
-          </ul>
+  const content = (
+    <div className="projects-row">
+      <img src={image} alt={alt} />
+      <div className="column">
+        <div className="projects-row-title row">
+          <span>{title}</span>
+          {activeLink && <Icon name="path-link" />}
         </div>
+        <p className="light">{desc}</p>
+        <ul className="row">
+          {tech.map((tech, index) => (
+            <li className="tech" key={index}>
+              {tech}
+            </li>
+          ))}
+          <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
+        </ul>
       </div>
-    );
-  }
+    </div>
+  );
+
+  return activeLink ? (
+    <a
+      href={link}
+      className="fit-content"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {content}
+    </a>
+  ) : (
+    content
+  );
 };
 
 export default ProjectsRow;
