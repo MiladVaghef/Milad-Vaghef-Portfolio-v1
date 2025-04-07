@@ -22,7 +22,6 @@ const ProjectsColumn = () => {
 
   return (
     <div className="column projects-column-container">
-      {" "}
       <div className="row projects-column-category">
         {categoryOrder.map((category) => (
           <button
@@ -34,15 +33,35 @@ const ProjectsColumn = () => {
           </button>
         ))}
       </div>
+
       <div className="projects-column-grid">
-        {" "}
-        {filteredProjects.map((project, index) => (
-          <a href={project.link} target="_blank">
-            <div key={index} className="projects-column column">
+        {filteredProjects.map((project, index) =>
+          project.activeLink ? (
+            <a href={project.link} target="_blank" key={index}>
+              <div className="projects-column column">
+                <img src={project.image} alt={project.alt} className="" />
+                <div className="projects-column-title row">
+                  <span className="medium">{project.title}</span>
+                  <Icon name="path-link" />
+                </div>
+                <p className="light">{project.desc}</p>
+                <ul className="row">
+                  {project.tech.map((tech, techIndex) => (
+                    <li key={techIndex} className="tech">
+                      {tech}
+                    </li>
+                  ))}
+                  <li className={project.isPractice ? "concept-tag" : "remove"}>
+                    Concept
+                  </li>
+                </ul>
+              </div>
+            </a>
+          ) : (
+            <div key={index} className="projects-column column fit-content">
               <img src={project.image} alt={project.alt} className="" />
               <div className="projects-column-title row">
                 <span className="medium">{project.title}</span>
-                <Icon name="path-link"></Icon>
               </div>
               <p className="light">{project.desc}</p>
               <ul className="row">
@@ -56,8 +75,8 @@ const ProjectsColumn = () => {
                 </li>
               </ul>
             </div>
-          </a>
-        ))}
+          )
+        )}
       </div>
     </div>
   );
