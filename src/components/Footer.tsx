@@ -95,7 +95,6 @@ const Footer = () => {
         <a href="http://instagram.com/_u/miladvaghef" target="_blank">
           <Icon name="instagram" />
         </a>
-        <Icon name="linkedin" />
         <a href="https://github.com/MiladVaghef" target="_blank">
           <Icon name="github" />
         </a>
