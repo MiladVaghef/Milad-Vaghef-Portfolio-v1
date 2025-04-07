@@ -5,6 +5,7 @@ import cyberWorldLanding from "../assets/images/projects/cyber-world-landing.png
 import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
 
 export interface Project {
+  isPractice: boolean;
   category: string;
   activeLink: boolean;
   image: string;
@@ -17,6 +18,7 @@ export interface Project {
 
 export const projectsData: Project[] = [
   {
+    isPractice: false,
     category: "Wordpress",
     activeLink: true,
     link: "https://customade.ir",
@@ -27,6 +29,7 @@ export const projectsData: Project[] = [
     tech: ["Wordpress", "Woocommerce", "Elementor"],
   },
   {
+    isPractice: false,
     category: "Front-End",
     activeLink: true,
     link: "#",
@@ -37,6 +40,7 @@ export const projectsData: Project[] = [
     tech: ["JavaScript", "TypeScript", "React", "Scss"],
   },
   {
+    isPractice: false,
     category: "Figma",
     activeLink: true,
     link: "",
@@ -47,6 +51,7 @@ export const projectsData: Project[] = [
     tech: ["Figma"],
   },
   {
+    isPractice: true,
     category: "Figma",
     activeLink: true,
     link: "#",
@@ -54,8 +59,10 @@ export const projectsData: Project[] = [
     alt: "Milad Vaghef Landing",
     title: "Cyber World - Characters Showcase",
     desc: "My designs are not limited to website boundaries. I can design user interfaces for any device and application, regardless of the concept.",
-    tech: ["Figma", "Auto Layout", "Concept"],
+    tech: ["Figma", "Auto Layout"],
+  },
   {
+    isPractice: true,
     category: "Front-End",
     activeLink: true,
     link: "#",
@@ -66,6 +73,7 @@ export const projectsData: Project[] = [
     tech: ["JavaScript", "Css"],
   },
   {
+    isPractice: false,
     category: "Figma",
     activeLink: true,
     link: "https://customade.ir",
@@ -76,6 +84,7 @@ export const projectsData: Project[] = [
     tech: ["Figma", "Auto Layout"],
   },
   {
+    isPractice: false,
     category: "Figma",
     activeLink: true,
     link: "#",

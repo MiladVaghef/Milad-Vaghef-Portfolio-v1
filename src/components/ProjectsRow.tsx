@@ -1,6 +1,7 @@
 import Icon from "./Icon";
 
 interface DataProps {
+  isPractice: boolean;
   activeLink: boolean;
   link: string;
   image: string;
@@ -11,6 +12,7 @@ interface DataProps {
 }
 
 const ProjectsRow = ({
+  isPractice,
   activeLink,
   link,
   image,
@@ -36,6 +38,7 @@ const ProjectsRow = ({
                   {tech}
                 </li>
               ))}
+              <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
             </ul>
           </div>
         </div>{" "}
@@ -57,6 +60,7 @@ const ProjectsRow = ({
                 {tech}
               </li>
             ))}
+            <li className={isPractice ? "concept-tag" : "remove"}></li>
           </ul>
         </div>
       </div>

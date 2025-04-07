@@ -51,6 +51,9 @@ const ProjectsColumn = () => {
                     {tech}
                   </li>
                 ))}
+                <li className={project.isPractice ? "concept-tag" : "remove"}>
+                  Concept
+                </li>
               </ul>
             </div>
           </a>

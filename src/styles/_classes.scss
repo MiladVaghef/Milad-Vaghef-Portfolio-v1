@@ -56,6 +56,18 @@
   }
 }
 
+.concept-tag {
+  list-style: none;
+  text-align: center;
+  width: fit-content;
+  padding: 2.5px 16px;
+  background-color: rgb(255, 149, 0);
+  color: $secondary-text-color;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .not-available {
   opacity: 60%;
   pointer-events: none;
