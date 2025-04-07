@@ -60,7 +60,7 @@ const ProjectsRow = ({
                 {tech}
               </li>
             ))}
-            <li className={isPractice ? "concept-tag" : "remove"}></li>
+            <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
           </ul>
         </div>
       </div>
