@@ -1,11 +1,13 @@
 import { lazy, Suspense } from "react";
 import { socialMediaData } from "../data/socialMedia";
+import useSwipe from "../hooks/useSwipe";
 
 const SocialMedia = lazy(() => import("../components/SocialMedia"));
 
 const Contact = () => {
+  const swipeHandlers = useSwipe();
   return (
-    <div id="contact">
+    <div id="contact" {...swipeHandlers} className="allow-vertical-pan">
       <div id="contact-box-holder">
         {" "}
         {socialMediaData.map((mediaData, index) => (

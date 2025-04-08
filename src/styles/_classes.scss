@@ -42,6 +42,10 @@
   font-weight: 600;
 }
 
+.allow-vertical-pan {
+  touch-action: pan-y;
+}
+
 .tech {
   list-style: none;
   text-align: center;

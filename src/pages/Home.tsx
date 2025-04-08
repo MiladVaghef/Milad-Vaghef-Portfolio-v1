@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
+import useSwipe from "../hooks/useSwipe";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -14,6 +15,7 @@ interface HomeProps {
 }
 
 const Home = ({ setInViewSections }: HomeProps) => {
+  const swipeHandlers = useSwipe();
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 100 }, (_, i) => i * 0.01);
 
@@ -51,7 +53,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
   });
 
   return (
-    <div id="home">
+    <div id="home" {...swipeHandlers} className="allow-vertical-pan">
       <div id="home-holder" className="column">
         <div id="biography" className="column" ref={bioRef}>
           <p>
