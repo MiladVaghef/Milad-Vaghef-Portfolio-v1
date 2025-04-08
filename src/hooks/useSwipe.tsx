@@ -24,7 +24,7 @@ const useSwipe = () => {
   const routes = ["/", "/projects", "/contact-me"];
   const currentIndex = routes.indexOf(location.pathname);
 
-  const minSwipeDistance = 150;
+  const minSwipeDistance = 50;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
