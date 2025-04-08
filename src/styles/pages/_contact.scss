@@ -1,7 +1,14 @@
 #contact {
+  display: flex;
+  flex-direction: column;
   gap: 60px;
   justify-content: center;
   align-items: center;
+  @include device("mobile") {
+    margin-top: 60px;
+    gap: 20px;
+    flex-direction: column-reverse;
+  }
   #contact-box-holder {
     display: flex;
     justify-content: center;
@@ -10,6 +17,10 @@
     gap: 35px;
     @include device("tablet") {
       margin-top: 60px;
+    }
+    @include device("mobile") {
+      margin-top: 20px;
+      margin-bottom: 60px;
     }
   }
   #contact-note {
@@ -20,6 +31,10 @@
     }
     @include device("tablet") {
       padding-bottom: 120px;
+    }
+    @include device("mobile") {
+      padding-bottom: unset;
+      text-align: center;
     }
   }
 }

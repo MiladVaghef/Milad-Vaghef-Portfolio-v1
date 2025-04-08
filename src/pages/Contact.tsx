@@ -5,7 +5,7 @@ const SocialMedia = lazy(() => import("../components/SocialMedia"));
 
 const Contact = () => {
   return (
-    <div id="contact" className="column">
+    <div id="contact">
       <div id="contact-box-holder">
         {" "}
         {socialMediaData.map((mediaData, index) => (
