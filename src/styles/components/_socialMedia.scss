@@ -1,5 +1,6 @@
 .social-media-container {
   color: $text-color;
+  margin-top: 10px;
   @media (max-width: 705px) {
     min-width: 100%;
   }
@@ -10,7 +11,15 @@
     border-radius: 12px;
     max-width: 275px;
     min-width: 275px;
+    transition: transform 0.3s ease-in;
+    &:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease-out;
+    }
     @media (max-width: 705px) {
+      &:hover {
+        transform: scale(1.02);
+      }
       max-width: unset;
     }
     .social-media-top {
