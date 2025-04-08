@@ -1,3 +1,39 @@
+#introduction {
+  padding-top: 60px;
+  padding-bottom: 50px;
+  color: $text-color;
+  display: none;
+  @include device("tablet") {
+    display: block;
+  }
+  h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+    @include device("laptop") {
+      font-size: 32px;
+    }
+  }
+  h2 {
+    span {
+      font-size: 20px;
+      font-weight: 600;
+      @include device("laptop") {
+        font-size: 17px;
+      }
+    }
+  }
+  p {
+    width: 80%;
+    @include device("laptop") {
+      font-size: 13px;
+    }
+    @include device("tablet") {
+      max-width: 380px;
+    }
+  }
+}
+
 #home {
   display: flex;
   justify-content: flex-end;
