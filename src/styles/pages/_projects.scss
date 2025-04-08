@@ -1,7 +1,6 @@
 #projects {
   padding-bottom: 50px;
   @include device("tablet") {
-    min-height: 100vh;
     padding-bottom: 0px;
   }
 }
