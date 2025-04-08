@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import { PathRoutes } from "./PathRoutes";
 import Footer from "./components/Footer";
 import Aside from "./components/Aside";
@@ -20,6 +21,7 @@ const App = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <div id="container">
         <Aside inViewSections={inViewSections} />
         <PathRoutes setInViewSections={setInViewSections} />
