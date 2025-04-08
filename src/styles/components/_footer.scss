@@ -17,7 +17,7 @@ footer {
     background-color: #ffffffd9;
   }
   @media (max-width: 850px) {
-    justify-content: center;
+    visibility: hidden;
   }
   @include device("mobile") {
     max-height: 70px;
