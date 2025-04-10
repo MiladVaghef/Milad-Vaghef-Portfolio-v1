@@ -1,16 +1,24 @@
-// useSwipe.tsx
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 type Direction = "left" | "right" | null;
 
 const useSwipe = () => {
-  const [touchStart, setTouchStart] = useState<number>(0);
-  const [touchEnd, setTouchEnd] = useState<number>(0);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [direction, setDirection] = useState<Direction>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const routes = ["/", "/projects", "/contact-me"];
+  const currentIndex = routes.indexOf(location.pathname);
+
+  const minSwipeDistance = 50;
+  const maxTouchDuration = 700; // in ms
+  const maxVerticalDeviation = 100; // max vertical offset allowed
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -21,47 +29,49 @@ const useSwipe = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const routes = ["/", "/projects", "/contact-me"];
-  const currentIndex = routes.indexOf(location.pathname);
-
-  const minSwipeDistance = 50;
-
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
-    setTouchStart(e.targetTouches[0].clientX);
+    const touch = e.targetTouches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchStartTime = Date.now();
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     if (!isMobile) return;
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
 
-  const handleTouchEnd = () => {
-    if (!isMobile || !touchStart || !touchEnd) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touchStartX - touch.clientX;
+    const deltaY = touchStartY - touch.clientY;
+    const timeElapsed = Date.now() - touchStartTime;
 
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
 
-    if (isLeftSwipe) {
+    const isHorizontalSwipe =
+      absDeltaX > minSwipeDistance && absDeltaX > absDeltaY;
+    const isWithinVerticalLimit = absDeltaY <= maxVerticalDeviation;
+    const isQuickEnough = timeElapsed < maxTouchDuration;
+
+    if (!isHorizontalSwipe || !isWithinVerticalLimit || !isQuickEnough) return;
+
+    if (deltaX > 0) {
+      // Swipe left → go to next
       const nextIndex = (currentIndex + 1) % routes.length;
       setDirection("left");
       navigate(routes[nextIndex]);
-    }
-    if (isRightSwipe) {
-      const nextIndex =
+    } else {
+      // Swipe right → go to previous
+      const prevIndex =
         currentIndex - 1 < 0 ? routes.length - 1 : currentIndex - 1;
       setDirection("right");
-      navigate(routes[nextIndex]);
+      navigate(routes[prevIndex]);
     }
-
-    setTouchStart(0);
-    setTouchEnd(0);
   };
 
   return {
     onTouchStart: handleTouchStart,
-    onTouchMove: handleTouchMove,
+    onTouchMove: () => {}, // not needed anymore
     onTouchEnd: handleTouchEnd,
     direction,
   };
