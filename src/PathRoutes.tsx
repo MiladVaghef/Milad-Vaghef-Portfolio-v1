@@ -35,12 +35,12 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
         animate: {
           x: 0,
           opacity: 1,
-          transition: { duration: 0.2 },
+          transition: { duration: 0.15 },
         },
         exit: (dir: string) => ({
           x: dir === "left" ? "-100%" : "100%",
           opacity: 0,
-          transition: { duration: 0.2 },
+          transition: { duration: 0.15 },
         }),
       }
     : {
