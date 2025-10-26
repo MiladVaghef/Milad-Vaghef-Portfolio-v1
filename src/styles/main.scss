@@ -30,6 +30,7 @@ body {
     color: white;
   }
   @include device("tablet") {
+    background: rgb(249, 249, 249);
     height: 100%;
   }
 }
@@ -44,15 +45,11 @@ a {
   justify-content: space-between;
   flex-direction: column;
   max-width: 1480px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 3rem;
+  padding-right: 3rem;
   @include device("laptop") {
-    padding-left: 35px;
-    padding-right: 35px;
-  }
-  @include device("mobile") {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
@@ -73,13 +70,6 @@ main {
   overflow-x: hidden;
   padding-right: 30px;
   scroll-behavior: smooth;
-  @include device("tablet") {
-    width: 100%;
-    margin-top: 0;
-    padding-right: 0;
-    overflow-y: unset;
-    overflow-x: unset;
-  }
   &::-webkit-scrollbar {
     width: 0.5vw;
     max-width: 7px;
@@ -96,5 +86,24 @@ main {
   &::-webkit-scrollbar-thumb {
     background: $secondary-color;
     border-radius: 20px;
+  }
+  @include device("tablet") {
+    width: 100%;
+    margin-top: 0;
+    padding-right: 0;
+    height: 100vh;
+    &::-webkit-scrollbar {
+      width: 0vw;
+      max-width: 7444px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
   }
 }

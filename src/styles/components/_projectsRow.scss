@@ -31,6 +31,7 @@
         font-size: 15px;
       }
       svg {
+        z-index: -1;
         transition: all 0.15s ease-in-out;
         width: 9px;
         height: 9px;

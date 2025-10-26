@@ -1,11 +1,23 @@
 #introduction {
   padding-top: 60px;
-  padding-bottom: 50px;
+  padding-bottom: 70px;
   color: $text-color;
   display: none;
-  @include device("tablet") {
-    display: block;
+  #intro-icons {
+    display: none;
+    margin-top: 30px;
+    gap: 3%;
+    @media (max-width: 800px) {
+      display: flex;
+      svg {
+        fill: $text-color;
+        width: 20px;
+        height: 20px;
+        transition: all 0.3s ease-in-out;
+      }
+    }
   }
+
   h1 {
     margin: 0;
     font-size: 36px;
@@ -32,12 +44,34 @@
       max-width: 380px;
     }
   }
+  @include device("tablet") {
+    display: block;
+  }
 }
 
 #home {
   display: flex;
   justify-content: flex-end;
   padding-right: 20px;
+  .sticky-title {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background-color: rgba(249, 249, 249, 0.842);
+    backdrop-filter: blur(10px);
+    display: none;
+    @include device("tablet") {
+      display: block;
+    }
+    h3 {
+      text-transform: uppercase;
+      color: rgb(60, 60, 60);
+      margin: 0;
+      padding: 20px 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
   @include device("laptop") {
     padding-right: unset;
   }
@@ -48,16 +82,22 @@
     max-width: 900px;
     gap: 60px;
     padding-bottom: 60px;
+
     @include device("tablet") {
-      padding-bottom: 120px;
+      padding-bottom: 130px;
       max-width: unset;
     }
     @media (max-width: 850px) {
       padding-bottom: 60px;
     }
+    @include device("mobile") {
+      padding-bottom: 150px;
+    }
+
     #biography {
       gap: 20px;
       text-align: justify;
+      position: relative;
       @include device("tablet") {
         text-align: unset;
       }
@@ -69,17 +109,38 @@
     }
     #home-row-projects {
       gap: 40px;
+      position: relative;
       #all-projects-link {
-        align-items: center;
-        gap: 10px;
         margin-bottom: 40px;
-        a {
+        button {
+          display: flex;
           color: $text-color;
-          font-size: 12px;
+          font-size: 14px;
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          align-items: center;
+          gap: 10px;
+          svg {
+            stroke: $text-color;
+          }
+          &:hover {
+            gap: 20px;
+            span {
+              gap: 20px;
+              transition: all 0.2s ease-in-out;
+              color: $primary-color;
+            }
+            svg {
+              stroke: $primary-color;
+            }
+          }
         }
       }
     }
     #home-work-history {
+      position: relative;
       gap: 60px;
     }
   }
