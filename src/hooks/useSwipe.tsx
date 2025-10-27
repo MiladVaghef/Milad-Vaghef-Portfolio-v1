@@ -1,29 +1,25 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-
-type Direction = "left" | "right" | null;
+import { useLocation } from "react-router-dom";
+import { useNavigation } from "../contexts/NavigationContext"; // ✅ using NavigationContext
 
 const useSwipe = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [direction, setDirection] = useState<Direction>(null);
-  const navigate = useNavigate();
   const location = useLocation();
+  const { navigateTo } = useNavigation();
 
   const routes = ["/", "/projects", "/contact-me"];
   const currentIndex = routes.indexOf(location.pathname);
 
   const minSwipeDistance = 50;
-  const maxTouchDuration = 700; // in ms
-  const maxVerticalDeviation = 100; // max vertical offset allowed
+  const maxTouchDuration = 700;
+  const maxVerticalDeviation = 100;
 
   let touchStartX = 0;
   let touchStartY = 0;
   let touchStartTime = 0;
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 850);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth <= 850);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -56,24 +52,18 @@ const useSwipe = () => {
     if (!isHorizontalSwipe || !isWithinVerticalLimit || !isQuickEnough) return;
 
     if (deltaX > 0) {
-      // Swipe left → go to next
       const nextIndex = (currentIndex + 1) % routes.length;
-      setDirection("left");
-      navigate(routes[nextIndex]);
+      navigateTo(routes[nextIndex], "left");
     } else {
-      // Swipe right → go to previous
       const prevIndex =
         currentIndex - 1 < 0 ? routes.length - 1 : currentIndex - 1;
-      setDirection("right");
-      navigate(routes[prevIndex]);
+      navigateTo(routes[prevIndex], "right");
     }
   };
 
   return {
     onTouchStart: handleTouchStart,
-    onTouchMove: () => {}, // not needed anymore
     onTouchEnd: handleTouchEnd,
-    direction,
   };
 };
 

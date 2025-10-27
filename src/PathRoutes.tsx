@@ -1,11 +1,14 @@
+import { lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import Home from "./pages/Home";
-import Projects from "./pages/Projects";
-import Contact from "./pages/Contact";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
+import { useNavigation } from "./contexts/NavigationContext";
+
+const Home = lazy(() => import("./pages/Home"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 interface PathRoutesProps {
   setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
@@ -13,19 +16,16 @@ interface PathRoutesProps {
 
 export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
-  const { onTouchStart, onTouchMove, onTouchEnd, direction } = useSwipe();
+  const { direction } = useNavigation(); // Added
+  const swipeHandlers = useSwipe();
 
-  // Determine if screen width is under 850px
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 850);
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 850);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 850);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Conditionally define animation variants based on isMobile
   const pageVariants = isMobile
     ? {
         initial: (dir: string) => ({
@@ -44,18 +44,13 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
         }),
       }
     : {
-        // When not mobile, disable animations:
         initial: { x: 0, opacity: 1 },
         animate: { x: 0, opacity: 1 },
         exit: { x: 0, opacity: 1 },
       };
 
   return (
-    <main
-      className="column"
-      // Only attach swipe events when mobile:
-      {...(isMobile ? { onTouchStart, onTouchMove, onTouchEnd } : {})}
-    >
+    <main className="column" {...(isMobile ? swipeHandlers : {})}>
       <AnimatePresence mode="wait" custom={direction}>
         <Routes location={location} key={location.pathname}>
           <Route

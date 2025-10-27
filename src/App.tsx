@@ -5,6 +5,7 @@ import { PathRoutes } from "./PathRoutes";
 import Footer from "./components/Footer";
 import Aside from "./components/Aside";
 import "./styles/main.css";
+import { NavigationProvider } from "./contexts/NavigationContext"; // Added
 
 export type InViewSections = {
   "#biography": number;
@@ -21,12 +22,16 @@ const App = () => {
 
   return (
     <Router>
-      <ScrollToTop />
-      <div id="container">
-        <Aside inViewSections={inViewSections} />
-        <PathRoutes setInViewSections={setInViewSections} />
-      </div>
-      <Footer />
+      <NavigationProvider>
+        {" "}
+        {/* Added provider */}
+        <ScrollToTop />
+        <div id="container">
+          <Aside inViewSections={inViewSections} />
+          <PathRoutes setInViewSections={setInViewSections} />
+        </div>
+        <Footer />
+      </NavigationProvider>
     </Router>
   );
 };

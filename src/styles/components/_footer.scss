@@ -16,12 +16,17 @@ footer {
     backdrop-filter: blur(20px);
     background-color: #ffffffd9;
   }
-  @media (max-width: 850px) {
-    visibility: hidden;
-  }
   @include device("mobile") {
-    max-height: 70px;
-    border-radius: 15px 15px 0 0;
+    min-height: 50px;
+    height: 55px;
+    border-radius: 100px;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    background-color: rgba(255, 255, 255, 0.521);
+    border: 2px solid $primary-color;
+    box-shadow: unset;
   }
 }
 
@@ -32,7 +37,7 @@ footer {
   @include device("tablet") {
     padding-left: 35px;
   }
-  @media (max-width: 850px) {
+  @media (max-width: 800px) {
     display: none;
   }
   img {
@@ -44,12 +49,8 @@ footer {
 }
 
 #footer-navbar {
-  width: 50%;
-  @media (max-width: 850px) {
-    width: 100%;
-  }
-
-  .footer-navbar-active {
+  width: 100%;
+  .active {
     color: $primary-color;
 
     &::after {
@@ -63,21 +64,51 @@ footer {
     gap: 6%;
     justify-content: center;
     margin: 0;
-    @media (max-width: 850px) {
+    display: flex;
+    @media (max-width: 800px) {
       gap: 17%;
     }
     @media (max-width: 450px) {
-      gap: 10%;
+      gap: 13%;
     }
-    li a {
-      font-weight: 500;
+    li .active-mobile {
+      background-color: $primary-color;
+      outline: 9px solid $primary-color;
+      transform: translateY(-23px);
+      border: 2px solid transparent;
+      svg {
+        fill: white;
+      }
+    }
+    .footer-link-mobile {
+      outline-color: transparent;
+      background-color: white;
+      border-radius: 100%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translateY(-13px);
+      border: 2px solid $primary-color;
+      outline-offset: -2px;
+      svg {
+        fill: $primary-color;
+        width: 30px;
+      }
+    }
+    li button {
       text-decoration: none;
       color: $text-color;
-      font-size: 15px;
+      font-size: 16px;
       padding: 10px 10px 10px 10px;
       position: relative;
       transition: all 0.3s ease-in-out;
-      display: flex;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      display: inline-block;
       @include device("laptop") {
         font-size: 14px;
       }
@@ -112,7 +143,7 @@ footer {
   @include device("tablet") {
     padding-right: 35px;
   }
-  @media (max-width: 850px) {
+  @media (max-width: 800px) {
     display: none;
   }
   svg {

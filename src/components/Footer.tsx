@@ -1,96 +1,85 @@
-import { useState, useEffect, useRef } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useNavigation } from "../contexts/NavigationContext";
+import Logo from "../components/Logo";
 import Icon from "./Icon";
-import Logo from "./Logo";
-import { VALID_PATHS, ValidPath } from "../config/routes";
+import { useState, useEffect } from "react";
+import type { IconType } from "./Icon";
 
-function useWindowWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
+// 🔹 Reusable hook
+function useResponsive(maxWidth: number) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= maxWidth);
 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-
+    const handleResize = () => setIsMobile(window.innerWidth <= maxWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [maxWidth]);
 
-  return width;
+  return isMobile;
 }
 
 const Footer = () => {
-  const width = useWindowWidth();
   const location = useLocation();
-  const isInvalidPath = !VALID_PATHS.includes(location.pathname as ValidPath);
-  const [showFooter, setShowFooter] = useState(true);
-  const lastScrollY = useRef(window.scrollY);
+  const { navigateTo } = useNavigation();
+  const isMobile = useResponsive(668);
+  // Define your routes and labels here
+  const routeLabels: Record<string, string> = {
+    "/": "Home",
+    "/projects": "Projects",
+    "/contact-me": "Contact",
+  };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  const routes = Object.keys(routeLabels);
 
-      // Show footer when scrolling down, hide when scrolling up
-      if (currentScrollY > lastScrollY.current + 2) {
-        // Scrolling down
-        setShowFooter(true);
-      } else if (currentScrollY < lastScrollY.current - 2) {
-        // Scrolling up
-        setShowFooter(false);
-      }
+  const getDirection = (targetPath: string): "left" | "right" | null => {
+    const currentIndex = routes.indexOf(location.pathname);
+    const targetIndex = routes.indexOf(targetPath);
 
-      // Always update last scroll position
-      lastScrollY.current = currentScrollY;
+    if (targetIndex > currentIndex) return "left";
+    if (targetIndex < currentIndex) return "right";
+    return null;
+  };
 
-      // Ensure footer is hidden at the very top
-      if (currentScrollY === 0) {
-        setShowFooter(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const routeIcons: Record<string, IconType> = {
+    "/": "home",
+    "/projects": "grid",
+    "/contact-me": "contact",
+  };
 
   return (
-    <footer className={`row${showFooter && width < 851 ? " slide-down" : ""}`}>
+    <footer className="row">
       <div id="footer-logo">
         <Logo />
       </div>
-      <nav id="footer-navbar">
-        <ul className="row">
-          <li>
-            <NavLink
-              to="/home"
-              className={
-                ["/", "/home"].includes(location.pathname) || isInvalidPath
-                  ? "footer-navbar-active"
-                  : ""
-              }
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/projects"
-              className={({ isActive }) =>
-                isActive ? "footer-navbar-active" : ""
-              }
-            >
-              Projects
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/contact-me"
-              className={({ isActive }) =>
-                isActive ? "footer-navbar-active" : ""
-              }
-            >
-              Contact
-            </NavLink>
-          </li>
+      <div id="footer-navbar">
+        <ul>
+          {routes.map((path) => (
+            <li key={path}>
+              {isMobile ? (
+                // 🔹 Mobile version (icon only)
+                <button
+                  className={`footer-link-mobile ${
+                    location.pathname === path ? "active-mobile" : ""
+                  }`}
+                  onClick={() => navigateTo(path, getDirection(path))}
+                >
+                  <Icon name={routeIcons[path]} />
+                </button>
+              ) : (
+                // 🔹 Desktop version (text)
+                <button
+                  className={`footer-link ${
+                    location.pathname === path ? "active" : ""
+                  }`}
+                  onClick={() => navigateTo(path, getDirection(path))}
+                >
+                  {routeLabels[path]}
+                </button>
+              )}
+            </li>
+          ))}
         </ul>
-      </nav>
+      </div>
       <div id="footer-social-media">
         <a href="http://instagram.com/_u/miladvaghef" target="_blank">
           <Icon name="instagram" />
