@@ -1,11 +1,11 @@
 import { lazy, Suspense } from "react";
 import Icon from "../components/Icon";
 import { InViewSections } from "../App";
-import { NavLink } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
 import useSwipe from "../hooks/useSwipe";
+import { useNavigation } from "../contexts/NavigationContext"; // ✅ added
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -16,6 +16,7 @@ interface HomeProps {
 
 const Home = ({ setInViewSections }: HomeProps) => {
   const swipeHandlers = useSwipe();
+  const { navigateTo } = useNavigation(); // ✅ use navigation context
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 100 }, (_, i) => i * 0.01);
 
@@ -64,17 +65,33 @@ const Home = ({ setInViewSections }: HomeProps) => {
           I make modern and well-structured websites and friendly user
           interfaces.
         </p>
+        <div id="intro-icons" className="row">
+          <a href="https://t.me/miladvaghef" target="_blank">
+            <Icon name="telegram" />
+          </a>
+          <a href="https://wa.me/989017867178" target="_blank">
+            <Icon name="whatsapp" />
+          </a>{" "}
+          <a href="http://instagram.com/_u/miladvaghef" target="_blank">
+            <Icon name="instagram" />
+          </a>
+        </div>
       </section>
+
       <div id="home" {...swipeHandlers} className="allow-vertical-pan">
         <div id="home-holder" className="column">
+          {/* About Section */}
           <div id="biography" className="column" ref={bioRef}>
+            <div className="sticky-title">
+              <h3>About</h3>
+            </div>
             <p>
               I'm a<span className="blue-text semi-bold"> 19-year-old </span>
-              passionate{" "}
+              passionate
               <span className="blue-text semi-bold"> front-end </span> web
               designer with a keen eye for creating clean and visually
-              compelling{" "}
-              <span className="blue-text semi-bold">user interfaces</span>.
+              compelling
+              <span className="blue-text semi-bold"> user interfaces</span>.
               Currently pursuing a degree in photography and having completed a
               year of training at a web design academy, I bring both technical
               expertise and a strong creative vision to my work.
@@ -102,10 +119,14 @@ const Home = ({ setInViewSections }: HomeProps) => {
               bringing a vision to life from start to finish, I'm dedicated to
               delivering high-quality, innovative designs that exceed client
               expectations.
-            </p>{" "}
+            </p>
           </div>
 
+          {/* Projects Section */}
           <div id="home-row-projects" className="column" ref={projectsRef}>
+            <div className="sticky-title">
+              <h3>Projects</h3>
+            </div>
             {limitedProjects.map((project, rowprojectslazy) => (
               <Suspense
                 key={rowprojectslazy}
@@ -121,11 +142,17 @@ const Home = ({ setInViewSections }: HomeProps) => {
             ))}
 
             <div id="all-projects-link" className="row semi-bold">
-              <NavLink to={"/projects"}>View Full Project</NavLink>
-              <Icon name="right-arrow"></Icon>
+              <button
+                onClick={() => navigateTo("/projects", "left")} // ✅ swipe right transition
+                className="link-button"
+              >
+                <span>View Full Project</span>
+                <Icon name="right-arrow" />
+              </button>
             </div>
           </div>
 
+          {/* Work History Section */}
           <div id="home-work-history" className="column-reverse" ref={workRef}>
             {workHistoryData.map((workData, index) => (
               <Suspense
@@ -140,6 +167,10 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 <WorkHistory {...workData} />
               </Suspense>
             ))}
+
+            <div className="sticky-title">
+              <h3>Experience</h3>
+            </div>
           </div>
         </div>
       </div>
