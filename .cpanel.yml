@@ -1,8 +1,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=~/public_html
-    - cd ~
-    - cd repositories/Milad-Vaghef-Portfolio-V1
+    - cd ~/repositories/Milad-Vaghef-Portfolio-v1
     - /opt/cpanel/ea-nodejs18/bin/npm ci
     - /opt/cpanel/ea-nodejs18/bin/npm run build
     - rsync -a --delete dist/ $DEPLOYPATH/
