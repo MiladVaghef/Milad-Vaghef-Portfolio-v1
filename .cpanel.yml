@@ -1,7 +1,21 @@
+---
 deployment:
-  tasks:
-    - export DEPLOYPATH=~/public_html
+  predeploy:
+    # Go to your repo folder
     - cd ~/repositories/Milad-Vaghef-Portfolio-v1
-    - /opt/cpanel/ea-nodejs18/bin/npm ci
-    - /opt/cpanel/ea-nodejs18/bin/npm run build
-    - rsync -a --delete dist/ $DEPLOYPATH/
+
+    # Install dependencies (optional, only if you use npm packages)
+    - npm ci
+
+    # Build the project
+    - npm run build
+
+  postdeploy:
+    # Copy the built site to public_html
+    - rsync -a --delete ~/repositories/Milad-Vaghef-Portfolio-v1/dist/ ~/public_html/
+
+    # Save commit info so cPanel can detect it
+    - cd ~/repositories/Milad-Vaghef-Portfolio-v1
+    - echo "Last deployed SHA: $(git rev-parse HEAD)" > ~/public_html/.last-deploy
+    - echo "Author: $(git log -1 --pretty=format:'%an')" >> ~/public_html/.last-deploy
+    - echo "Commit Date: $(git log -1 --pretty=format:'%ad')" >> ~/public_html/.last-deploy
