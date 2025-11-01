@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+// src/contexts/NavigationContext.tsx
+import { createContext, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 type Direction = "left" | "right" | null;
@@ -28,10 +29,4 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useNavigation = () => {
-  const context = useContext(NavigationContext);
-  if (!context) {
-    throw new Error("useNavigation must be used within a NavigationProvider");
-  }
-  return context;
-};
+export default NavigationContext;

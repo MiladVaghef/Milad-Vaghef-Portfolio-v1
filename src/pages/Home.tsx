@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
 import useSwipe from "../hooks/useSwipe";
-import { useNavigation } from "../contexts/NavigationContext"; // ✅ added
+import { useNavigation } from "../hooks/useNavigation";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -16,7 +16,7 @@ interface HomeProps {
 
 const Home = ({ setInViewSections }: HomeProps) => {
   const swipeHandlers = useSwipe();
-  const { navigateTo } = useNavigation(); // ✅ use navigation context
+  const { navigateTo } = useNavigation();
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 100 }, (_, i) => i * 0.01);
 

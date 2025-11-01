@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useNavigation } from "../contexts/NavigationContext";
+import { useNavigation } from "../hooks/useNavigation";
 import Logo from "../components/Logo";
 import Icon from "./Icon";
 import { useState, useEffect } from "react";

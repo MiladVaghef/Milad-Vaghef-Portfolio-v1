@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
 import { useNavigation } from "./contexts/NavigationContext";
+import { useNavigation } from "./hooks/useNavigation";
 
 const Home = lazy(() => import("./pages/Home"));
 const Projects = lazy(() => import("./pages/Projects"));

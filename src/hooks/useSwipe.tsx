@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useNavigation } from "../contexts/NavigationContext"; // ✅ using NavigationContext
+import { useNavigation } from "../hooks/useNavigation";
 
 const useSwipe = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
