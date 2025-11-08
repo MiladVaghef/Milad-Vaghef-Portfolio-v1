@@ -4,7 +4,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { PathRoutes } from "./PathRoutes";
 import Footer from "./components/Footer";
 import Aside from "./components/Aside";
-import "./styles/main.css";
+import "./styles/main.scss";
 import { NavigationProvider } from "./contexts/NavigationContext"; // Added
 
 export type InViewSections = {
