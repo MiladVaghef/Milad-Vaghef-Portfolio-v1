@@ -35,10 +35,10 @@ jobs:
           local-dir: dist/                    # note the trailing slash
           server-dir: ${{ secrets.FTP_PATH }}
           dangerous-clean-slate: true        # removes old files that aren't in dist/
-exclude: |
-  htdocs/**                        # keeps your htdocs folder
-  **/.git*
-  **/.github*
-  node_modules/**
-  .well-known/**                   # keeps .well-known folder
-  cgi-bin/**                       # keeps cgi-bin folder
+          exclude: |                          # <-- must be indented under 'with'
+            htdocs/**                        # keeps your htdocs folder
+            **/.git*
+            **/.github*
+            node_modules/**
+            .well-known/**                   # keeps .well-known folder
+            cgi-bin/**                       # keeps cgi-bin folder
