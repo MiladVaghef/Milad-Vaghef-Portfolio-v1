@@ -1,10 +1,9 @@
 import { lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
-import { useNavigation } from "./contexts/NavigationContext";
 import { useNavigation } from "./hooks/useNavigation";
 
 const Home = lazy(() => import("./pages/Home"));
@@ -17,10 +16,12 @@ interface PathRoutesProps {
 
 export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
-  const { direction } = useNavigation(); // Added
+  const { direction } = useNavigation();
   const swipeHandlers = useSwipe();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 850);
+  const hasMounted = useRef(false);
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 850);
     window.addEventListener("resize", handleResize);
@@ -29,10 +30,10 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
 
   const pageVariants = isMobile
     ? {
-        initial: (dir: string) => ({
-          x: dir === "left" ? "100%" : "-100%",
-          opacity: 0,
-        }),
+        initial: (dir: string) =>
+          hasMounted.current
+            ? { x: dir === "left" ? "100%" : "-100%", opacity: 0 }
+            : { x: 0, opacity: 1 },
         animate: {
           x: 0,
           opacity: 1,
@@ -49,6 +50,10 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
         animate: { x: 0, opacity: 1 },
         exit: { x: 0, opacity: 1 },
       };
+
+  useEffect(() => {
+    hasMounted.current = true;
+  }, []);
 
   return (
     <main className="column" {...(isMobile ? swipeHandlers : {})}>
