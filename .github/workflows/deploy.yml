@@ -31,11 +31,12 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: dist
+          protocol: ftps
+          local-dir: dist/                    # note the trailing slash
           server-dir: ${{ secrets.FTP_PATH }}
-          delete: true                  # removes old build files
+          dangerous-clean-slate: true        # removes old files that aren't in dist/
           exclude: |
-            htdocs/**                   # keep your htdocs folder safe
+            htdocs/**                        # keeps your htdocs folder
             **/.git*
             **/.github*
             node_modules/**
