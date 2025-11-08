@@ -39,12 +39,12 @@ export const socialMediaData: socialMedia[] = [
     linkText: "@miladvaghef",
   },
   {
-    isAvailable: false,
+    isAvailable: true,
     isFollowable: true,
     icon: "linkedin",
     title: "Linkedin",
-    message: "Let’s talk business ",
-    link: "#",
+    message: "Let’s talk business",
+    link: "https://www.linkedin.com/in/milad-vaghef-18a2852a1/",
     linkText: "@miladvaghef",
   },
   {
