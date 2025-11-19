@@ -1,58 +1,90 @@
-#introduction {
-  padding-top: 60px;
-  padding-bottom: 70px;
-  color: $text-color;
-  display: none;
-  #intro-icons {
-    display: none;
-    margin-top: 30px;
-    gap: 3%;
-    @media (max-width: 800px) {
-      display: flex;
-      svg {
-        fill: $text-color;
-        width: 20px;
-        height: 20px;
-        transition: all 0.3s ease-in-out;
-      }
-    }
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 36px;
-    font-weight: 700;
-    @include device("laptop") {
-      font-size: 32px;
-    }
-  }
-  h2 {
-    span {
-      font-size: 20px;
-      font-weight: 600;
-      @include device("laptop") {
-        font-size: 17px;
-      }
-    }
-  }
-  p {
-    width: 80%;
-    @include device("laptop") {
-      font-size: 13px;
-    }
-    @include device("tablet") {
-      max-width: 380px;
-    }
-  }
-  @include device("tablet") {
-    display: block;
-  }
-}
-
 #home {
   display: flex;
-  justify-content: flex-end;
-  padding-right: 20px;
+  padding-right: 50px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: inherit;
+  &::-webkit-scrollbar {
+    width: 0.3vw;
+    max-width: 7px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 20px;
+    transition: all 0.3s ease-in;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $secondary-color;
+    border-radius: 20px;
+  }
+  @include device("tablet") {
+    &::-webkit-scrollbar {
+      width: 0vw;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+  }
+  #introduction {
+    padding-top: 60px;
+    padding-bottom: 70px;
+    color: $text-color;
+    display: none;
+    #intro-icons {
+      display: none;
+      margin-top: 30px;
+      gap: 3%;
+      @media (max-width: 800px) {
+        display: flex;
+        svg {
+          fill: $text-color;
+          width: 20px;
+          height: 20px;
+          transition: all 0.3s ease-in-out;
+        }
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: 700;
+      @include device("laptop") {
+        font-size: 32px;
+      }
+    }
+    h2 {
+      span {
+        font-size: 20px;
+        font-weight: 600;
+        @include device("laptop") {
+          font-size: 17px;
+        }
+      }
+    }
+    p {
+      width: 80%;
+      @include device("laptop") {
+        font-size: 13px;
+      }
+      @include device("tablet") {
+        max-width: 380px;
+      }
+    }
+    @include device("tablet") {
+      display: block;
+    }
+  }
   .sticky-title {
     width: 100%;
     position: sticky;

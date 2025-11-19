@@ -55,30 +55,30 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
   return (
     <>
-      <section id="introduction">
-        <h1>Milad Vaghef</h1>
-        <h2 className="column">
-          <span>Front-End Developer</span>
-          <span>UI Designer</span>
-        </h2>
-        <p>
-          I make modern and well-structured websites and friendly user
-          interfaces.
-        </p>
-        <div id="intro-icons" className="row">
-          <a href="https://t.me/miladvaghef" target="_blank">
-            <Icon name="telegram" />
-          </a>
-          <a href="https://wa.me/989017867178" target="_blank">
-            <Icon name="whatsapp" />
-          </a>{" "}
-          <a href="http://instagram.com/_u/miladvaghef" target="_blank">
-            <Icon name="instagram" />
-          </a>
-        </div>
-      </section>
-
-      <div id="home" {...swipeHandlers} className="allow-vertical-pan">
+      <div id="home" {...swipeHandlers} className="allow-vertical-pan column">
+        {" "}
+        <section id="introduction">
+          <h1>Milad Vaghef</h1>
+          <h2 className="column">
+            <span>Front-End Developer</span>
+            <span>UI Designer</span>
+          </h2>
+          <p>
+            I make modern and well-structured websites and friendly user
+            interfaces.
+          </p>
+          <div id="intro-icons" className="row">
+            <a href="https://t.me/miladvaghef" target="_blank">
+              <Icon name="telegram" />
+            </a>
+            <a href="https://wa.me/989017867178" target="_blank">
+              <Icon name="whatsapp" />
+            </a>{" "}
+            <a href="http://instagram.com/_u/miladvaghef" target="_blank">
+              <Icon name="instagram" />
+            </a>
+          </div>
+        </section>
         <div id="home-holder" className="column">
           {/* About Section */}
           <div id="biography" className="column" ref={bioRef}>
@@ -86,38 +86,28 @@ const Home = ({ setInViewSections }: HomeProps) => {
               <h3>About</h3>
             </div>
             <p>
-              I'm a<span className="blue-text semi-bold"> 19-year-old </span>
-              passionate
-              <span className="blue-text semi-bold"> front-end </span> web
-              designer with a keen eye for creating clean and visually
-              compelling
-              <span className="blue-text semi-bold"> user interfaces</span>.
-              Currently pursuing a degree in photography and having completed a
-              year of training at a web design academy, I bring both technical
-              expertise and a strong creative vision to my work.
+              I'm a front-end web designer passionate about creating clean,
+              visually engaging, and user-friendly digital experiences. I’m
+              currently pursuing a degree in graphic design, where I gain
+              hands-on experience creating posters, banners, and digital assets
+              using tools like Adobe Photoshop and Illustrator. This combination
+              of formal education and practical skills allows me to deliver
+              polished and thoughtful designs.
             </p>
             <p>
-              My education has equipped me with a solid foundation in web
-              design, and I'm proud to hold a
-              <span className="blue-text semi-bold">
-                {" "}
-                web designing certificate{" "}
-              </span>
-              that validates my skills in this field.
+              With a year of dedicated web design training and a certified web
+              designing background, I bring both technical expertise and
+              creative vision to every project. I focus on crafting websites
+              that balance aesthetics with functionality, ensuring users enjoy
+              seamless, intuitive, and visually appealing experiences.
             </p>
             <p>
-              Drawing inspiration from my photography studies, I merge
-              aesthetics with functionality to craft web experiences that are
-              not only beautiful but user-friendly. I believe great design is
-              about striking the perfect balance between form and function,
-              creating websites that resonate with users and elevate brands.
-            </p>
-            <p>
-              Based in Iran, I've had the opportunity to work on a diverse range
-              of projects, each one allowing me to refine my craft and push
-              creative boundaries. Whether I'm collaborating on a new concept or
-              bringing a vision to life from start to finish, I'm dedicated to
-              delivering high-quality, innovative designs that exceed client
+              Based in Iran, I've collaborated on a variety of projects, from
+              e-commerce platforms to custom digital experiences. I thrive on
+              turning ideas into high-quality, innovative designs that resonate
+              with users and help brands stand out. Whether working
+              independently or as part of a team, I am committed to pushing
+              creative boundaries and delivering results that exceed
               expectations.
             </p>
           </div>

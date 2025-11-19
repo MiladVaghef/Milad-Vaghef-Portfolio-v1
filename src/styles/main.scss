@@ -66,44 +66,12 @@ a {
 main {
   margin-top: 50px;
   width: 70%;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
-  padding-right: 30px;
   scroll-behavior: smooth;
-  &::-webkit-scrollbar {
-    width: 0.5vw;
-    max-width: 7px;
-  }
-
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 20px;
-    transition: all 0.3s ease-in;
-  }
-
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: $secondary-color;
-    border-radius: 20px;
-  }
   @include device("tablet") {
     width: 100%;
     margin-top: 0;
-    padding-right: 0;
     height: 100vh;
-    &::-webkit-scrollbar {
-      width: 0vw;
-      max-width: 7444px;
-    }
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-      background: transparent;
-    }
   }
 }

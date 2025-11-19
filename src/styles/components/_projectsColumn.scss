@@ -1,6 +1,7 @@
 .projects-column-container {
   gap: 30px;
   align-items: center;
+  height: inherit;
   @include device("tablet") {
     margin-bottom: 80px;
     margin-top: 60px;
@@ -45,7 +46,6 @@
         background-color: $primary-color;
         transform: translateX(-50%);
       }
-
       &:hover {
         color: $primary-color;
       }
@@ -57,6 +57,44 @@
     padding: 5px;
     justify-items: center;
     gap: 5%;
+    padding: 0px 30px 25px 0px;
+    width: 95%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 0.3vw;
+      max-width: 7px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 20px;
+      transition: all 0.3s ease-in;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: $secondary-color;
+      border-radius: 20px;
+    }
+    @include device("tablet") {
+      padding: 0px;
+      padding-bottom: 180px;
+      width: 100%;
+      &::-webkit-scrollbar {
+        width: 0vw;
+      }
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+      }
+    }
     @include device("mobile") {
       padding-bottom: 0;
       grid-template-columns: 1fr;

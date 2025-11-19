@@ -4,6 +4,7 @@
   gap: 60px;
   justify-content: center;
   align-items: center;
+  height: inherit;
   @include device("mobile") {
     margin-top: 60px;
     gap: 20px;
@@ -15,12 +16,43 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 35px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 0.3vw;
+      max-width: 7px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 20px;
+      transition: all 0.3s ease-in;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: $secondary-color;
+      border-radius: 20px;
+    }
     @include device("tablet") {
       margin-top: 60px;
+      padding-bottom: 190px;
+      &::-webkit-scrollbar {
+        width: 0vw;
+      }
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+      }
     }
     @include device("mobile") {
       margin-top: 20px;
-      margin-bottom: 140px;
     }
   }
   #contact-note {
