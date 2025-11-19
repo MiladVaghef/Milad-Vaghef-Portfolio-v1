@@ -3,14 +3,14 @@ import { useLocation } from "react-router-dom";
 import { projectsData } from "../data/projects";
 import Icon from "./Icon";
 
+const categoryOrder = ["WordPress", "Figma", "Front-End", "Graphic Design"];
 const ProjectsColumn = () => {
   const location = useLocation();
-  const categoryOrder = ["Wordpress", "Figma", "Front-End"];
+
   const [activeTab, setActiveTab] = useState(categoryOrder[0]);
 
   useEffect(() => {
-    const categoryOrder = ["Wordpress", "Figma", "Front-End"];
-    const hash = location.hash.replace("#", "");
+    const hash = decodeURIComponent(location.hash.replace("#", ""));
     if (categoryOrder.includes(hash)) {
       setActiveTab(hash);
     }
