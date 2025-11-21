@@ -1,13 +1,12 @@
 .social-media-container {
   color: $text-color;
-  margin-top: 10px;
   @media (max-width: 705px) {
     min-width: 100%;
   }
   .social-media-box {
     background-color: white;
     padding: 10px;
-    margin: 5px;
+    margin: 9px;
     box-shadow: 0px 0px 4px 0px #00000047;
     border-radius: 12px;
     max-width: 275px;
