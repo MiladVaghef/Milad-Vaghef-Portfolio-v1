@@ -84,9 +84,9 @@ export const projectsData: Project[] = [
     activeLink: false,
     link: "#",
     image: bmwI8magazine,
-    alt: "Customade Landing",
-    title: "Customade - Selling Custom Shoes",
-    desc: "Commerce websites are my main source of works. Customade is a modern website for selling customized shoes.",
+    alt: "BMW i8 Magazine",
+    title: "BMW i8 - Super Cars Magazine",
+    desc: "This BMW i8 supercar magazine is a concept created for a college assignment, designed to show my ability to craft clean editorial layouts and present automotive content with a professional, modern style.",
     tech: ["Figma", "Adobe Ilustrator"],
   },
 ];
