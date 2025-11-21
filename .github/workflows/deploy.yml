@@ -34,14 +34,11 @@ jobs:
           protocol: ftps
           local-dir: dist/                   
           server-dir: ${{ secrets.FTP_PATH }}
-          dangerous-clean-slate: true       
-          exclude: |  
-            /.htaccess
-            **/.htaccess
-            .htaccess
-            htdocs/**                        
+          dangerous-clean-slate: false
+          exclude: |
+            .htaccess                # never delete or overwrite
             **/.git*
             **/.github*
             node_modules/**
-            .well-known/**                   
-            cgi-bin/**                     
+            .well-known/**
+            cgi-bin/**
