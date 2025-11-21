@@ -36,6 +36,8 @@ jobs:
           server-dir: ${{ secrets.FTP_PATH }}
           dangerous-clean-slate: true       
           exclude: |  
+            /.htaccess
+            **/.htaccess
             .htaccess
             htdocs/**                        
             **/.git*
