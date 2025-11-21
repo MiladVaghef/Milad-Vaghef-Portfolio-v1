@@ -35,10 +35,11 @@ jobs:
           local-dir: dist/                   
           server-dir: ${{ secrets.FTP_PATH }}
           dangerous-clean-slate: true       
-          exclude: |                        
-            htdocs/**                        # keeps your htdocs folder
+          exclude: |  
+            .htaccess
+            htdocs/**                        
             **/.git*
             **/.github*
             node_modules/**
-            .well-known/**                   # keeps .well-known folder
-            cgi-bin/**                       # keeps cgi-bin folder
+            .well-known/**                   
+            cgi-bin/**                     
