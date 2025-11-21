@@ -30,10 +30,8 @@
       cursor: pointer;
       position: relative;
       transition: all 0.3s ease-in-out;
-      @media (max-width: 315px) {
-        padding: 0;
-        padding-bottom: 10px;
-        font-size: 13px;
+      @include device("mobile") {
+        font-size: 14px;
       }
       &::after {
         content: "";
@@ -52,11 +50,8 @@
     }
   }
   .projects-column-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 5px;
-    justify-items: center;
-    gap: 5%;
+    column-count: 2;
+    column-gap: 4%;
     padding: 0px 30px 25px 0px;
     width: 95%;
     overflow-y: auto;
@@ -99,15 +94,16 @@
       padding-bottom: 0;
       grid-template-columns: 1fr;
       gap: 40px;
+      columns: 1;
     }
 
     .projects-column {
       color: $text-color;
       gap: 15px;
-      max-width: 400px;
-      @include device("mobile") {
-        max-width: 560px;
-      }
+      padding: 5px;
+      margin-bottom: 35px;
+      break-inside: avoid;
+      margin-bottom: 10%;
       img {
         width: 100%;
         margin-bottom: 5px;
