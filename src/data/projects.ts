@@ -3,6 +3,7 @@ import bushehrKhormaLanding from "../assets/images/projects/bushehr-khorma-landi
 import cyberWorldLanding from "../assets/images/projects/cyber-world-landing.png";
 import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
 import bmwI8magazine from "../assets/images/projects/bmw-i8-magazine.png";
+import bloodPressurePoster from "../assets/images/projects/erfankala-blood-pressure-poster.png";
 export interface Project {
   isPractice: boolean;
   showWide: boolean;
@@ -88,5 +89,17 @@ export const projectsData: Project[] = [
     title: "BMW i8 - Super Cars Magazine",
     desc: "This BMW i8 supercar magazine is a concept created for a college assignment, designed to show my ability to craft clean editorial layouts and present automotive content with a professional, modern style.",
     tech: ["Figma", "Adobe Ilustrator"],
+  },
+  {
+    isPractice: false,
+    showWide: false,
+    category: "Graphic Design",
+    activeLink: false,
+    link: "#",
+    image: bloodPressurePoster,
+    alt: "ErfanKala Blood Pressure Poster",
+    title: "ErfanKala - Blood Pressure Poster",
+    desc: "Designed for ErfanKala, this blood pressure device poster was created as a printed advertisement, presenting key product features in a clear layout for wall displays and customer outreach.",
+    tech: ["Adobe Ilustrator"],
   },
 ];
