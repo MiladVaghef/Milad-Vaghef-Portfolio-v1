@@ -37,8 +37,19 @@ const ProjectsColumn = () => {
       <div className="projects-column-grid">
         {filteredProjects.map((project, index) =>
           project.activeLink ? (
-            <a href={project.link} target="_blank" key={index}>
-              <div className="projects-column column">
+            <a
+              href={project.link}
+              target="_blank"
+              key={index}
+              className="fit-content"
+            >
+              <div
+                className={
+                  project.showWide
+                    ? "projects-column column wide-project"
+                    : "projects-column column"
+                }
+              >
                 <img src={project.image} alt={project.alt} className="" />
                 <div className="projects-column-title row">
                   <span className="medium">{project.title}</span>
@@ -58,7 +69,14 @@ const ProjectsColumn = () => {
               </div>
             </a>
           ) : (
-            <div key={index} className="projects-column column fit-content">
+            <div
+              key={index}
+              className={
+                project.showWide
+                  ? "projects-column column wide-project"
+                  : "projects-column column"
+              }
+            >
               <img src={project.image} alt={project.alt} className="" />
               <div className="projects-column-title row">
                 <span className="medium">{project.title}</span>
