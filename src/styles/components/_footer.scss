@@ -13,20 +13,15 @@ footer {
     width: 100%;
     min-height: 75px;
     box-shadow: 0px 0px 4px 0px #acacac;
-    backdrop-filter: blur(20px);
-    background-color: #ffffffd9;
+    background-color: #ffffff;
   }
   @include device("mobile") {
-    min-height: 50px;
+    min-height: 100px;
     height: 55px;
-    border-radius: 100px;
-    bottom: 3%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    background-color: rgba(255, 255, 255, 0.521);
-    border: 2px solid $primary-color;
     box-shadow: unset;
+    background-color: unset;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -37,9 +32,11 @@ footer {
   @include device("tablet") {
     padding-left: 35px;
   }
-  @media (max-width: 800px) {
+
+  @include device("mobile") {
     display: none;
   }
+
   img {
     width: 150px;
     @include device("laptop") {
@@ -50,86 +47,111 @@ footer {
 
 #footer-navbar {
   width: 100%;
-  .active {
-    color: $primary-color;
-
-    &::after {
-      width: 100%;
-    }
+  @include device("mobile") {
+    box-shadow: 0px 0px 6px 1px #bcbcbcf2;
+    background-color: #ffffff;
+    width: 92%;
+    border-radius: 100px;
+    height: 78%;
+    margin-bottom: 12px;
   }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    gap: 6%;
-    justify-content: center;
-    margin: 0;
+  nav {
+    height: 100%;
     display: flex;
-    @media (max-width: 800px) {
-      gap: 17%;
+    justify-content: space-around;
+    align-items: center;
+    @include device("tablet") {
+      padding-left: 20px;
+      padding-right: 20px;
     }
-    @media (max-width: 450px) {
-      gap: 13%;
+    @include device("mobile") {
+      padding: 0;
     }
-    li .active-mobile {
-      background-color: $primary-color;
-      outline: 9px solid $primary-color;
-      transform: translateY(-23px);
-      border: 2px solid transparent;
-      svg {
-        fill: white;
-      }
-    }
-    .footer-link-mobile {
-      outline-color: transparent;
-      background-color: white;
-      border-radius: 100%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transform: translateY(-13px);
-      border: 2px solid $primary-color;
-      outline-offset: -2px;
-      svg {
-        fill: $primary-color;
-        width: 30px;
-      }
-    }
-    li button {
-      text-decoration: none;
-      color: $text-color;
-      font-size: 16px;
-      padding: 10px 10px 10px 10px;
-      position: relative;
-      transition: all 0.3s ease-in-out;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      display: inline-block;
-      @include device("laptop") {
-        font-size: 14px;
-      }
-      @media (max-width: 350px) {
-        font-size: 12px;
-      }
+    .active {
+      color: $primary-color;
 
       &::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: -1px;
-        width: 0;
-        height: 2px;
-        transition: width 0.3s ease-in-out;
-        background-color: $primary-color;
-        transform: translateX(-50%);
+        width: 100%;
       }
+    }
 
-      &:hover {
-        color: $primary-color;
+    ul {
+      display: flex;
+      list-style-type: none;
+      padding: 0;
+      gap: 39%;
+      justify-content: center;
+      margin: 0;
+      position: relative;
+      @include device("tablet") {
+        justify-content: space-between;
+        width: 70%;
+        gap: 0%;
+      }
+      li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .active-mobile {
+          svg {
+            fill: $primary-color;
+          }
+          span {
+            color: $primary-color;
+          }
+        }
+      }
+      .footer-link-mobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          fill: #acacac;
+          width: 22px;
+          transition: all 0.3s ease-in-out;
+          transform: translateY(-5 px);
+          margin-bottom: 7px;
+        }
+      }
+      li button {
+        text-decoration: none;
+        color: $text-color;
+        font-size: 16px;
+        position: relative;
+        cursor: pointer;
+        padding: 10px;
+        background-color: transparent;
+        border: 0;
+        @include device("laptop") {
+          font-size: 14px;
+        }
+        @include device("mobile") {
+          padding: 0;
+        }
+        @media (max-width: 350px) {
+          font-size: 12px;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: -1px;
+          width: 0;
+          height: 2px;
+          transition: width 0.3s ease-in-out;
+          background-color: $primary-color;
+          transform: translateX(-50%);
+        }
+
+        &:hover {
+          color: $primary-color;
+        }
+
+        span {
+          font-size: 12px;
+          color: #acacac;
+        }
       }
     }
   }
@@ -143,9 +165,10 @@ footer {
   @include device("tablet") {
     padding-right: 35px;
   }
-  @media (max-width: 800px) {
+  @include device("mobile") {
     display: none;
   }
+
   svg {
     fill: $text-color;
     width: 20px;

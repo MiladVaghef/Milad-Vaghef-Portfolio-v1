@@ -52,33 +52,36 @@ const Footer = () => {
         <Logo />
       </div>
       <div id="footer-navbar">
-        <ul>
-          {routes.map((path) => (
-            <li key={path}>
-              {isMobile ? (
-                // 🔹 Mobile version (icon only)
-                <button
-                  className={`footer-link-mobile ${
-                    location.pathname === path ? "active-mobile" : ""
-                  }`}
-                  onClick={() => navigateTo(path, getDirection(path))}
-                >
-                  <Icon name={routeIcons[path]} />
-                </button>
-              ) : (
-                // 🔹 Desktop version (text)
-                <button
-                  className={`footer-link ${
-                    location.pathname === path ? "active" : ""
-                  }`}
-                  onClick={() => navigateTo(path, getDirection(path))}
-                >
-                  {routeLabels[path]}
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
+        <nav>
+          <ul>
+            {routes.map((path) => (
+              <li key={path}>
+                {isMobile ? (
+                  // 🔹 Mobile version
+                  <button
+                    className={`footer-link-mobile column ${
+                      location.pathname === path ? "active-mobile" : ""
+                    }`}
+                    onClick={() => navigateTo(path, getDirection(path))}
+                  >
+                    <Icon name={routeIcons[path]} />
+                    <span>{routeLabels[path]}</span>
+                  </button>
+                ) : (
+                  // 🔹 Desktop version
+                  <button
+                    className={`footer-link ${
+                      location.pathname === path ? "active" : ""
+                    }`}
+                    onClick={() => navigateTo(path, getDirection(path))}
+                  >
+                    {routeLabels[path]}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
       <div id="footer-social-media">
         <a href="http://instagram.com/_u/miladvaghef" target="_blank">
