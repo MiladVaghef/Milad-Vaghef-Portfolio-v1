@@ -7,8 +7,6 @@ import Icon, { type IconType } from "./Icon";
 import Swiper from "swiper";
 import type SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
 
 export interface Project {
   title: string;

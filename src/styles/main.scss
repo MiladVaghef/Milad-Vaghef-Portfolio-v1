@@ -8,9 +8,13 @@
 @import "components/workHistory";
 @import "components/socialMedia";
 @import "components/projectsColumn";
+@import "swiper/css/pagination";
+@import "swiper/css/scrollbar";
+@import "swiper/css/effect-coverflow";
 @import "pages/home";
 @import "pages/projects";
 @import "pages/contact";
+@import "swiper/css";
 
 @font-face {
   font-family: Inter;
