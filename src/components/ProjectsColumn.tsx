@@ -1,20 +1,85 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { projectsData } from "../data/projects";
-import Icon from "./Icon";
+import Icon, { type IconType } from "./Icon";
 
-const categoryOrder = ["WordPress", "Figma", "Front-End", "Graphic Design"];
+// Swiper
+import Swiper from "swiper";
+import type SwiperCore from "swiper";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+
+export interface Project {
+  title: string;
+  category: string;
+  image: string;
+  alt: string;
+  desc: string;
+  tech: string[];
+  link?: string;
+  activeLink: boolean;
+  showWide?: boolean;
+  isPractice?: boolean;
+}
+
+const categories: { label: string; icon: IconType }[] = [
+  { label: "WordPress", icon: "wordpress" },
+  { label: "Figma", icon: "figma" },
+  { label: "Front-End", icon: "front-end" },
+  { label: "Graphic Design", icon: "graphic-design" },
+];
+
 const ProjectsColumn = () => {
   const location = useLocation();
+  const swiperRef = useRef<HTMLDivElement | null>(null);
+  const swiperInstance = useRef<SwiperCore | null>(null);
 
-  const [activeTab, setActiveTab] = useState(categoryOrder[0]);
+  const [activeTab, setActiveTab] = useState<string>(categories[0].label);
 
   useEffect(() => {
     const hash = decodeURIComponent(location.hash.replace("#", ""));
-    if (categoryOrder.includes(hash)) {
-      setActiveTab(hash);
+    const index = categories.findIndex((c) => c.label === hash);
+
+    if (index !== -1) {
+      setActiveTab(categories[index].label);
+      swiperInstance.current?.slideTo(index);
     }
   }, [location.hash]);
+
+  useEffect(() => {
+    if (!swiperRef.current) return;
+
+    swiperInstance.current = new Swiper(swiperRef.current, {
+      modules: [Navigation],
+      slidesPerView: "auto",
+      centeredSlides: true,
+      spaceBetween: 0,
+      grabCursor: true,
+      navigation: {
+        nextEl: ".projects-next",
+        prevEl: ".projects-prev",
+      },
+      on: {
+        slideChange(swiper) {
+          const category = categories[swiper.activeIndex];
+          if (!category) return;
+
+          setActiveTab(category.label);
+          window.history.replaceState(
+            null,
+            "",
+            `#${encodeURIComponent(category.label)}`
+          );
+        },
+      },
+    });
+
+    return () => {
+      swiperInstance.current?.destroy(true, true);
+      swiperInstance.current = null;
+    };
+  }, []);
 
   const filteredProjects = projectsData.filter(
     (project) => project.category === activeTab
@@ -22,82 +87,76 @@ const ProjectsColumn = () => {
 
   return (
     <div className="column projects-column-container">
-      <div className="row projects-column-category">
-        {categoryOrder.map((category) => (
-          <button
-            key={category}
-            onClick={() => (window.location.hash = category)}
-            className={`${activeTab === category ? "category-active" : ""}`}
-          >
-            {category}
-          </button>
-        ))}
+      <div className="category-slider-wrapper">
+        <div ref={swiperRef} className="swiper projects-column-category">
+          <div className="swiper-wrapper">
+            {categories.map(({ label, icon }, index) => (
+              <div key={label} className="swiper-slide">
+                <button
+                  className={
+                    activeTab === label ? "category-active row" : "row"
+                  }
+                  onClick={() => swiperInstance.current?.slideTo(index)}
+                >
+                  <Icon name={icon} />
+                  {label}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="projects-prev swiper-button-prev" />
+        <div className="projects-next swiper-button-next" />
       </div>
 
       <div className="projects-column-grid">
-        {filteredProjects.map((project, index) =>
-          project.activeLink ? (
-            <a
-              href={project.link}
-              target="_blank"
-              key={index}
-              className="fit-content"
-            >
-              <div
-                className={
-                  project.showWide
-                    ? "projects-column column wide-project"
-                    : "projects-column column"
-                }
+        {filteredProjects.map((project) => (
+          <div
+            key={project.title}
+            className={`projects-column column ${
+              project.showWide ? "wide-project" : ""
+            }`}
+          >
+            {project.activeLink ? (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                className="fit-content"
               >
-                <img src={project.image} alt={project.alt} className="" />
-                <div className="projects-column-title row">
-                  <span className="medium">{project.title}</span>
-                  <Icon name="path-link" />
-                </div>
-                <p className="light">{project.desc}</p>
-                <ul className="row">
-                  {project.tech.map((tech, techIndex) => (
-                    <li key={techIndex} className="tech">
-                      {tech}
-                    </li>
-                  ))}
-                  <li className={project.isPractice ? "concept-tag" : "remove"}>
-                    Concept
-                  </li>
-                </ul>
-              </div>
-            </a>
-          ) : (
-            <div
-              key={index}
-              className={
-                project.showWide
-                  ? "projects-column column wide-project"
-                  : "projects-column column"
-              }
-            >
-              <img src={project.image} alt={project.alt} className="" />
-              <div className="projects-column-title row">
-                <span className="medium">{project.title}</span>
-              </div>
-              <p className="light">{project.desc}</p>
-              <ul className="row">
-                {project.tech.map((tech, techIndex) => (
-                  <li key={techIndex} className="tech">
-                    {tech}
-                  </li>
-                ))}
-                <li className={project.isPractice ? "concept-tag" : "remove"}>
-                  Concept
-                </li>
-              </ul>
-            </div>
-          )
-        )}
+                <ProjectContent project={project} />
+              </a>
+            ) : (
+              <ProjectContent project={project} />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
+
+const ProjectContent = ({ project }: { project: Project }) => (
+  <>
+    <img src={project.image} alt={project.alt} />
+
+    <div className="projects-column-title row">
+      <span className="medium">{project.title}</span>
+      {project.activeLink && <Icon name="path-link" />}
+    </div>
+
+    <p className="light">{project.desc}</p>
+
+    <ul className="row">
+      {project.tech.map((tech) => (
+        <li key={tech} className="tech">
+          {tech}
+        </li>
+      ))}
+      {project.isPractice && <li className="concept-tag">Concept</li>}
+    </ul>
+  </>
+);
 
 export default ProjectsColumn;

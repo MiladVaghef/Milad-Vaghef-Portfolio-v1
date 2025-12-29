@@ -1,54 +1,151 @@
 .projects-column-container {
+  display: flex;
+  flex-direction: column;
   gap: 30px;
   align-items: center;
-  height: inherit;
+  width: 100%;
+  height: 100%;
+
   @include device("tablet") {
     margin-bottom: 80px;
-    margin-top: 60px;
+    margin-top: 30px;
   }
-  .projects-column-category {
-    justify-content: center;
-    width: 100%;
-    gap: 4%;
-    @include device("mobile") {
-      gap: 7%;
-    }
-    @media (max-width: 315px) {
-      gap: 12%;
-    }
-    .category-active {
-      color: $primary-color;
-      &::after {
-        width: 100%;
-      }
-    }
-    button {
-      font-size: 16px;
-      background-color: unset;
-      border: unset;
-      padding: 10px;
-      cursor: pointer;
+
+  .swiper-button-disabled {
+    opacity: 0.3 !important;
+  }
+
+  /* 1. THE SLIDER WRAPPER */
+  .category-slider-wrapper {
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+
+    /* 2. THE SWIPER CONTAINER WITH FADE MASK */
+    .projects-column-category {
+      width: 100%;
+      overflow: hidden;
       position: relative;
-      transition: all 0.3s ease-in-out;
-      @include device("mobile") {
+      padding: 10px 0;
+      max-width: 85vw;
+
+      // The Magic: Linear Gradient Mask
+      // Fades from transparent (0%) to solid black (20% to 80%) back to transparent (100%)
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 20%,
+        black 80%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 20%,
+        black 80%,
+        transparent 100%
+      );
+
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      .swiper-slide {
+        width: auto; // Required for slidesPerView: "auto"
+        display: flex;
+        justify-content: center;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+
+        // Peek styling: Non-active slides are faded
+        opacity: 0.3;
+        transform: scale(0.9);
+
+        &.swiper-slide-active {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      button {
         font-size: 14px;
-      }
-      &::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: -1px;
-        width: 0;
-        height: 2px;
-        transition: width 0.3s ease-in-out;
-        background-color: $primary-color;
-        transform: translateX(-50%);
-      }
-      &:hover {
-        color: $primary-color;
+        background: transparent;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        white-space: nowrap;
+        color: $text-color;
+        position: relative;
+        transition: color 0.3s ease;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        @include device("mobile") {
+          font-size: 14px;
+        }
+
+        &:hover {
+          color: $primary-color;
+        }
+
+        &.category-active {
+          color: $primary-color;
+          &::after {
+            width: 90%; // Underline width
+          }
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          width: 0;
+          height: 2px;
+          background-color: $primary-color;
+          transform: translateX(-50%);
+          transition: width 0.3s ease-in-out;
+        }
+        svg {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
+
+    /* 3. NAVIGATION BUTTONS */
+    .projects-prev,
+    .projects-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: $primary-color;
+      z-index: 20;
+      margin: 0;
+
+      &::after {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      &.swiper-button-disabled {
+        opacity: 0.1;
+      }
+    }
+
+    .projects-prev {
+      left: 0;
+    }
+    .projects-next {
+      right: 0;
+    }
   }
+
+  /* 4. PROJECTS GRID (Your existing logic) */
   .projects-column-grid {
     column-count: 2;
     column-gap: 4%;
@@ -56,112 +153,103 @@
     width: 95%;
     overflow-y: auto;
     overflow-x: hidden;
-    &::-webkit-scrollbar {
-      width: 0.3vw;
-      max-width: 7px;
-    }
+    min-height: 0;
 
-    /* Track */
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
     &::-webkit-scrollbar-track {
       background: transparent;
-      border-radius: 20px;
-      transition: all 0.3s ease-in;
     }
-
-    /* Handle */
     &::-webkit-scrollbar-thumb {
       background: $secondary-color;
       border-radius: 20px;
     }
+
     @include device("tablet") {
       padding: 0px;
       padding-bottom: 180px;
       width: 100%;
       &::-webkit-scrollbar {
-        width: 0vw;
-      }
-      /* Track */
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      /* Handle */
-      &::-webkit-scrollbar-thumb {
-        background: transparent;
+        width: 0;
       }
     }
+
     @include device("mobile") {
-      grid-template-columns: 1fr;
+      column-count: 1;
       gap: 40px;
-      columns: 1;
     }
 
     .projects-column {
       color: $text-color;
+      display: flex;
+      flex-direction: column;
       gap: 15px;
-      padding: 5px;
       margin-bottom: 35px;
       break-inside: avoid;
+      a {
+        color: $text-color;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 35px;
+        break-inside: avoid;
+        // Hover effect for the project cards
+        &:hover {
+          .projects-column-title {
+            color: $primary-color;
+            svg {
+              transform: translate(3px, -3px);
+              path {
+                stroke: $primary-color;
+              }
+            }
+          }
+        }
+      }
+
       img {
         width: 100%;
         margin-bottom: 5px;
-        box-shadow: 0px 0px 4px 0px #00000047;
+        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
         border-radius: 5px;
       }
     }
+
     .wide-project {
       column-span: all;
       width: 100%;
-      break-inside: avoid;
     }
+
     .projects-column-title {
-      transition: all 0.15s ease-in-out;
+      display: flex;
       justify-content: start;
       align-items: center;
       gap: 12px;
-      @include device("laptop") {
-        font-size: 15px;
-      }
+      transition: color 0.2s ease;
+
       svg {
-        z-index: -1;
-        transition: all 0.15s ease-in-out;
         width: 9px;
         height: 9px;
-        transform: translateX(-0px) translateY(0px);
+        transition: transform 0.2s ease;
         path {
-          transition: all 0.15s ease-in-out;
           stroke: $text-color;
         }
       }
     }
+
     p {
       margin: 0;
       font-size: 14px;
-      @include device("laptop") {
-        font-size: 12px;
-      }
     }
-    ul {
-      padding: 0;
-      margin: 0;
-      gap: 7px;
-      margin-top: 5px;
-      flex-wrap: wrap;
-    }
-  }
-}
 
-a .projects-column:hover {
-  .projects-column-title {
-    color: $primary-color;
-    transition: all 0.15s ease-in-out;
-    svg {
-      transition: all 0.15s ease-in-out;
-      transform: translateX(3px) translateY(-3px);
-      path {
-        transition: all 0.15s ease-in-out;
-        stroke: $primary-color;
-      }
+    ul {
+      display: flex;
+      padding: 0;
+      margin: 5px 0 0 0;
+      gap: 7px;
+      flex-wrap: wrap;
+      list-style: none;
     }
   }
 }

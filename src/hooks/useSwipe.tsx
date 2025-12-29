@@ -17,6 +17,7 @@ const useSwipe = () => {
   let touchStartX = 0;
   let touchStartY = 0;
   let touchStartTime = 0;
+  let ignoreSwipe = false;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 850);
@@ -27,6 +28,16 @@ const useSwipe = () => {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
+
+    // Check if the touch started inside the slider
+    const target = e.target as HTMLElement;
+    if (target.closest(".category-slider-wrapper")) {
+      ignoreSwipe = true;
+      return;
+    } else {
+      ignoreSwipe = false;
+    }
+
     const touch = e.targetTouches[0];
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
@@ -34,7 +45,7 @@ const useSwipe = () => {
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isMobile) return;
+    if (!isMobile || ignoreSwipe) return;
 
     const touch = e.changedTouches[0];
     const deltaX = touchStartX - touch.clientX;
