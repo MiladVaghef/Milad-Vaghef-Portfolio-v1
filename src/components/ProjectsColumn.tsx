@@ -33,15 +33,15 @@ const ProjectsColumn = () => {
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
 
-  const [activeTab, setActiveTab] = useState<string>(categories[0].label);
+  const [activeTab, setActiveTab] = useState(categories[0].label);
 
+  // Sync URL hash → swiper
   useEffect(() => {
     const hash = decodeURIComponent(location.hash.replace("#", ""));
     const index = categories.findIndex((c) => c.label === hash);
 
-    if (index !== -1) {
-      setActiveTab(categories[index].label);
-      swiperInstance.current?.slideTo(index);
+    if (index !== -1 && swiperInstance.current) {
+      swiperInstance.current.slideTo(index);
     }
   }, [location.hash]);
 
@@ -52,8 +52,8 @@ const ProjectsColumn = () => {
       modules: [Navigation],
       slidesPerView: "auto",
       centeredSlides: true,
-      spaceBetween: 0,
       grabCursor: true,
+      spaceBetween: 0,
       navigation: {
         nextEl: ".projects-next",
         prevEl: ".projects-prev",
@@ -88,17 +88,16 @@ const ProjectsColumn = () => {
       <div className="category-slider-wrapper">
         <div ref={swiperRef} className="swiper projects-column-category">
           <div className="swiper-wrapper">
-            {categories.map(({ label, icon }, index) => (
+            {categories.map(({ label, icon }) => (
               <div key={label} className="swiper-slide">
-                <button
-                  className={
-                    activeTab === label ? "category-active row" : "row"
-                  }
-                  onClick={() => swiperInstance.current?.slideTo(index)}
+                <div
+                  className={`category-slide row ${
+                    activeTab === label ? "category-active" : ""
+                  }`}
                 >
                   <Icon name={icon} />
-                  {label}
-                </button>
+                  <span>{label}</span>
+                </div>
               </div>
             ))}
           </div>
