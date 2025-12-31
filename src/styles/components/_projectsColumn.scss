@@ -23,6 +23,10 @@
     align-items: center;
 
     /* 2. THE SWIPER CONTAINER WITH FADE MASK */
+    .swiper-button-prev svg {
+      transform: rotate(180deg);
+    }
+
     .projects-column-category {
       width: 100%;
       overflow: hidden;
