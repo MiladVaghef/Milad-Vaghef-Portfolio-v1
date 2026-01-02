@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Icon from "./Icon";
 
 interface DataProps {
@@ -21,15 +22,28 @@ const ProjectsRow = ({
   desc,
   tech,
 }: DataProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const content = (
     <div className="projects-row">
-      <img src={image} alt={alt} />
+      <div className={`projects-row-image ${imageLoaded ? "loaded" : ""}`}>
+        <img
+          src={image}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+        />
+      </div>
+
       <div className="column">
         <div className="projects-row-title row">
           <span>{title}</span>
           {activeLink && <Icon name="path-link" />}
         </div>
+
         <p className="light">{desc}</p>
+
         <ul className="row">
           {tech.map((tech, index) => (
             <li className="tech" key={index}>

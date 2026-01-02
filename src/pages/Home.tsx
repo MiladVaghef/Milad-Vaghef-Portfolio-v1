@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import Icon from "../components/Icon";
 import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
@@ -20,7 +20,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 100 }, (_, i) => i * 0.01);
 
-  // Biography Section
   const { ref: bioRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
@@ -31,7 +30,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
     },
   });
 
-  // Projects Section
   const { ref: projectsRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
@@ -42,7 +40,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
     },
   });
 
-  // Work History Section
   const { ref: workRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
@@ -56,7 +53,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
   return (
     <>
       <div id="home" {...swipeHandlers} className="allow-vertical-pan column">
-        {" "}
         <section id="introduction">
           <h1>Milad Vaghef</h1>
           <h2 className="column">
@@ -73,14 +69,14 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </a>
             <a href="https://wa.me/989017867178" target="_blank">
               <Icon name="whatsapp" />
-            </a>{" "}
+            </a>
             <a href="http://instagram.com/_u/miladvaghef" target="_blank">
               <Icon name="instagram" />
             </a>
           </div>
         </section>
+
         <div id="home-holder" className="column">
-          {/* About Section */}
           <div id="biography" className="column" ref={bioRef}>
             <div className="sticky-title">
               <h3>About</h3>
@@ -112,28 +108,18 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </p>
           </div>
 
-          {/* Projects Section */}
           <div id="home-row-projects" className="column" ref={projectsRef}>
             <div className="sticky-title">
               <h3>Projects</h3>
             </div>
-            {limitedProjects.map((project, rowprojectslazy) => (
-              <Suspense
-                key={rowprojectslazy}
-                fallback={
-                  <div className="row-projects-lazy row">
-                    <div className="lazy-animation"></div>
-                    <span className="lazy-animation"></span>
-                  </div>
-                }
-              >
-                <ProjectsRow {...project} />
-              </Suspense>
+
+            {limitedProjects.map((project) => (
+              <ProjectsRow {...project} />
             ))}
 
             <div id="all-projects-link" className="row semi-bold">
               <button
-                onClick={() => navigateTo("/projects", "left")} // ✅ swipe right transition
+                onClick={() => navigateTo("/projects", "left")}
                 className="link-button"
               >
                 <span>View Full Project</span>
@@ -142,7 +128,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </div>
           </div>
 
-          {/* Work History Section */}
           <div id="home-work-history" className="column-reverse" ref={workRef}>
             {workHistoryData.map((workData, index) => (
               <Suspense
