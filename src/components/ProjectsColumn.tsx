@@ -12,6 +12,8 @@ export interface Project {
   title: string;
   category: string;
   image: string;
+  width: number;
+  height: number;
   alt: string;
   desc: string;
   tech: string[];
@@ -39,7 +41,6 @@ const ProjectsColumn = () => {
   useEffect(() => {
     const hash = decodeURIComponent(location.hash.replace("#", ""));
     const index = categories.findIndex((c) => c.label === hash);
-
     if (index !== -1 && swiperInstance.current) {
       swiperInstance.current.slideTo(index);
     }
@@ -62,7 +63,6 @@ const ProjectsColumn = () => {
         slideChange(swiper) {
           const category = categories[swiper.activeIndex];
           if (!category) return;
-
           setActiveTab(category.label);
           window.history.replaceState(
             null,
@@ -134,26 +134,44 @@ const ProjectsColumn = () => {
   );
 };
 
-const ProjectContent = ({ project }: { project: Project }) => (
-  <>
-    <img src={project.image} alt={project.alt} />
+const ProjectContent = ({ project }: { project: Project }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-    <div className="projects-column-title row">
-      <span className="medium">{project.title}</span>
-      {project.activeLink && <Icon name="path-link" />}
-    </div>
+  // calculate aspect ratio
+  const aspectRatio = project.height / project.width;
 
-    <p className="light">{project.desc}</p>
+  return (
+    <>
+      <div
+        className={`image-wrapper ${imageLoaded ? "loaded" : ""}`}
+        style={{ "--aspect-ratio": aspectRatio } as React.CSSProperties}
+      >
+        <img
+          src={project.image}
+          alt={project.alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+        />
+      </div>
 
-    <ul className="row">
-      {project.tech.map((tech) => (
-        <li key={tech} className="tech">
-          {tech}
-        </li>
-      ))}
-      {project.isPractice && <li className="concept-tag">Concept</li>}
-    </ul>
-  </>
-);
+      <div className="projects-column-title row">
+        <span className="medium">{project.title}</span>
+        {project.activeLink && <Icon name="path-link" />}
+      </div>
+
+      <p className="light">{project.desc}</p>
+
+      <ul className="row">
+        {project.tech.map((tech) => (
+          <li key={tech} className="tech">
+            {tech}
+          </li>
+        ))}
+        {project.isPractice && <li className="concept-tag">Concept</li>}
+      </ul>
+    </>
+  );
+};
 
 export default ProjectsColumn;

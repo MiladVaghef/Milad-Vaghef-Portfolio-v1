@@ -10,6 +10,8 @@ export interface Project {
   category: string;
   activeLink: boolean;
   image: string;
+  width: number;
+  height: number;
   alt: string;
   title: string;
   link: string;
@@ -23,6 +25,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "WordPress",
     activeLink: true,
+    width: 1481,
+    height: 833,
     link: "https://customade.ir",
     image: customadeLanding,
     alt: "Customade Landing",
@@ -35,6 +39,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "Figma",
     activeLink: false,
+    width: 1280,
+    height: 720,
     link: "#",
     image: bushehrKhormaLanding,
     alt: "Bushehr Khorma Landing",
@@ -47,6 +53,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "Figma",
     activeLink: false,
+    width: 1920,
+    height: 1080,
     link: "#",
     image: cyberWorldLanding,
     alt: "Milad Vaghef Landing",
@@ -59,6 +67,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "Front-End",
     activeLink: true,
+    width: 1355,
+    height: 762,
     link: "https://github.com/MiladVaghef/Netflix-Login-Concept",
     image: netflixLoginPage,
     alt: "Netflix Login Page",
@@ -71,6 +81,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "Figma",
     activeLink: false,
+    width: 1481,
+    height: 833,
     link: "#",
     image: customadeLanding,
     alt: "Customade Landing",
@@ -83,6 +95,8 @@ export const projectsData: Project[] = [
     showWide: true,
     category: "Graphic Design",
     activeLink: false,
+    width: 3628,
+    height: 1711,
     link: "#",
     image: bmwI8magazine,
     alt: "BMW i8 Magazine",
@@ -95,6 +109,8 @@ export const projectsData: Project[] = [
     showWide: false,
     category: "Graphic Design",
     activeLink: false,
+    width: 512,
+    height: 911,
     link: "#",
     image: bloodPressurePoster,
     alt: "ErfanKala Blood Pressure Poster",
