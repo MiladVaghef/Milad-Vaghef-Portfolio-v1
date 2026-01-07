@@ -4,6 +4,7 @@
   flex-direction: row;
   color: $text-color;
   width: fit-content;
+  padding: 3px;
 
   @include device("mobile") {
     flex-direction: column;
