@@ -63,7 +63,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             I make modern and well-structured websites and friendly user
             interfaces.
           </p>
-          <div id="intro-icons" className="row">
+          {/* <div id="intro-icons" className="row">
             <a href="https://t.me/miladvaghef" target="_blank">
               <Icon name="telegram" />
             </a>
@@ -73,7 +73,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <a href="http://instagram.com/_u/miladvaghef" target="_blank">
               <Icon name="instagram" />
             </a>
-          </div>
+          </div> */}
         </section>
 
         <div id="home-holder" className="column">
