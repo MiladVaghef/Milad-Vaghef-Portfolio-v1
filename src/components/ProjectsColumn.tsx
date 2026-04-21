@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { projectsData } from "../data/projects";
 import Icon, { type IconType } from "./Icon";
@@ -35,16 +35,19 @@ const ProjectsColumn = () => {
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
 
-  const [activeTab, setActiveTab] = useState(categories[0].label);
+  const currentHash = decodeURIComponent(location.hash.replace("#", ""));
 
-  // Sync URL hash → swiper
+  const activeTab =
+    categories.find((c) => c.label === currentHash)?.label ||
+    categories[0].label;
+
   useEffect(() => {
-    const hash = decodeURIComponent(location.hash.replace("#", ""));
-    const index = categories.findIndex((c) => c.label === hash);
+    const index = categories.findIndex((c) => c.label === activeTab);
+
     if (index !== -1 && swiperInstance.current) {
       swiperInstance.current.slideTo(index);
     }
-  }, [location.hash]);
+  }, [activeTab]);
 
   useEffect(() => {
     if (!swiperRef.current) return;
@@ -63,12 +66,8 @@ const ProjectsColumn = () => {
         slideChange(swiper) {
           const category = categories[swiper.activeIndex];
           if (!category) return;
-          setActiveTab(category.label);
-          window.history.replaceState(
-            null,
-            "",
-            `#${encodeURIComponent(category.label)}`
-          );
+
+          window.location.hash = encodeURIComponent(category.label);
         },
       },
     });

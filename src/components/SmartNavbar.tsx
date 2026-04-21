@@ -47,7 +47,9 @@ const SmartNavbar = ({ names, links, inViewSections }: SmartNavbarProps) => {
               onClick={(e) => {
                 if (isProjectsPage) {
                   e.preventDefault();
-                  window.location.hash = link.replace("#", "");
+                  window.location.hash = decodeURIComponent(
+                    link.replace("#", "")
+                  );
                 }
               }}
             >
