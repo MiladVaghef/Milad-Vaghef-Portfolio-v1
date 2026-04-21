@@ -54,7 +54,7 @@ a {
 }
 
 #container {
-  height: 90vh;
+  height: calc(100vh - 90px);
   flex-direction: row;
   display: flex;
   @include device("tablet") {
