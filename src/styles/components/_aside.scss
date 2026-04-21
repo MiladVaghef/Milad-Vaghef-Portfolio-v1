@@ -4,14 +4,15 @@ aside {
   width: 30%;
   padding-top: 50px;
   padding-bottom: 50px;
-  gap: 100px;
   color: $text-color;
+  overflow: hidden;
   @include device("tablet") {
     gap: 0px;
     width: 100%;
     padding-top: 60px;
   }
   section {
+    margin-bottom: 10vh;
     h1 {
       margin: 0;
       font-size: 36px;
