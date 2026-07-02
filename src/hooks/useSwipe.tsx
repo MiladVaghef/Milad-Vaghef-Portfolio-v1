@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigation } from "../hooks/useNavigation";
 
@@ -7,17 +7,17 @@ const useSwipe = () => {
   const location = useLocation();
   const { navigateTo } = useNavigation();
 
-  const routes = ["/", "/projects", "/contact-me"];
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const touchStartTimeRef = useRef(0);
+  const ignoreSwipeRef = useRef(false);
+
+  const routes = ["/home", "/projects", "/contact-me"];
   const currentIndex = routes.indexOf(location.pathname);
 
   const minSwipeDistance = 50;
   const maxTouchDuration = 700;
   const maxVerticalDeviation = 100;
-
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchStartTime = 0;
-  let ignoreSwipe = false;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 850);
@@ -29,28 +29,30 @@ const useSwipe = () => {
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
 
-    // Check if the touch started inside the slider
     const target = e.target as HTMLElement;
-    if (target.closest(".category-slider-wrapper")) {
-      ignoreSwipe = true;
+
+    // ✅ use generic blocker
+    if (target.closest("[data-no-swipe]")) {
+      ignoreSwipeRef.current = true;
       return;
-    } else {
-      ignoreSwipe = false;
     }
 
+    ignoreSwipeRef.current = false;
+
     const touch = e.targetTouches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-    touchStartTime = Date.now();
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    touchStartTimeRef.current = Date.now();
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isMobile || ignoreSwipe) return;
+    if (!isMobile || ignoreSwipeRef.current) return;
+    if (currentIndex === -1) return;
 
     const touch = e.changedTouches[0];
-    const deltaX = touchStartX - touch.clientX;
-    const deltaY = touchStartY - touch.clientY;
-    const timeElapsed = Date.now() - touchStartTime;
+    const deltaX = touchStartXRef.current - touch.clientX;
+    const deltaY = touchStartYRef.current - touch.clientY;
+    const timeElapsed = Date.now() - touchStartTimeRef.current;
 
     const absDeltaX = Math.abs(deltaX);
     const absDeltaY = Math.abs(deltaY);
@@ -63,11 +65,11 @@ const useSwipe = () => {
     if (!isHorizontalSwipe || !isWithinVerticalLimit || !isQuickEnough) return;
 
     if (deltaX > 0) {
-      const nextIndex = (currentIndex + 1) % routes.length;
+      const nextIndex =
+        currentIndex + 1 >= routes.length ? currentIndex : currentIndex + 1;
       navigateTo(routes[nextIndex], "left");
     } else {
-      const prevIndex =
-        currentIndex - 1 < 0 ? routes.length - 1 : currentIndex - 1;
+      const prevIndex = currentIndex - 1 < 0 ? currentIndex : currentIndex - 1;
       navigateTo(routes[prevIndex], "right");
     }
   };

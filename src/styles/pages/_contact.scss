@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 60px;
-  justify-content: center;
   align-items: center;
   height: inherit;
   @include device("mobile") {
@@ -18,6 +17,8 @@
     gap: 35px;
     overflow-y: auto;
     overflow-x: hidden;
+    touch-action: pan-y;
+
     &::-webkit-scrollbar {
       width: 0.3vw;
       max-width: 7px;

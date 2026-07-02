@@ -1,7 +1,11 @@
-import { lazy } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { lazy, useState, useEffect, useRef, useMemo } from "react";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
 import { useNavigation } from "./hooks/useNavigation";
@@ -11,109 +15,256 @@ const Projects = lazy(() => import("./pages/Projects"));
 const Contact = lazy(() => import("./pages/Contact"));
 
 interface PathRoutesProps {
-  setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
+  setInViewSections: React.Dispatch<
+    React.SetStateAction<InViewSections>
+  >;
 }
 
-export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
+export const PathRoutes = ({
+  setInViewSections,
+}: PathRoutesProps) => {
   const location = useLocation();
-  const { direction } = useNavigation();
   const swipeHandlers = useSwipe();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 850);
-  const hasMounted = useRef(false);
+  const { direction, navigateTo } = useNavigation();
 
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth < 1024
+  );
+
+  const dragX = useRef(0);
+
+  const isDraggingFromNoSwipeZone =
+    useRef(false);
+  const [isDragEnabled, setIsDragEnabled] =
+    useState(true);
+
+  const MIN_SWIPE = 80;
+
+  const routes = [
+    "/home",
+    "/projects",
+    "/contact-me",
+  ];
+
+  const currentIndex = routes.indexOf(
+    location.pathname
+  );
+
+  // responsive
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 850);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const handleResize = () =>
+      setIsMobile(window.innerWidth < 1024);
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
   }, []);
 
-  const pageVariants = isMobile
-    ? {
-        initial: (dir: string) =>
-          hasMounted.current
-            ? { x: dir === "left" ? "100%" : "-100%", opacity: 0 }
-            : { x: 0, opacity: 1 },
-        animate: {
-          x: 0,
-          opacity: 1,
-          transition: { duration: 0.15 },
-        },
-        exit: (dir: string) => ({
-          x: dir === "left" ? "-100%" : "100%",
-          opacity: 0,
-          transition: { duration: 0.15 },
-        }),
-      }
-    : {
-        initial: { x: 0, opacity: 1 },
-        animate: { x: 0, opacity: 1 },
-        exit: { x: 0, opacity: 1 },
-      };
+  // detect where drag starts
+  const handlePointerDown = (
+    e: React.PointerEvent
+  ) => {
+    const target = e.target as HTMLElement;
 
-  useEffect(() => {
-    hasMounted.current = true;
-  }, []);
+    if (target.closest("[data-no-swipe]")) {
+      isDraggingFromNoSwipeZone.current = true;
+      setIsDragEnabled(false);
+    } else {
+      isDraggingFromNoSwipeZone.current =
+        false;
+      setIsDragEnabled(true);
+    }
+  };
+
+  // drag handler
+  const handleDrag = (
+    _e: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
+    dragX.current = info.offset.x;
+  };
+
+  // drag end
+  const handleDragEnd = () => {
+    if (!isMobile) return;
+
+    if (isDraggingFromNoSwipeZone.current) {
+      dragX.current = 0;
+      setIsDragEnabled(true);
+      return;
+    }
+
+    const offset = dragX.current;
+
+    if (Math.abs(offset) < MIN_SWIPE) {
+      dragX.current = 0;
+      setIsDragEnabled(true);
+      return;
+    }
+
+    if (currentIndex === -1) return;
+
+    if (offset > 0) {
+      const targetPath =
+        routes[currentIndex - 1] ??
+        routes[currentIndex];
+
+      navigateTo(targetPath, "right");
+    } else {
+      const targetPath =
+        routes[currentIndex + 1] ??
+        routes[currentIndex];
+
+      navigateTo(targetPath, "left");
+    }
+
+    dragX.current = 0;
+    setIsDragEnabled(true);
+  };
+
+  const pageVariants = useMemo(
+    () =>
+      isMobile
+        ? {
+            initial: (
+              dir: "left" | "right"
+            ) => ({
+              x:
+                dir === "left"
+                  ? "100%"
+                  : "-100%",
+              opacity: 0,
+            }),
+
+            animate: {
+              x: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.18,
+                ease: [0.22, 1, 0.36, 1],
+              },
+            },
+
+            exit: (
+              dir: "left" | "right"
+            ) => ({
+              x:
+                dir === "left"
+                  ? "-100%"
+                  : "100%",
+              opacity: 0,
+              transition: {
+                duration: 0.18,
+                ease: [0.22, 1, 0.36, 1],
+              },
+            }),
+          }
+        : {
+            initial: {
+              x: 0,
+              opacity: 1,
+            },
+            animate: {
+              x: 0,
+              opacity: 1,
+            },
+            exit: {
+              x: 0,
+              opacity: 1,
+            },
+          },
+    [isMobile]
+  );
+
+  const pageProps = {
+    drag:
+      isMobile && isDragEnabled
+        ? ("x" as const)
+        : false,
+    onPointerDown: handlePointerDown,
+    dragElastic: 0.18,
+    dragConstraints: {
+      left: 0,
+      right: 0,
+    },
+    onDrag: handleDrag,
+    onDragEnd: handleDragEnd,
+    style: {
+      height: "100%",
+      width: "100%",
+    },
+    custom: direction,
+    variants: pageVariants,
+    initial: "initial" as const,
+    animate: "animate" as const,
+    exit: "exit" as const,
+  };
 
   return (
-    <main className="column" {...(isMobile ? swipeHandlers : {})}>
-      <AnimatePresence mode="wait" custom={direction}>
-        <Routes location={location} key={location.pathname}>
+    <main
+      className="column"
+      {...(isMobile
+        ? swipeHandlers
+        : {})}
+    >
+      <AnimatePresence
+        initial={false}
+        mode={isMobile ? "wait" : "sync"}
+        custom={direction}
+      >
+        <Routes
+          location={location}
+          key={location.pathname}
+        >
           <Route
             path="/"
             element={
-              <motion.div
-                custom={direction}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                style={{ height: "100%" }}
-              >
-                <Home setInViewSections={setInViewSections} />
-              </motion.div>
+              <Navigate
+                to="/home"
+                replace
+              />
             }
           />
+
           <Route
             path="/home"
             element={
               <motion.div
-                custom={direction}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                style={{ height: "100%" }}
+                {...pageProps}
               >
-                <Home setInViewSections={setInViewSections} />
+                <Home
+                  setInViewSections={
+                    setInViewSections
+                  }
+                />
               </motion.div>
             }
           />
+
           <Route
             path="/projects"
             element={
               <motion.div
-                custom={direction}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                style={{ height: "100%" }}
+                {...pageProps}
               >
                 <Projects />
               </motion.div>
             }
           />
+
           <Route
             path="/contact-me"
             element={
               <motion.div
-                custom={direction}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                style={{ height: "100%" }}
+                {...pageProps}
               >
                 <Contact />
               </motion.div>

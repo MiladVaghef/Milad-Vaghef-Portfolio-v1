@@ -1,6 +1,6 @@
 #projects {
   padding-bottom: 50px;
-  height: inherit;
+  height: 100%;
   @include device("tablet") {
     padding-bottom: 60px;
   }

@@ -84,7 +84,7 @@ const ProjectsColumn = () => {
 
   return (
     <div className="column projects-column-container">
-      <div className="category-slider-wrapper">
+      <div className="category-slider-wrapper" data-no-swipe>
         <div ref={swiperRef} className="swiper projects-column-category">
           <div className="swiper-wrapper">
             {categories.map(({ label, icon }) => (

@@ -22,26 +22,25 @@ const Footer = () => {
   const location = useLocation();
   const { navigateTo } = useNavigation();
   const isMobile = useResponsive(668);
-  // Define your routes and labels here
+
   const routeLabels: Record<string, string> = {
-    "/": "Home",
+    "/home": "Home",
     "/projects": "Projects",
     "/contact-me": "Contact",
   };
 
   const routes = Object.keys(routeLabels);
 
-  const getDirection = (targetPath: string): "left" | "right" | null => {
+  // ✅ Always returns valid direction (no null)
+  const getDirection = (targetPath: string): "left" | "right" => {
     const currentIndex = routes.indexOf(location.pathname);
     const targetIndex = routes.indexOf(targetPath);
 
-    if (targetIndex > currentIndex) return "left";
-    if (targetIndex < currentIndex) return "right";
-    return null;
+    return targetIndex > currentIndex ? "left" : "right";
   };
 
   const routeIcons: Record<string, IconType> = {
-    "/": "home",
+    "/home": "home",
     "/projects": "grid",
     "/contact-me": "contact",
   };
@@ -51,29 +50,36 @@ const Footer = () => {
       <div id="footer-logo">
         <Logo />
       </div>
+
       <div id="footer-navbar">
         <nav>
           <ul>
             {routes.map((path) => (
               <li key={path}>
                 {isMobile ? (
-                  // 🔹 Mobile version
+                  // 🔹 Mobile
                   <button
                     className={`footer-link-mobile column ${
                       location.pathname === path ? "active-mobile" : ""
                     }`}
-                    onClick={() => navigateTo(path, getDirection(path))}
+                    onClick={() => {
+                      if (location.pathname === path) return; // 🚫 prevent same-route bug
+                      navigateTo(path, getDirection(path));
+                    }}
                   >
                     <Icon name={routeIcons[path]} />
                     <span>{routeLabels[path]}</span>
                   </button>
                 ) : (
-                  // 🔹 Desktop version
+                  // 🔹 Desktop
                   <button
                     className={`footer-link ${
                       location.pathname === path ? "active" : ""
                     }`}
-                    onClick={() => navigateTo(path, getDirection(path))}
+                    onClick={() => {
+                      if (location.pathname === path) return; // 🚫 prevent same-route bug
+                      navigateTo(path, getDirection(path));
+                    }}
                   >
                     {routeLabels[path]}
                   </button>
@@ -83,6 +89,7 @@ const Footer = () => {
           </ul>
         </nav>
       </div>
+
       <div id="footer-social-media">
         <a href="http://instagram.com/_u/miladvaghef" target="_blank">
           <Icon name="instagram" />
