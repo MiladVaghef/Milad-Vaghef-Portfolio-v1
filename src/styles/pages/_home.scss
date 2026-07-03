@@ -1,9 +1,14 @@
 #home {
   display: flex;
-  padding-right: 50px;
   overflow-y: auto;
   overflow-x: hidden;
   height: inherit;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  @include device("tablet") {
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+  }
   &::-webkit-scrollbar {
     width: 0.3vw;
     max-width: 7px;
@@ -103,12 +108,6 @@
       font-size: 15px;
       font-weight: 600;
     }
-  }
-  @include device("laptop") {
-    padding-right: unset;
-  }
-  @include device("tablet") {
-    justify-content: unset;
   }
   #home-holder {
     max-width: 900px;

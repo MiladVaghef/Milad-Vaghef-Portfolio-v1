@@ -45,12 +45,6 @@ a {
   justify-content: space-between;
   flex-direction: column;
   max-width: 1480px;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  @include device("tablet") {
-    padding-left: 1.3rem;
-    padding-right: 1.3rem;
-  }
 }
 
 #container {
