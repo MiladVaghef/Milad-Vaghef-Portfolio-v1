@@ -146,31 +146,32 @@
     #home-row-projects {
       gap: 40px;
       position: relative;
-      #all-projects-link {
-        margin-bottom: 40px;
-        button {
-          display: flex;
-          color: $text-color;
-          font-size: 14px;
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s ease-in-out;
-          align-items: center;
-          gap: 10px;
-          svg {
-            stroke: $text-color;
-          }
-          &:hover {
+    }
+    #all-projects-link {
+      margin-top: 30px;
+      margin-bottom: 40px;
+      button {
+        display: flex;
+        color: $text-color;
+        font-size: 14px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        align-items: center;
+        gap: 10px;
+        svg {
+          stroke: $text-color;
+        }
+        &:hover {
+          gap: 20px;
+          span {
             gap: 20px;
-            span {
-              gap: 20px;
-              transition: all 0.2s ease-in-out;
-              color: $primary-color;
-            }
-            svg {
-              stroke: $primary-color;
-            }
+            transition: all 0.2s ease-in-out;
+            color: $primary-color;
+          }
+          svg {
+            stroke: $primary-color;
           }
         }
       }

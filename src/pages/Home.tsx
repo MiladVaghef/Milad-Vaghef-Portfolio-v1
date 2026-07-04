@@ -108,12 +108,12 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </p>
           </div>
 
-          <div id="home-row-projects" className="column" ref={projectsRef}>
+          <div ref={projectsRef}>
             <div className="sticky-title">
               <h3>Projects</h3>
             </div>
 
-            <div className="home-mobile-padding">
+            <div id="home-row-projects" className="home-mobile-padding column">
             {limitedProjects.map((project) => (
               <ProjectsRow {...project} />
             ))}
