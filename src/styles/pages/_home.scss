@@ -93,15 +93,13 @@
     }
   }
   .sticky-title {
-    z-index: 2000;
+    z-index: 1000;
     width: 100%;
     position: sticky;
     top: 0;
     background-color: rgba(249, 249, 249, 0.842);
     backdrop-filter: blur(10px);
     display: none;
-    padding-left: 1.3rem;
-    padding-right: 1.3rem;
     @include device("tablet") {
       display: block;
     }
@@ -112,6 +110,8 @@
       padding: 20px 0;
       font-size: 15px;
       font-weight: 600;
+      padding-left: 1.3rem;
+      padding-right: 1.3rem;
     }
   }
   #home-holder {
