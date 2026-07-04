@@ -81,7 +81,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <div className="sticky-title">
               <h3>About</h3>
             </div>
-            <p>
+            <p className="home-mobile-padding">
               I'm a front-end web designer passionate about creating clean,
               visually engaging, and user-friendly digital experiences. I’m
               currently pursuing a degree in graphic design, where I gain
@@ -90,14 +90,14 @@ const Home = ({ setInViewSections }: HomeProps) => {
               of formal education and practical skills allows me to deliver
               polished and thoughtful designs.
             </p>
-            <p>
+            <p className="home-mobile-padding">
               With a year of dedicated web design training and a certified web
               designing background, I bring both technical expertise and
               creative vision to every project. I focus on crafting websites
               that balance aesthetics with functionality, ensuring users enjoy
               seamless, intuitive, and visually appealing experiences.
             </p>
-            <p>
+            <p className="home-mobile-padding">
               Based in Iran, I've collaborated on a variety of projects, from
               e-commerce platforms to custom digital experiences. I thrive on
               turning ideas into high-quality, innovative designs that resonate
@@ -113,11 +113,14 @@ const Home = ({ setInViewSections }: HomeProps) => {
               <h3>Projects</h3>
             </div>
 
+            <div className="home-mobile-padding">
             {limitedProjects.map((project) => (
               <ProjectsRow {...project} />
             ))}
+            </div>
 
-            <div id="all-projects-link" className="row semi-bold">
+
+            <div id="all-projects-link" className="row semi-bold home-mobile-padding">
               <button
                 onClick={() => navigateTo("/projects", "left")}
                 className="link-button"
@@ -128,8 +131,12 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </div>
           </div>
 
-          <div id="home-work-history" className="column-reverse" ref={workRef}>
-            {workHistoryData.map((workData, index) => (
+          <div ref={workRef}>
+          <div className="sticky-title">
+              <h3>Experience</h3>
+            </div>
+            <div className="home-mobile-padding column-reverse" id="home-work-history">
+              {workHistoryData.map((workData, index) => (
               <Suspense
                 key={index}
                 fallback={
@@ -142,9 +149,6 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 <WorkHistory {...workData} />
               </Suspense>
             ))}
-
-            <div className="sticky-title">
-              <h3>Experience</h3>
             </div>
           </div>
         </div>

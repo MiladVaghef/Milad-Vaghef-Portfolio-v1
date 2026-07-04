@@ -6,8 +6,8 @@
   padding-left: 3rem;
   padding-right: 3rem;
   @include device("tablet") {
-    padding-left: 1.3rem;
-    padding-right: 1.3rem;
+    padding-left: 0;
+    padding-right: 0;
   }
   &::-webkit-scrollbar {
     width: 0.3vw;
@@ -41,6 +41,8 @@
     }
   }
   #introduction {
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
     padding-top: 60px;
     padding-bottom: 70px;
     color: $text-color;
@@ -91,12 +93,15 @@
     }
   }
   .sticky-title {
+    z-index: 2000;
     width: 100%;
     position: sticky;
     top: 0;
     background-color: rgba(249, 249, 249, 0.842);
     backdrop-filter: blur(10px);
     display: none;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
     @include device("tablet") {
       display: block;
     }
@@ -171,8 +176,16 @@
       }
     }
     #home-work-history {
+      margin-top: 60px;
       position: relative;
       gap: 60px;
+    }
+  }
+
+  .home-mobile-padding {
+    @include device("mobile") {
+      padding-left: 1.3rem;
+      padding-right: 1.3rem;
     }
   }
 }
