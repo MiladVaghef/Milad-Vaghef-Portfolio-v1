@@ -7,10 +7,8 @@ aside {
   color: $text-color;
   overflow: hidden;
   padding-left: 3rem;
-  padding-right: 3rem;
   @include device("tablet") {
     padding-left: 1.3rem;
-    padding-right: 1.3rem;
   }
   @include device("tablet") {
     gap: 0px;
