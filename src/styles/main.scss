@@ -18,7 +18,7 @@
 }
 
 body {
-  background: $background-color;
+  background: #fcfdfc;
   min-height: 100vh;
   margin: 0;
   display: flex;
@@ -44,11 +44,10 @@ a {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  max-width: 1480px;
 }
 
 #container {
-  height: calc(100vh - 90px);
+  height: 100vh;
   flex-direction: row;
   display: flex;
   @include device("tablet") {
@@ -57,15 +56,36 @@ a {
   }
 }
 
+.page-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+    overflow-y: hidden;
+}
+
+.page-slider {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
 main {
-  margin-top: 50px;
   width: 70%;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
+  margin-top: 50px;
+  height: calc(100vh - 50px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
   @include device("tablet") {
     width: 100%;
-    margin-top: 0;
     height: 100vh;
+    margin-top: 0;
   }
 }

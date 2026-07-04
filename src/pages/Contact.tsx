@@ -1,12 +1,15 @@
 import { lazy, Suspense } from "react";
 import { socialMediaData } from "../data/socialMedia";
 import useSwipe from "../hooks/useSwipe";
+import PageLayout from "../components/PageLayout";
+
 
 const SocialMedia = lazy(() => import("../components/SocialMedia"));
 
 const Contact = () => {
   const swipeHandlers = useSwipe();
   return (
+    <PageLayout>
     <div id="contact" {...swipeHandlers} className="allow-vertical-pan">
       <div id="contact-box-holder">
         {" "}
@@ -27,6 +30,7 @@ const Contact = () => {
         as I can.
       </span>
     </div>
+    </PageLayout>
   );
 };
 

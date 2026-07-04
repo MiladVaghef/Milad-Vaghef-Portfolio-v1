@@ -2,7 +2,6 @@ import { useState } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import { PathRoutes } from "./PathRoutes";
-import Footer from "./components/Footer";
 import Aside from "./components/Aside";
 import { NavigationProvider } from "./hooks/useNavigation";
 import "./styles/main.scss";
@@ -29,8 +28,6 @@ const App = () => {
           <Aside inViewSections={inViewSections} />
           <PathRoutes setInViewSections={setInViewSections} />
         </div>
-
-        <Footer />
       </NavigationProvider>
     </Router>
   );

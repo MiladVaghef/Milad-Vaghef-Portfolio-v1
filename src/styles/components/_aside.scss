@@ -7,7 +7,10 @@ aside {
   color: $text-color;
   overflow: hidden;
   padding-left: 3rem;
-  @include device("tablet") {
+  background-color: #f8fafb;
+  border-right: 1px solid rgba(225, 225, 225, 0.369);
+  box-shadow: 4px 0px 20px 0px rgb(103 103 103 / 5%);
+    @include device("tablet") {
     padding-left: 1.3rem;
   }
   @include device("tablet") {

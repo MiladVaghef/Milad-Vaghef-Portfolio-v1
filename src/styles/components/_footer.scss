@@ -1,10 +1,16 @@
 footer {
-  min-height: 90px;
+    min-height: 90px;
+    width: 100%;
+    flex-shrink: 0;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 2000;
-  transform: translateX(0) translateY(0);
+  background-color: #fcfcfd;
+  border-top: 1px solid rgba(225, 225, 225, 0.369);
+  box-shadow: 4px 0px 20px 0px #67676712;
+  z-index: 1900;
   @include device("tablet") {
+    border-top: unset;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -24,6 +30,7 @@ footer {
 }
 
 #footer-logo {
+  margin-left: 3rem;
   width: 25%;
   display: flex;
   align-items: center;
@@ -155,6 +162,7 @@ footer {
 }
 
 #footer-social-media {
+  margin-right: 3rem;
   width: 25%;
   display: flex;
   justify-content: end;

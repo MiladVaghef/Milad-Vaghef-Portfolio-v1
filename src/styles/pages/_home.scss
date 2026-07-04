@@ -1,10 +1,11 @@
 #home {
   display: flex;
-  overflow-y: auto;
+  align-items: center;
   overflow-x: hidden;
-  height: inherit;
+  height: 100vh;
   padding-left: 3rem;
   padding-right: 3rem;
+  position: relative;
   @include device("tablet") {
     padding-left: 0;
     padding-right: 0;
@@ -41,6 +42,7 @@
     }
   }
   #introduction {
+    width: 100%;
     padding-left: 1.3rem;
     padding-right: 1.3rem;
     padding-top: 60px;
@@ -117,7 +119,7 @@
   #home-holder {
     max-width: 900px;
     gap: 60px;
-    padding-bottom: 60px;
+    padding-bottom: 190px;
 
     @include device("tablet") {
       padding-bottom: 130px;
@@ -184,7 +186,7 @@
   }
 
   .home-mobile-padding {
-    @include device("mobile") {
+    @include device("tablet") {
       padding-left: 1.3rem;
       padding-right: 1.3rem;
     }

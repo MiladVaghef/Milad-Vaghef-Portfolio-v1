@@ -6,6 +6,7 @@ import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
 import useSwipe from "../hooks/useSwipe";
 import { useNavigation } from "../hooks/useNavigation";
+import PageLayout from "../components/PageLayout";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -51,15 +52,15 @@ const Home = ({ setInViewSections }: HomeProps) => {
   });
 
   return (
-    <>
+    <PageLayout>
       <div id="home" {...swipeHandlers} className="allow-vertical-pan column">
-        <section id="introduction">
-          <h1>Milad Vaghef</h1>
-          <h2 className="column">
+        <section id="introduction" className="home-mobile-padding">
+          <h1 className="home-mobile-padding">Milad Vaghef</h1>
+          <h2 className="column home-mobile-padding">
             <span>Front-End Developer</span>
             <span>UI Designer</span>
           </h2>
-          <p>
+          <p className="home-mobile-padding">
             I make modern and well-structured websites and friendly user
             interfaces.
           </p>
@@ -153,7 +154,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
           </div>
         </div>
       </div>
-    </>
+    </PageLayout>
   );
 };
 

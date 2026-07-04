@@ -9,6 +9,7 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
 import { useNavigation } from "./hooks/useNavigation";
+import Footer from "./components/Footer";
 
 const Home = lazy(() => import("./pages/Home"));
 const Projects = lazy(() => import("./pages/Projects"));
@@ -209,69 +210,65 @@ export const PathRoutes = ({
   };
 
   return (
-    <main
-      className="column"
-      {...(isMobile
-        ? swipeHandlers
-        : {})}
-    >
-      <AnimatePresence
-        initial={false}
-        mode={isMobile ? "wait" : "sync"}
-        custom={direction}
+      <main
+        className="column"
+        {...(isMobile ? swipeHandlers : {})}
       >
-        <Routes
-          location={location}
-          key={location.pathname}
-        >
-          <Route
-            path="/"
-            element={
-              <Navigate
-                to="/home"
-                replace
+        <div className="page-slider">
+          <AnimatePresence
+            initial={false}
+            mode={isMobile ? "wait" : "sync"}
+            custom={direction}
+          >
+            <Routes
+              location={location}
+              key={location.pathname}
+            >
+              <Route
+                path="/"
+                element={
+                  <Navigate
+                    to="/home"
+                    replace
+                  />
+                }
               />
-            }
-          />
-
-          <Route
-            path="/home"
-            element={
-              <motion.div
-                {...pageProps}
-              >
-                <Home
-                  setInViewSections={
-                    setInViewSections
-                  }
-                />
-              </motion.div>
-            }
-          />
-
-          <Route
-            path="/projects"
-            element={
-              <motion.div
-                {...pageProps}
-              >
-                <Projects />
-              </motion.div>
-            }
-          />
-
-          <Route
-            path="/contact-me"
-            element={
-              <motion.div
-                {...pageProps}
-              >
-                <Contact />
-              </motion.div>
-            }
-          />
-        </Routes>
-      </AnimatePresence>
-    </main>
-  );
+    
+              <Route
+                path="/home"
+                element={
+                  <motion.div {...pageProps}>
+                    <Home
+                      setInViewSections={
+                        setInViewSections
+                      }
+                    />
+                  </motion.div>
+                }
+              />
+    
+              <Route
+                path="/projects"
+                element={
+                  <motion.div {...pageProps}>
+                    <Projects />
+                  </motion.div>
+                }
+              />
+    
+              <Route
+                path="/contact-me"
+                element={
+                  <motion.div {...pageProps}>
+                    <Contact />
+                  </motion.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </div>
+    
+        <Footer />
+      </main>
+    );
 };
