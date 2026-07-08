@@ -1,9 +1,10 @@
 @import "../responsive";
 
 aside {
-  width: 30%;
+  display: flex;
+  justify-content: space-between;  width: 30%;
   padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 30px;
   color: $text-color;
   overflow: hidden;
   padding-left: 3rem;
@@ -44,6 +45,25 @@ aside {
       }
       @include device("tablet") {
         max-width: 380px;
+      }
+    }
+  }
+  #aside-logo {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    @include device("tablet") {
+      padding-left: 35px;
+    }
+  
+    @include device("mobile") {
+      display: none;
+    }
+  
+    img {
+      width: 150px;
+      @include device("laptop") {
+        width: 125px;
       }
     }
   }

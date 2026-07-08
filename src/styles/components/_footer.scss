@@ -1,7 +1,7 @@
 footer {
-    min-height: 90px;
-    width: 100%;
-    flex-shrink: 0;
+  min-height: 90px;
+  width: 100%;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,27 +26,6 @@ footer {
     background-color: unset;
     justify-content: center;
     align-items: center;
-  }
-}
-
-#footer-logo {
-  margin-left: 3rem;
-  width: 25%;
-  display: flex;
-  align-items: center;
-  @include device("tablet") {
-    padding-left: 35px;
-  }
-
-  @include device("mobile") {
-    display: none;
-  }
-
-  img {
-    width: 150px;
-    @include device("laptop") {
-      width: 125px;
-    }
   }
 }
 
@@ -81,6 +60,7 @@ footer {
 
     ul {
       display: flex;
+      width: 18%;
       list-style-type: none;
       padding: 0;
       gap: 39%;
@@ -162,8 +142,8 @@ footer {
 }
 
 #footer-social-media {
-  margin-right: 3rem;
-  width: 25%;
+  position: absolute;
+  right: 25px;
   display: flex;
   justify-content: end;
   gap: 3%;

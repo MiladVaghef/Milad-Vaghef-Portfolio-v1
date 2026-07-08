@@ -3,6 +3,7 @@ import SmartNavbar from "./SmartNavbar";
 import { useEffect, useState } from "react";
 import { VALID_PATHS, ValidPath } from "../config/routes";
 import { InViewSections } from "../App";
+import Logo from "../components/Logo";
 
 interface AsideProps {
   inViewSections: InViewSections;
@@ -67,6 +68,7 @@ const Aside = ({ inViewSections }: AsideProps) => {
 
   return (
     <aside className={width < 1025 ? "remove" : "column"}>
+      <div>
       <section>
         <h1>Milad Vaghef</h1>
         <h2 className="column">
@@ -85,6 +87,11 @@ const Aside = ({ inViewSections }: AsideProps) => {
           links={SmartNavbarLinks}
           inViewSections={inViewSections}
         />
+      </div>
+      </div>
+
+      <div id="aside-logo">
+        <Logo />
       </div>
     </aside>
   );

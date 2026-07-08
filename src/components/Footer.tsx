@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { useNavigation } from "../hooks/useNavigation";
-import Logo from "../components/Logo";
 import Icon from "./Icon";
 import { useState, useEffect } from "react";
 import type { IconType } from "./Icon";
@@ -47,10 +46,6 @@ const Footer = () => {
 
   return (
     <footer className="row">
-      <div id="footer-logo">
-        <Logo />
-      </div>
-
       <div id="footer-navbar">
         <nav>
           <ul>
