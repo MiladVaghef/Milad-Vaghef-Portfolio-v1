@@ -89,11 +89,18 @@ const ProjectsColumn = () => {
           <div className="swiper-wrapper">
             {categories.map(({ label, icon }) => (
               <div key={label} className="swiper-slide">
-                <div
-                  className={`category-slide row ${
-                    activeTab === label ? "category-active" : ""
-                  }`}
-                >
+<div
+  className={`category-slide row ${
+    activeTab === label ? "category-active" : ""
+  }`}
+  onClick={() => {
+    const index = categories.findIndex(
+      (c) => c.label === label
+    );
+
+    swiperInstance.current?.slideTo(index);
+  }}
+>
                   <Icon name={icon} />
                   <span>{label}</span>
                 </div>
