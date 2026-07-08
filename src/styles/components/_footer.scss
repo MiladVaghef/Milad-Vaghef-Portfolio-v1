@@ -69,8 +69,13 @@ footer {
       position: relative;
       @include device("tablet") {
         justify-content: space-between;
-        width: 70%;
+        min-width: 320px;
+        width: 40%;
         gap: 0%;
+      }
+      @include device("mobile"){
+        min-width: unset;
+        width:75%;
       }
       li {
         display: flex;
@@ -147,12 +152,12 @@ footer {
   display: flex;
   justify-content: end;
   gap: 3%;
+
+
+
   @include device("tablet") {
-    padding-right: 35px;
-  }
-  @include device("mobile") {
     display: none;
-  }
+  } 
 
   svg {
     fill: $text-color;
