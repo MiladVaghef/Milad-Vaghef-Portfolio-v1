@@ -156,7 +156,6 @@
       }
     }
 
-    /* much closer now */
     .projects-prev {
       left: 0px;
       transform: translateY(-50%) rotate(180deg);
@@ -171,11 +170,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 35px 4%;
-    padding: 0px 30px 25px 0px;
+    padding: 10px 30px 25px 8px;
     width: 95%;
     min-height: 0;
     overflow-y: auto;
-    overflow-x: hidden;
     pointer-events: auto;
 
     touch-action: pan-y;
@@ -205,20 +203,22 @@
     }
 
     .projects-column {
+      border-radius: 13px;
+      background-color: white;
+      box-shadow: 0px 0px 16px 0px #0000000d;
       color: $text-color;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      margin-bottom: 0; /* Remove margin since grid-gap handles it */
+      gap: 6px;
+      margin-bottom: 0;
       break-inside: avoid;
-      padding: 5px;
 
       a {
         color: $text-color;
         display: flex;
         flex-direction: column;
-        gap: 15px;
-        margin-bottom: 0; /* Remove margin since grid-gap handles it */
+        gap: 6px;
+        margin-bottom: 0;
         break-inside: avoid;
         &:hover {
           .projects-column-title {
@@ -234,15 +234,17 @@
       }
 
       .image-wrapper {
+        overflow: hidden;
         width: 100%;
+        border-radius: 13px 13px 0 0;
         position: relative;
         overflow: hidden;
         background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
-        box-shadow: 0px 0px 5px 0px #cacaca;
-
+        box-shadow: 0px 4px 4px 0px #cacaca1c;
         &::before {
+
           content: "";
           display: block;
           padding-top: calc(var(--aspect-ratio) * 100%);
@@ -250,6 +252,7 @@
 
         img {
           position: absolute;
+
           top: 0;
           left: 0;
           width: 100%;
@@ -275,35 +278,39 @@
       width: 100%;
     }
 
-    .projects-column-title {
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      gap: 12px;
-      transition: color 0.2s ease;
-
-      svg {
-        width: 9px;
-        height: 9px;
-        transition: transform 0.2s ease;
-        path {
-          stroke: $text-color;
+    .details {
+      padding: 15px 20px 25px 20px;
+      gap: 10px;
+      .projects-column-title {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 12px;
+        transition: color 0.2s ease;
+  
+        svg {
+          width: 9px;
+          height: 9px;
+          transition: transform 0.2s ease;
+          path {
+            stroke: $text-color;
+          }
         }
       }
-    }
-
-    p {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    ul {
-      display: flex;
-      padding: 0;
-      margin: 5px 0 0 0;
-      gap: 7px;
-      flex-wrap: wrap;
-      list-style: none;
+  
+      p {
+        margin: 0;
+        font-size: 12px;
+      }
+  
+      ul {
+        display: flex;
+        padding: 0;
+        margin: 13px 0 0 0;
+        gap: 7px;
+        flex-wrap: wrap;
+        list-style: none;
+      }
     }
   }
 }

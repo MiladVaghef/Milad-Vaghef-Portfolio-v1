@@ -89,18 +89,18 @@ const ProjectsColumn = () => {
           <div className="swiper-wrapper">
             {categories.map(({ label, icon }) => (
               <div key={label} className="swiper-slide">
-<div
-  className={`category-slide row ${
-    activeTab === label ? "category-active" : ""
-  }`}
-  onClick={() => {
-    const index = categories.findIndex(
-      (c) => c.label === label
-    );
+                <div
+                  className={`category-slide row ${
+                    activeTab === label ? "category-active" : ""
+                  }`}
+                  onClick={() => {
+                    const index = categories.findIndex(
+                      (c) => c.label === label
+                    );
 
-    swiperInstance.current?.slideTo(index);
-  }}
->
+                    swiperInstance.current?.slideTo(index);
+                  }}
+                >
                   <Icon name={icon} />
                   <span>{label}</span>
                 </div>
@@ -126,7 +126,6 @@ const ProjectsColumn = () => {
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="fit-content"
               >
                 <ProjectContent project={project} />
               </a>
@@ -161,21 +160,23 @@ const ProjectContent = ({ project }: { project: Project }) => {
         />
       </div>
 
-      <div className="projects-column-title row">
-        <span className="medium">{project.title}</span>
-        {project.activeLink && <Icon name="path-link" />}
+      <div className="details column">
+        <div className="projects-column-title row">
+          <span className="medium">{project.title}</span>
+          {project.activeLink && <Icon name="path-link" />}
+        </div>
+
+        <p className="light">{project.desc}</p>
+
+        <ul className="row">
+          {project.tech.map((tech) => (
+            <li key={tech} className="tech">
+              {tech}
+            </li>
+          ))}
+          {project.isPractice && <li className="concept-tag">Concept</li>}
+        </ul>
       </div>
-
-      <p className="light">{project.desc}</p>
-
-      <ul className="row">
-        {project.tech.map((tech) => (
-          <li key={tech} className="tech">
-            {tech}
-          </li>
-        ))}
-        {project.isPractice && <li className="concept-tag">Concept</li>}
-      </ul>
     </>
   );
 };
