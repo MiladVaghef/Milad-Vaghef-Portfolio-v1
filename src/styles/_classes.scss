@@ -57,6 +57,7 @@
   color: white;
   border-radius: 15px;
   font-size: 12px;
+  line-height: 1.7;
   @include device("laptop") {
     padding: 4px 14px;
   }
@@ -64,6 +65,7 @@
 
 .concept-tag {
   list-style: none;
+  line-height: 1.7;
   text-align: center;
   width: fit-content;
   padding: 2.5px 16px;
