@@ -1,11 +1,16 @@
 .projects-column-container {
-  gap: 30px;
+  gap: 20px;
   align-items: center;
   height: 100%; /* keep this */
   min-height: 0; /* IMPORTANT for flex scrolling */
   @include device("tablet") {
     margin-bottom: 80px;
     margin-top: 30px;
+  }
+  @include device("mobile") {
+    margin-bottom: 80px;
+    margin-top: 30px;
+    gap: 10px;
   }
 
   .swiper-button-disabled {
@@ -166,151 +171,226 @@
       transform: translateY(-50%);
     }
   }
-  .projects-column-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 35px 4%;
-    padding: 10px 30px 25px 8px;
+  .projects-column-grid-wrapper {
     width: 95%;
     min-height: 0;
-    overflow-y: auto;
-    pointer-events: auto;
 
+    overflow-y: auto;
+
+    padding: 10px 30px 25px 8px;
+
+    pointer-events: auto;
     touch-action: pan-y;
+
     &::-webkit-scrollbar {
       width: 4px;
     }
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
       background: $secondary-color;
       border-radius: 20px;
     }
 
     @include device("tablet") {
-      padding: 0px;
-      padding-bottom: 180px;
       width: 100%;
+      padding: 0;
+      padding-bottom: 180px;
+
       &::-webkit-scrollbar {
         width: 0;
       }
     }
+  }
 
-    @include device("mobile") {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
+  .projects-column-grid {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 
-    .projects-column {
-      border-radius: 13px;
-      background-color: white;
-      box-shadow: 0px 0px 16px 0px #0000000d;
-      color: $text-color;
+    gap: 35px;
+
+    width: 100%;
+
+    direction: ltr;
+  }
+
+  .projects-column-grid-column {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 35px;
+
+    min-width: 0;
+  }
+
+  .projects-column {
+    width: 100%;
+
+    border-radius: 13px;
+
+    background-color: white;
+
+    box-shadow: 0px 0px 16px 0px #0000000d;
+
+    color: $text-color;
+
+    overflow: hidden;
+
+    a {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-bottom: 0;
-      break-inside: avoid;
 
-      a {
-        color: $text-color;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-bottom: 0;
-        break-inside: avoid;
-        &:hover {
-          .projects-column-title {
-            color: $primary-color;
-            svg {
-              transform: translate(3px, -3px);
-              path {
-                stroke: $primary-color;
-              }
+      gap: 6px;
+
+      color: $text-color;
+
+      text-decoration: none;
+
+      &:hover {
+        .projects-column-title {
+          color: $primary-color;
+
+          svg {
+            transform: translate(3px, -3px);
+
+            path {
+              stroke: $primary-color;
             }
           }
         }
       }
+    }
 
-      .image-wrapper {
-        overflow: hidden;
+    .image-wrapper {
+      position: relative;
+
+      width: 100%;
+
+      overflow: hidden;
+
+      border-radius: 13px 13px 0 0;
+
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+
+      background-size: 200% 100%;
+
+      animation: shimmer 1.5s infinite;
+
+      box-shadow: 0px 4px 4px 0px #cacaca1c;
+
+      &::before {
+        content: "";
+
+        display: block;
+
+        padding-top: calc(var(--aspect-ratio) * 100%);
+      }
+
+      img {
+        position: absolute;
+
+        inset: 0;
+
         width: 100%;
-        border-radius: 13px 13px 0 0;
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        box-shadow: 0px 4px 4px 0px #cacaca1c;
-        &::before {
+        height: 100%;
 
-          content: "";
-          display: block;
-          padding-top: calc(var(--aspect-ratio) * 100%);
-        }
+        object-fit: cover;
+
+        opacity: 0;
+
+        transition: opacity 0.5s ease;
+      }
+
+      &.loaded {
+        animation: none;
+
+        background: none;
 
         img {
-          position: absolute;
-
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-
-        &.loaded {
-          animation: none;
-          background: none;
-
-          img {
-            opacity: 1;
-          }
+          opacity: 1;
         }
       }
     }
 
-    .wide-project {
-      grid-column: 1 / -1; /* Span all columns */
-      width: 100%;
-    }
-
     .details {
-      padding: 15px 20px 25px 20px;
+      padding: 15px 20px 25px;
+
+      display: flex;
+      flex-direction: column;
+
       gap: 10px;
+
       .projects-column-title {
         display: flex;
-        justify-content: start;
+
         align-items: center;
+
         gap: 12px;
+
         transition: color 0.2s ease;
-  
+
         svg {
           width: 9px;
           height: 9px;
+
           transition: transform 0.2s ease;
+
           path {
             stroke: $text-color;
           }
         }
       }
-  
+
       p {
         margin: 0;
+
         font-size: 12px;
       }
-  
+
       ul {
         display: flex;
-        padding: 0;
-        margin: 13px 0 0 0;
-        gap: 7px;
+
         flex-wrap: wrap;
+
+        gap: 7px;
+
+        padding: 0;
+
+        margin: 13px 0 0;
+
         list-style: none;
       }
+    }
+  }
+
+  .wide-project {
+    width: 100%;
+  }
+
+  @include device("mobile") {
+    .projects-column-grid {
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .projects-column-grid-column {
+      width: 100%;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
     }
   }
 }
