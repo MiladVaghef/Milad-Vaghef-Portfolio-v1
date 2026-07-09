@@ -24,14 +24,14 @@ export interface Project {
 }
 
 const categories: { label: string; icon: IconType }[] = [
+  { label: "Front-End", icon: "front-end" },
   { label: "WordPress", icon: "wordpress" },
   { label: "Figma", icon: "figma" },
-  { label: "Front-End", icon: "front-end" },
-  { label: "Graphic Design", icon: "graphic-design" },
 ];
 
 const ProjectsColumn = () => {
   const location = useLocation();
+
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
 
@@ -41,6 +41,7 @@ const ProjectsColumn = () => {
     categories.find((c) => c.label === currentHash)?.label ||
     categories[0].label;
 
+
   useEffect(() => {
     const index = categories.findIndex((c) => c.label === activeTab);
 
@@ -48,6 +49,7 @@ const ProjectsColumn = () => {
       swiperInstance.current.slideTo(index);
     }
   }, [activeTab]);
+
 
   useEffect(() => {
     if (!swiperRef.current) return;
@@ -58,13 +60,16 @@ const ProjectsColumn = () => {
       centeredSlides: true,
       grabCursor: true,
       spaceBetween: 0,
+
       navigation: {
         nextEl: ".projects-next",
         prevEl: ".projects-prev",
       },
+
       on: {
         slideChange(swiper) {
           const category = categories[swiper.activeIndex];
+
           if (!category) return;
 
           window.location.hash = encodeURIComponent(category.label);
@@ -72,11 +77,14 @@ const ProjectsColumn = () => {
       },
     });
 
+
     return () => {
       swiperInstance.current?.destroy(true, true);
       swiperInstance.current = null;
     };
+
   }, []);
+
 
   const filteredProjects = projectsData.filter(
     (project) => project.category === activeTab

@@ -44,18 +44,8 @@ const Aside = ({ inViewSections }: AsideProps) => {
         "#home-work-history",
       ]);
     } else if (location.pathname === "/projects") {
-      setSmartNavbarTexts([
-        "WordPress",
-        "Figma",
-        "Front-End",
-        "Graphic Design",
-      ]);
-      setSmartNavbarLinks([
-        "#WordPress",
-        "#Figma",
-        "#Front-End",
-        "#Graphic%20Design",
-      ]);
+      setSmartNavbarTexts(["WordPress", "Figma", "Front-End"]);
+      setSmartNavbarLinks(["#WordPress", "#Figma", "#Front-End"]);
     }
   }, [location.pathname, isInvalidPath]);
 
@@ -69,25 +59,25 @@ const Aside = ({ inViewSections }: AsideProps) => {
   return (
     <aside className={width < 1025 ? "remove" : "column"}>
       <div>
-      <section>
-        <h1>Milad Vaghef</h1>
-        <h2 className="column">
-          <span>Front-End Developer</span>
-          <span>UI Designer</span>
-        </h2>
-        <p>
-          I make modern and well-structured websites and friendly user
-          interfaces.
-        </p>
-      </section>
+        <section>
+          <h1>Milad Vaghef</h1>
+          <h2 className="column">
+            <span>Front-End Developer</span>
+            <span>UI Designer</span>
+          </h2>
+          <p>
+            I make modern and well-structured websites and friendly user
+            interfaces.
+          </p>
+        </section>
 
-      <div id="smart-navbar" className={isNavbarVisible ? "" : "hide"}>
-        <SmartNavbar
-          names={SmartNavbarTexts}
-          links={SmartNavbarLinks}
-          inViewSections={inViewSections}
-        />
-      </div>
+        <div id="smart-navbar" className={isNavbarVisible ? "" : "hide"}>
+          <SmartNavbar
+            names={SmartNavbarTexts}
+            links={SmartNavbarLinks}
+            inViewSections={inViewSections}
+          />
+        </div>
       </div>
 
       <div id="aside-logo">
