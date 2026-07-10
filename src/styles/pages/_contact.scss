@@ -4,6 +4,8 @@
   gap: 30px;
   align-items: center;
   height: 100vh;
+  padding-left: 2rem;
+  padding-right: 2rem;
   @include device("tablet") {
     padding-left: 1.3rem;
     padding-right: 1.3rem;
@@ -14,6 +16,7 @@
     flex-direction: column-reverse;
   }
   #contact-box-holder {
+    max-width: 1000px;
     display: flex;
     justify-content: center;
     align-items: center;
