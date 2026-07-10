@@ -1,7 +1,8 @@
 @import "../responsive";
 
 aside {
-  justify-content: space-between;  width: 30%;
+  justify-content: space-between;
+  width: 25%;
   padding-top: 50px;
   padding-bottom: 30px;
   color: $text-color;
@@ -11,7 +12,10 @@ aside {
   border-right: 1px solid rgba(225, 225, 225, 0.369);
   box-shadow: 0px 0px 4px 0px rgba(103, 103, 103, 0.1529411765);
   z-index: 2000;
-    @include device("tablet") {
+  @include device("laptop") {
+    padding-left: 2rem;
+  }
+   @include device("tablet") {
     padding-left: 1.3rem;
   }
   @include device("tablet") {
