@@ -91,6 +91,11 @@
   border-radius: 5px;
 }
 
+.primary-text {
+  color: $primary-color;
+  font-weight: 500;
+}
+
 .primary-button {
   background-color: $primary-color;
   color: white;

@@ -74,7 +74,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <a href="http://instagram.com/_u/miladvaghef" target="_blank">
               <Icon name="instagram" />
             </a>
-          </div> 
+          </div>
         </section>
 
         <div id="home-holder" className="column">
@@ -83,29 +83,35 @@ const Home = ({ setInViewSections }: HomeProps) => {
               <h3>About</h3>
             </div>
             <p className="home-mobile-padding">
-              I'm a front-end web designer passionate about creating clean,
-              visually engaging, and user-friendly digital experiences. I’m
-              currently pursuing a degree in graphic design, where I gain
-              hands-on experience creating posters, banners, and digital assets
-              using tools like Adobe Photoshop and Illustrator. This combination
-              of formal education and practical skills allows me to deliver
-              polished and thoughtful designs.
+              I'm a <span className="primary-text">front-end developer</span> focused on building modern, responsive,
+              and scalable web applications. I enjoy turning complex ideas into
+              intuitive user interfaces while writing clean, maintainable code
+              that is built for long-term growth. My work is driven by
+              performance, accessibility, and delivering polished user
+              experiences.
             </p>
+
+            <div className="home-mobile-padding row highlight">
+              <span className="highlight-line"></span>
+              <p>
+                My background in design gives me a strong attention to detail,
+                allowing me to bridge the gap between design and development. I
+                take pride in translating UI concepts into <span className="primary-text">pixel-perfect</span>,
+                production-ready interfaces while preserving the intent behind
+                every design.
+              </p>
+            </div>
+
             <p className="home-mobile-padding">
-              With a year of dedicated web design training and a certified web
-              designing background, I bring both technical expertise and
-              creative vision to every project. I focus on crafting websites
-              that balance aesthetics with functionality, ensuring users enjoy
-              seamless, intuitive, and visually appealing experiences.
-            </p>
-            <p className="home-mobile-padding">
-              Based in Iran, I've collaborated on a variety of projects, from
-              e-commerce platforms to custom digital experiences. I thrive on
-              turning ideas into high-quality, innovative designs that resonate
-              with users and help brands stand out. Whether working
-              independently or as part of a team, I am committed to pushing
-              creative boundaries and delivering results that exceed
-              expectations.
+              I've contributed to a variety of commercial projects, including
+              business websites, e-commerce platforms, and marketplace
+              applications. Whether developing reusable component systems,
+              improving existing products, or building new features from
+              scratch, I enjoy collaborating with designers, back-end
+              developers, and product teams to create reliable, scalable
+              solutions. I'm always looking to refine my skills and build
+              digital products that provide real value to both users and
+              businesses.
             </p>
           </div>
 
@@ -115,13 +121,15 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </div>
 
             <div id="home-row-projects" className="home-mobile-padding column">
-            {limitedProjects.map((project) => (
-              <ProjectsRow {...project} />
-            ))}
+              {limitedProjects.map((project) => (
+                <ProjectsRow {...project} />
+              ))}
             </div>
 
-
-            <div id="all-projects-link" className="row semi-bold home-mobile-padding">
+            <div
+              id="all-projects-link"
+              className="row semi-bold home-mobile-padding"
+            >
               <button
                 onClick={() => navigateTo("/projects", "left")}
                 className="link-button"
@@ -133,23 +141,26 @@ const Home = ({ setInViewSections }: HomeProps) => {
           </div>
 
           <div ref={workRef}>
-          <div className="sticky-title">
+            <div className="sticky-title">
               <h3>Experience</h3>
             </div>
-            <div className="home-mobile-padding column-reverse" id="home-work-history">
+            <div
+              className="home-mobile-padding column-reverse"
+              id="home-work-history"
+            >
               {workHistoryData.map((workData, index) => (
-              <Suspense
-                key={index}
-                fallback={
-                  <div className="work-history-lazy">
-                    <div className="lazy-animation"></div>
-                    <span className="lazy-animation"></span>
-                  </div>
-                }
-              >
-                <WorkHistory {...workData} />
-              </Suspense>
-            ))}
+                <Suspense
+                  key={index}
+                  fallback={
+                    <div className="work-history-lazy">
+                      <div className="lazy-animation"></div>
+                      <span className="lazy-animation"></span>
+                    </div>
+                  }
+                >
+                  <WorkHistory {...workData} />
+                </Suspense>
+              ))}
             </div>
           </div>
         </div>
