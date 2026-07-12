@@ -30,7 +30,7 @@ const SocialMedia = ({
     >
       <div className="social-media-box column">
         <div className="social-media-top row">
-          <div className="icon-box">
+          <div className="social-icon-box">
             <Icon name={icon}></Icon>
           </div>
           <div className="social-media-button-container">

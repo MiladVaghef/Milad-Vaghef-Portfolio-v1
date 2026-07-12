@@ -82,28 +82,41 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <div className="sticky-title">
               <h3>About</h3>
             </div>
-            <p className="home-mobile-padding">
-              I'm a <span className="primary-text">front-end developer</span> focused on building modern, responsive,
-              and scalable web applications. I enjoy turning complex ideas into
-              intuitive user interfaces while writing clean, maintainable code
-              that is built for long-term growth. My work is driven by
-              performance, accessibility, and delivering polished user
-              experiences.
+            <div className="biography-paragraph home-mobile-padding row"> 
+              <div className="icon-box">
+                <Icon name="code"></Icon>
+              </div>
+            <p>
+              I'm a <span className="primary-text">front-end developer</span>{" "}
+              focused on building modern, responsive, and scalable web
+              applications. I enjoy turning complex ideas into intuitive user
+              interfaces while writing clean, maintainable code that is built
+              for long-term growth. My work is driven by performance,
+              accessibility, and delivering polished user experiences.
             </p>
+            </div>
 
-            <div className="home-mobile-padding row highlight">
+            <div className="biography-paragraph home-mobile-padding row highlight"> 
+              <div className="icon-box">
+                <Icon name="brush"></Icon>
+              </div>
               <span className="highlight-line"></span>
               <p>
                 My background in design gives me a strong attention to detail,
                 allowing me to bridge the gap between design and development. I
-                take pride in translating UI concepts into <span className="primary-text">pixel-perfect</span>,
+                take pride in translating UI concepts into{" "}
+                <span className="primary-text">pixel-perfect</span>,
                 production-ready interfaces while preserving the intent behind
                 every design.
               </p>
             </div>
 
-            <p className="home-mobile-padding">
-              I've contributed to a variety of commercial projects, including
+            <div className="biography-paragraph home-mobile-padding row"> 
+              <div className="icon-box">
+                <Icon name="rocket"></Icon>
+              </div>
+            <p>
+            I've contributed to a variety of commercial projects, including
               business websites, e-commerce platforms, and marketplace
               applications. Whether developing reusable component systems,
               improving existing products, or building new features from
@@ -113,6 +126,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
               digital products that provide real value to both users and
               businesses.
             </p>
+            </div>
           </div>
 
           <div ref={projectsRef}>
