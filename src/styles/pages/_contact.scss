@@ -13,7 +13,6 @@
   @include device("mobile") {
     margin-top: 40px;
     gap: 20px;
-    flex-direction: column-reverse;
   }
   #contact-box-holder {
     max-width: 1000px;
@@ -25,6 +24,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     touch-action: pan-y;
+
+    margin-bottom: 180px;
 
     &::-webkit-scrollbar {
       width: 0.3vw;
@@ -44,8 +45,8 @@
       border-radius: 20px;
     }
     @include device("tablet") {
-      margin-top: 60px;
-      padding-bottom: 10px;
+      margin-bottom: 90px;
+      padding-bottom: 50px;
       &::-webkit-scrollbar {
         width: 0vw;
       }
@@ -61,22 +62,19 @@
     }
     @include device("mobile") {
       margin-top: 0px;
-      padding-bottom: 180px;
-
+      padding-bottom: 160px;
+      margin-bottom: unset;
     }
   }
   #contact-note {
     opacity: 70%;
     font-size: 14px;
-    @media (max-width: 1508px) {
-      padding-bottom: 60px;
-    }
     @include device("tablet") {
-      padding-bottom: 120px;
+      padding-top: 40px;
     }
     @include device("mobile") {
-      padding-bottom: unset;
       text-align: center;
+      padding-top: unset;
     }
   }
 }

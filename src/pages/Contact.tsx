@@ -11,6 +11,10 @@ const Contact = () => {
   return (
     <PageLayout>
     <div id="contact" {...swipeHandlers} className="allow-vertical-pan">
+    <span id="contact-note">
+        Contact me at any time of the day you want! I will respond back as soon
+        as I can.
+      </span>
       <div id="contact-box-holder">
         {" "}
         {socialMediaData.map((mediaData, index) => (
@@ -24,11 +28,6 @@ const Contact = () => {
           </Suspense>
         ))}
       </div>
-
-      <span id="contact-note">
-        Contact me at any time of the day you want! I will respond back as soon
-        as I can.
-      </span>
     </div>
     </PageLayout>
   );

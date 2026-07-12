@@ -177,7 +177,7 @@
 
     overflow-y: auto;
 
-    padding: 10px 30px 25px 8px;
+    padding: 10px 30px 125px 8px;
 
     pointer-events: auto;
     touch-action: pan-y;
@@ -198,7 +198,7 @@
     @include device("tablet") {
       width: 100%;
       padding: 0;
-      padding-bottom: 180px;
+      padding-bottom: 150px;
 
       &::-webkit-scrollbar {
         width: 0;
