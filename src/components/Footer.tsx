@@ -22,6 +22,10 @@ const Footer = () => {
   const { navigateTo } = useNavigation();
   const isMobile = useResponsive(668);
 
+  // Treat "/" as "/home"
+  const currentPath =
+    location.pathname === "/" ? "/home" : location.pathname;
+
   const routeLabels: Record<string, string> = {
     "/home": "Home",
     "/projects": "Projects",
@@ -30,9 +34,8 @@ const Footer = () => {
 
   const routes = Object.keys(routeLabels);
 
-  // ✅ Always returns valid direction (no null)
   const getDirection = (targetPath: string): "left" | "right" => {
-    const currentIndex = routes.indexOf(location.pathname);
+    const currentIndex = routes.indexOf(currentPath);
     const targetIndex = routes.indexOf(targetPath);
 
     return targetIndex > currentIndex ? "left" : "right";
@@ -52,13 +55,12 @@ const Footer = () => {
             {routes.map((path) => (
               <li key={path}>
                 {isMobile ? (
-                  // 🔹 Mobile
                   <button
                     className={`footer-link-mobile column ${
-                      location.pathname === path ? "active-mobile" : ""
+                      currentPath === path ? "active-mobile" : ""
                     }`}
                     onClick={() => {
-                      if (location.pathname === path) return; // 🚫 prevent same-route bug
+                      if (currentPath === path) return;
                       navigateTo(path, getDirection(path));
                     }}
                   >
@@ -66,13 +68,12 @@ const Footer = () => {
                     <span>{routeLabels[path]}</span>
                   </button>
                 ) : (
-                  // 🔹 Desktop
                   <button
                     className={`footer-link ${
-                      location.pathname === path ? "active" : ""
+                      currentPath === path ? "active" : ""
                     }`}
                     onClick={() => {
-                      if (location.pathname === path) return; // 🚫 prevent same-route bug
+                      if (currentPath === path) return;
                       navigateTo(path, getDirection(path));
                     }}
                   >
@@ -86,10 +87,19 @@ const Footer = () => {
       </div>
 
       <div id="footer-social-media">
-        <a href="http://instagram.com/_u/miladvaghef" target="_blank">
+        <a
+          href="https://instagram.com/_u/miladvaghef"
+          target="_blank"
+          rel="noreferrer"
+        >
           <Icon name="instagram" />
         </a>
-        <a href="https://github.com/MiladVaghef" target="_blank">
+
+        <a
+          href="https://github.com/MiladVaghef"
+          target="_blank"
+          rel="noreferrer"
+        >
           <Icon name="github" />
         </a>
       </div>

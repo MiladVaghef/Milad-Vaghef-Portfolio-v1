@@ -1,10 +1,5 @@
 import { lazy, useState, useEffect, useRef, useMemo } from "react";
-import {
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
@@ -16,71 +11,46 @@ const Projects = lazy(() => import("./pages/Projects"));
 const Contact = lazy(() => import("./pages/Contact"));
 
 interface PathRoutesProps {
-  setInViewSections: React.Dispatch<
-    React.SetStateAction<InViewSections>
-  >;
+  setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
 }
 
-export const PathRoutes = ({
-  setInViewSections,
-}: PathRoutesProps) => {
+export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
   const swipeHandlers = useSwipe();
 
   const { direction, navigateTo } = useNavigation();
 
-  const [isMobile, setIsMobile] = useState(
-    window.innerWidth < 1024
-  );
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   const dragX = useRef(0);
 
-  const isDraggingFromNoSwipeZone =
-    useRef(false);
-  const [isDragEnabled, setIsDragEnabled] =
-    useState(true);
+  const isDraggingFromNoSwipeZone = useRef(false);
+  const [isDragEnabled, setIsDragEnabled] = useState(true);
 
   const MIN_SWIPE = 80;
 
-  const routes = [
-    "/home",
-    "/projects",
-    "/contact-me",
-  ];
+  const routes = ["/home", "/projects", "/contact-me"];
 
-  const currentIndex = routes.indexOf(
-    location.pathname
-  );
+  const currentIndex = routes.indexOf(location.pathname);
 
   // responsive
   useEffect(() => {
-    const handleResize = () =>
-      setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
 
-    window.addEventListener(
-      "resize",
-      handleResize
-    );
+    window.addEventListener("resize", handleResize);
 
-    return () =>
-      window.removeEventListener(
-        "resize",
-        handleResize
-      );
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // detect where drag starts
-  const handlePointerDown = (
-    e: React.PointerEvent
-  ) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
     const target = e.target as HTMLElement;
 
     if (target.closest("[data-no-swipe]")) {
       isDraggingFromNoSwipeZone.current = true;
       setIsDragEnabled(false);
     } else {
-      isDraggingFromNoSwipeZone.current =
-        false;
+      isDraggingFromNoSwipeZone.current = false;
       setIsDragEnabled(true);
     }
   };
@@ -114,15 +84,11 @@ export const PathRoutes = ({
     if (currentIndex === -1) return;
 
     if (offset > 0) {
-      const targetPath =
-        routes[currentIndex - 1] ??
-        routes[currentIndex];
+      const targetPath = routes[currentIndex - 1] ?? routes[currentIndex];
 
       navigateTo(targetPath, "right");
     } else {
-      const targetPath =
-        routes[currentIndex + 1] ??
-        routes[currentIndex];
+      const targetPath = routes[currentIndex + 1] ?? routes[currentIndex];
 
       navigateTo(targetPath, "left");
     }
@@ -135,13 +101,8 @@ export const PathRoutes = ({
     () =>
       isMobile
         ? {
-            initial: (
-              dir: "left" | "right"
-            ) => ({
-              x:
-                dir === "left"
-                  ? "100%"
-                  : "-100%",
+            initial: (dir: "left" | "right") => ({
+              x: dir === "left" ? "100%" : "-100%",
               opacity: 0,
             }),
 
@@ -154,13 +115,8 @@ export const PathRoutes = ({
               },
             },
 
-            exit: (
-              dir: "left" | "right"
-            ) => ({
-              x:
-                dir === "left"
-                  ? "-100%"
-                  : "100%",
+            exit: (dir: "left" | "right") => ({
+              x: dir === "left" ? "-100%" : "100%",
               opacity: 0,
               transition: {
                 duration: 0.18,
@@ -186,10 +142,7 @@ export const PathRoutes = ({
   );
 
   const pageProps = {
-    drag:
-      isMobile && isDragEnabled
-        ? ("x" as const)
-        : false,
+    drag: isMobile && isDragEnabled ? ("x" as const) : false,
     onPointerDown: handlePointerDown,
     dragElastic: 0.18,
     dragConstraints: {
@@ -210,65 +163,54 @@ export const PathRoutes = ({
   };
 
   return (
-      <main
-        className="column"
-        {...(isMobile ? swipeHandlers : {})}
-      >
-        <div className="page-slider">
-          <AnimatePresence
-            initial={false}
-            mode={isMobile ? "wait" : "sync"}
-            custom={direction}
-          >
-            <Routes
-              location={location}
-              key={location.pathname}
-            >
-              <Route
-                path="/"
-                element={
-                  <Navigate
-                    to="/home"
-                    replace
-                  />
-                }
-              />
-    
-              <Route
-                path="/home"
-                element={
-                  <motion.div {...pageProps}>
-                    <Home
-                      setInViewSections={
-                        setInViewSections
-                      }
-                    />
-                  </motion.div>
-                }
-              />
-    
-              <Route
-                path="/projects"
-                element={
-                  <motion.div {...pageProps}>
-                    <Projects />
-                  </motion.div>
-                }
-              />
-    
-              <Route
-                path="/contact-me"
-                element={
-                  <motion.div {...pageProps}>
-                    <Contact />
-                  </motion.div>
-                }
-              />
-            </Routes>
-          </AnimatePresence>
-        </div>
-    
-        <Footer />
-      </main>
-    );
+    <main className="column" {...(isMobile ? swipeHandlers : {})}>
+      <div className="page-slider">
+        <AnimatePresence
+          initial={false}
+          mode={isMobile ? "wait" : "sync"}
+          custom={direction}
+        >
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <motion.div {...pageProps}>
+                  <Home setInViewSections={setInViewSections} />
+                </motion.div>
+              }
+            />
+
+            <Route
+              path="/home"
+              element={
+                <motion.div {...pageProps}>
+                  <Home setInViewSections={setInViewSections} />
+                </motion.div>
+              }
+            />
+
+            <Route
+              path="/projects"
+              element={
+                <motion.div {...pageProps}>
+                  <Projects />
+                </motion.div>
+              }
+            />
+
+            <Route
+              path="/contact-me"
+              element={
+                <motion.div {...pageProps}>
+                  <Contact />
+                </motion.div>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
+      </div>
+
+      <Footer />
+    </main>
+  );
 };
