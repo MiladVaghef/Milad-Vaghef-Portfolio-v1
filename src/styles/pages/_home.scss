@@ -8,8 +8,8 @@
   position: relative;
     margin-top: 50px;
 
-
   @include device("tablet") {
+    margin-top: 0;
     padding-left: 0;
     padding-right: 0;
   }
