@@ -64,4 +64,11 @@ export const workHistoryData: Project[] = [
     desc: "Provide one-on-one programming and front-end development lessons covering HTML, CSS, responsive web design, JavaScript, Python, and core programming concepts. Design structured learning paths, practical coding exercises, and project-based lessons tailored to each student's goals, helping students build strong programming logic, problem-solving skills, and confidence through hands-on practice.",
     tech: ["HTML5", "CSS", "JavaScript", "Python"],
   },
+  {
+    timeline: "2026 July — Present",
+    title: "Civiko",
+    role: ["Front-End Developer"],
+    desc: "Work as the front-end developer within a small independent software development team alongside a back-end developer and UI/UX designer. Build responsive and interactive interfaces while collaborating closely across design and development to deliver complete digital products. Also contribute to Figma-based design discussions and implementation planning when needed. Currently contributing to multiple active client projects.",
+    tech: ["React", "Tailwind CSS", "JavaScript", "TypeScript", "Figma"],
+  },
 ];
