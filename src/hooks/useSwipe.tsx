@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigation } from "../hooks/useNavigation";
 
 const useSwipe = () => {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1024);
 
   const location = useLocation();
 
@@ -28,9 +28,7 @@ const useSwipe = () => {
   const maxVerticalDeviation = 100;
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 850);
-
-    checkMobile();
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
 
     window.addEventListener("resize", checkMobile);
 
