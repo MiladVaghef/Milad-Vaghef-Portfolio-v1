@@ -4,7 +4,6 @@ import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
-import useSwipe from "../hooks/useSwipe";
 import { useNavigation } from "../hooks/useNavigation";
 import PageLayout from "../components/PageLayout";
 
@@ -16,10 +15,9 @@ interface HomeProps {
 }
 
 const Home = ({ setInViewSections }: HomeProps) => {
-  const swipeHandlers = useSwipe();
   const { navigateTo } = useNavigation();
   const limitedProjects = projectsData.slice(0, 4);
-  const thresholdSteps = Array.from({ length: 100 }, (_, i) => i * 0.01);
+  const thresholdSteps = Array.from({ length: 10 }, (_, i) => i * 0.1);
 
   const { ref: bioRef } = useInView({
     threshold: thresholdSteps,
@@ -53,7 +51,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
   return (
     <PageLayout>
-      <div id="home" {...swipeHandlers} className="allow-vertical-pan column">
+      <div id="home" className="allow-vertical-pan column">
         <section id="introduction" className="home-mobile-padding">
           <h1 className="home-mobile-padding">Milad Vaghef</h1>
           <h2 className="column home-mobile-padding">
@@ -82,21 +80,21 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <div className="sticky-title">
               <h3>About</h3>
             </div>
-            <div className="biography-paragraph home-mobile-padding row"> 
+            <div className="biography-paragraph home-mobile-padding row">
               <div className="icon-box">
                 <Icon name="code"></Icon>
               </div>
-            <p>
-              I'm a <span className="primary-text">front-end developer</span>{" "}
-              focused on building modern, responsive, and scalable web
-              applications. I enjoy turning complex ideas into intuitive user
-              interfaces while writing clean, maintainable code that is built
-              for long-term growth. My work is driven by performance,
-              accessibility, and delivering polished user experiences.
-            </p>
+              <p>
+                I'm a <span className="primary-text">front-end developer</span>{" "}
+                focused on building modern, responsive, and scalable web
+                applications. I enjoy turning complex ideas into intuitive user
+                interfaces while writing clean, maintainable code that is built
+                for long-term growth. My work is driven by performance,
+                accessibility, and delivering polished user experiences.
+              </p>
             </div>
 
-            <div className="biography-paragraph home-mobile-padding row highlight"> 
+            <div className="biography-paragraph home-mobile-padding row highlight">
               <div className="icon-box">
                 <Icon name="brush"></Icon>
               </div>
@@ -111,21 +109,21 @@ const Home = ({ setInViewSections }: HomeProps) => {
               </p>
             </div>
 
-            <div className="biography-paragraph home-mobile-padding row"> 
+            <div className="biography-paragraph home-mobile-padding row">
               <div className="icon-box">
                 <Icon name="rocket"></Icon>
               </div>
-            <p>
-            I've contributed to a variety of commercial projects, including
-              business websites, e-commerce platforms, and marketplace
-              applications. Whether developing reusable component systems,
-              improving existing products, or building new features from
-              scratch, I enjoy collaborating with designers, back-end
-              developers, and product teams to create reliable, scalable
-              solutions. I'm always looking to refine my skills and build
-              digital products that provide real value to both users and
-              businesses.
-            </p>
+              <p>
+                I've contributed to a variety of commercial projects, including
+                business websites, e-commerce platforms, and marketplace
+                applications. Whether developing reusable component systems,
+                improving existing products, or building new features from
+                scratch, I enjoy collaborating with designers, back-end
+                developers, and product teams to create reliable, scalable
+                solutions. I'm always looking to refine my skills and build
+                digital products that provide real value to both users and
+                businesses.
+              </p>
             </div>
           </div>
 
@@ -136,7 +134,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
             <div id="home-row-projects" className="home-mobile-padding column">
               {limitedProjects.map((project) => (
-                <ProjectsRow {...project} />
+                <ProjectsRow key={project.title} {...project} />
               ))}
             </div>
 

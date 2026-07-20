@@ -147,6 +147,7 @@
 
     @include device("tablet") {
       display: block;
+      backdrop-filter: none;
     }
 
     h3 {
