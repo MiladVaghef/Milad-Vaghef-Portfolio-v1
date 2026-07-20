@@ -6,6 +6,8 @@
   padding-left: 3rem;
   padding-right: 3rem;
   position: relative;
+    margin-top: 50px;
+
 
   @include device("tablet") {
     padding-left: 0;
