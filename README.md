@@ -5,7 +5,7 @@
 
 A personal portfolio website built to showcase front-end development projects, work experience, and skills.
 
-The goal of this project was to create a modern, well-structured, and interactive portfolio that reflects both my development and design capabilities. You can feel free to use this project as inspiration or reference for your own work — if it somehow helps you, we are more than happy about it <3
+The goal of this project was to create a modern, well-structured, and interactive portfolio that reflects both my development and design capabilities. You can feel free to use this project as inspiration or reference for your own work — if it somehow helps you, I'm are more than happy about it <3
 
 ## Used Technologies
 
@@ -22,11 +22,13 @@ This portfolio has been built with a fully responsive layout so it can be viewed
 
 **Tablet:**
 The tablet layout has been optimized to properly adapt to different screen dimensions and orientations, maintaining visual balance, accessibility, and smooth interactions while preserving the overall design experience.
+<br><br>
 <img width="1254" height="1254" alt="milad-vaghef-portfolio-v1-tablet" src="https://github.com/user-attachments/assets/0a3011fd-758e-42d2-8f00-3b29ebe56a65" />
 
 
 **Phone:**
 The mobile experience has been carefully optimized for various phone screen sizes and resolutions. Touch-friendly navigation, swipe gestures, and responsive components allow users to explore the portfolio naturally and comfortably on smaller devices.
+<br><br>
 <img width="1254" height="1254" alt="milad-vaghef-portfolio-v1-phone" src="https://github.com/user-attachments/assets/6b91a754-86e6-4566-965a-73a305061348" />
 
 
