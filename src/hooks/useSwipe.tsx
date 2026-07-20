@@ -17,7 +17,7 @@ const useSwipe = () => {
 
   const ignoreSwipeRef = useRef(false);
 
-  const routes = ["/home", "/projects", "/contact-me"];
+  const routes = ["/", "/home", "/projects", "/contact-me"];
 
   const currentIndex = routes.indexOf(location.pathname);
 
