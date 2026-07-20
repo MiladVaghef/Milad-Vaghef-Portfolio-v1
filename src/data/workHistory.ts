@@ -58,10 +58,10 @@ export const workHistoryData: Project[] = [
     ],
   },
   {
-    timeline: "2025 June — Present",
-    title: "Self Employed",
-    role: ["Private Programming Tutor", "Front-End Development Tutor"],
-    desc: "Provide one-on-one programming and front-end development lessons covering HTML, CSS, responsive web design, JavaScript, Python, and core programming concepts. Design structured learning paths, practical coding exercises, and project-based lessons tailored to each student's goals, helping students build strong programming logic, problem-solving skills, and confidence through hands-on practice.",
+    timeline: "2025 June — Seasonal",
+    title: "Self-Employed Programming Tutor",
+    role: ["Private Programming Tutor", "Private Front-End Development Tutor"],
+    desc: "Provide one-on-one programming and front-end development tutoring during the summer each year, covering HTML, CSS, JavaScript, Python, and core programming concepts through structured lessons and hands-on projects.",
     tech: ["HTML5", "CSS", "JavaScript", "Python"],
   },
   {
