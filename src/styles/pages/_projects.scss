@@ -4,6 +4,10 @@
   padding-left: 3rem;
   padding-right: 3rem;
   margin-top: 30px;
+  @include device("tablet"){
+      margin-top: 15px;
+
+  }
 
   @include device("tablet") {
     padding-bottom: 60px;
