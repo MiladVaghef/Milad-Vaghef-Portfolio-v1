@@ -21,7 +21,7 @@ const useSwipe = () => {
 
   const currentIndex = routes.indexOf(location.pathname);
 
-  const minSwipeDistance = 80;
+  const minSwipeDistance = 45;
 
   const maxTouchDuration = 700;
 
