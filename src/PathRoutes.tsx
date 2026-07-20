@@ -25,15 +25,17 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const dragX = useRef(0);
 
   const isDraggingFromNoSwipeZone = useRef(false);
+
   const [isDragEnabled, setIsDragEnabled] = useState(true);
 
-  const MIN_SWIPE = 80;
+  // 🔹 Increased from 80px
+  const MIN_SWIPE = 150;
 
   const routes = ["/home", "/projects", "/contact-me"];
 
   const currentIndex = routes.indexOf(location.pathname);
 
-  // responsive
+  // Responsive
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
 
@@ -42,7 +44,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // detect where drag starts
+  // Detect where drag starts
   const handlePointerDown = (e: React.PointerEvent) => {
     const target = e.target as HTMLElement;
 
@@ -55,18 +57,19 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
     }
   };
 
-  // drag handler
+  // Track drag
   const handleDrag = (
     _e: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
+    info: PanInfo,
   ) => {
     dragX.current = info.offset.x;
   };
 
-  // drag end
+  // Handle drag end
   const handleDragEnd = () => {
     if (!isMobile) return;
 
+    // 🚫 Slider / no-swipe area
     if (isDraggingFromNoSwipeZone.current) {
       dragX.current = 0;
       setIsDragEnabled(true);
@@ -75,6 +78,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
 
     const offset = dragX.current;
 
+    // 🚫 Not enough movement
     if (Math.abs(offset) < MIN_SWIPE) {
       dragX.current = 0;
       setIsDragEnabled(true);
@@ -97,6 +101,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
     setIsDragEnabled(true);
   };
 
+  // Page animations
   const pageVariants = useMemo(
     () =>
       isMobile
@@ -110,7 +115,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               x: 0,
               opacity: 1,
               transition: {
-                duration: 0.18,
+                duration: 0.25,
                 ease: [0.22, 1, 0.36, 1],
               },
             },
@@ -119,7 +124,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               x: dir === "left" ? "-100%" : "100%",
               opacity: 0,
               transition: {
-                duration: 0.18,
+                duration: 0.25,
                 ease: [0.22, 1, 0.36, 1],
               },
             }),
@@ -138,27 +143,39 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               opacity: 1,
             },
           },
-    [isMobile]
+    [isMobile],
   );
 
   const pageProps = {
     drag: isMobile && isDragEnabled ? ("x" as const) : false,
+
     onPointerDown: handlePointerDown,
-    dragElastic: 0.18,
+
+    // 🔹 Reduced from 0.18
+    dragElastic: 0.1,
+
     dragConstraints: {
       left: 0,
       right: 0,
     },
+
     onDrag: handleDrag,
+
     onDragEnd: handleDragEnd,
+
     style: {
       height: "100%",
       width: "100%",
     },
+
     custom: direction,
+
     variants: pageVariants,
+
     initial: "initial" as const,
+
     animate: "animate" as const,
+
     exit: "exit" as const,
   };
 
