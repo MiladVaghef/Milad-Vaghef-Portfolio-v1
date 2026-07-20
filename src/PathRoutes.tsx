@@ -96,7 +96,11 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   };
 
   return (
-    <main className="column" {...(isMobile ? swipeHandlers : {})}>
+    <main
+      className="column"
+      style={isMobile ? { touchAction: "pan-x pan-y" } : undefined}
+      {...(isMobile ? swipeHandlers : {})}
+    >
       <div className="page-slider">
         <AnimatePresence
           initial={false}
