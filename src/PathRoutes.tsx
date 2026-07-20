@@ -18,18 +18,15 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
   const swipeHandlers = useSwipe();
 
-  const { direction, navigateTo } = useNavigation();
+  const { direction } = useNavigation();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-
-  const routes = ["/home", "/projects", "/contact-me"];
 
   // Responsive
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
 
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
