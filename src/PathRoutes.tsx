@@ -28,8 +28,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
 
   const [isDragEnabled, setIsDragEnabled] = useState(true);
 
-  // 🔹 Increased from 80px
-  const MIN_SWIPE = 150;
+  const MIN_SWIPE = 100;
 
   const routes = ["/home", "/projects", "/contact-me"];
 
