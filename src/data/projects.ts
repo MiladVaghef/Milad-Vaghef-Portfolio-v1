@@ -6,6 +6,8 @@ import bmwI8magazine from "../assets/images/projects/bmw-i8-magazine.png";
 import swiperJsExperiment from "../assets/images/projects/swiper-js-experiment.png";
 import tvTimeClone from "../assets/images/projects/tv-time-clone.png";
 import chakodHome from "../assets/images/projects/chakod-home.png";
+import statuies from "../assets/images/projects/statuies.png";
+import miladVaghefPortfolio from "../assets/images/projects/milad-vaghef-portfolio.png";
 
 export interface Project {
   isPractice: boolean;
@@ -23,19 +25,19 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
-  {
-    isPractice: false,
+    {
+    isPractice: true,
     showWide: false,
-    category: "WordPress",
-    activeLink: true,
-    width: 1280,
-    height: 2626,
-    link: "https://customade.ir",
-    image: customadeLanding,
-    alt: "Customade Landing",
-    title: "Customade - Custom Shoe E-Commerce Website",
-    desc: "Developed a fully functional e-commerce website for a custom shoe brand, converting the UI design into a responsive WordPress experience using Elementor, WooCommerce, and JetEngine.",
-    tech: ["WordPress", "WooCommerce", "Elementor", "JetEngine"],
+    category: "Figma",
+    activeLink: false,
+    width: 1920,
+    height: 1080,
+    link: "#",
+    image: statuies,
+    alt: "Statues Landing Page",
+    title: "Statuies - Landing Page Concept",
+    desc: "A UI design practice created in Figma, focusing on visual hierarchy, composition, and modern aesthetics. The concept explores a dark, minimal landing page with a classical statue centerpiece, emphasizing balance, lighting, and clean typography.",
+    tech: ["Figma", "Auto Layout"],
   },
   {
     isPractice: false,
@@ -52,6 +54,20 @@ export const projectsData: Project[] = [
     tech: ["SCSS", "JavaScript", "Swiper.js"],
   },
   {
+    isPractice: false,
+    showWide: false,
+    category: "WordPress",
+    activeLink: true,
+    width: 1280,
+    height: 2626,
+    link: "https://customade.ir",
+    image: customadeLanding,
+    alt: "Customade Landing",
+    title: "Customade - Custom Shoe E-Commerce Website",
+    desc: "Developed a fully functional e-commerce website for a custom shoe brand, converting the UI design into a responsive WordPress experience using Elementor, WooCommerce, and JetEngine.",
+    tech: ["WordPress", "WooCommerce", "Elementor", "JetEngine"],
+  },
+  {
     isPractice: true,
     showWide: false,
     category: "Front-End",
@@ -64,6 +80,20 @@ export const projectsData: Project[] = [
     title: "Swiper.js Experiment",
     desc: "This project was built to practice creating responsive sliders and exploring different slider types using the Swiper.js library.",
     tech: ["Swiper.js", "Javascript"],
+  },
+  {
+    isPractice: false,
+    showWide: true,
+    category: "Front-End",
+    activeLink: false,
+    width: 1565,
+    height: 904,
+    link: "#",
+    image: miladVaghefPortfolio,
+    alt: "Milad Vaghef Portfolio",
+    title: "Milad Vaghef - Personal Portfolio",
+    desc: "A personal portfolio designed and developed from scratch to showcase my work, experience, and front-end development capabilities. Built with a focus on responsive design, custom UI interactions, smooth animations, reusable components, and a scalable front-end architecture.",
+    tech: ["React", "TypeScript", "SCSS", "Framer Motion", "Vite"],
   },
   {
     isPractice: true,
