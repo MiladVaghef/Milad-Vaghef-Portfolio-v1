@@ -17,9 +17,11 @@ const useSwipe = () => {
 
   const ignoreSwipeRef = useRef(false);
 
-  const routes = ["/", "/home", "/projects", "/contact-me"];
+  const routes = ["/home", "/projects", "/contact-me"];
 
-  const currentIndex = routes.indexOf(location.pathname);
+  const currentPath = location.pathname === "/" ? "/home" : location.pathname;
+
+  const currentIndex = routes.indexOf(currentPath);
 
   const minSwipeDistance = 45;
 
