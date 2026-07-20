@@ -6,14 +6,17 @@
   height: 100vh;
   padding-left: 2rem;
   padding-right: 2rem;
+
   @include device("tablet") {
     padding-left: 1.3rem;
     padding-right: 1.3rem;
   }
+
   @include device("mobile") {
     margin-top: 40px;
     gap: 20px;
   }
+
   #contact-box-holder {
     max-width: 1000px;
     display: flex;
@@ -41,15 +44,18 @@
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-      background: $secondary-color;
+      background: var(--secondary-color);
       border-radius: 20px;
     }
+
     @include device("tablet") {
       margin-bottom: 90px;
       padding-bottom: 50px;
+
       &::-webkit-scrollbar {
         width: 0vw;
       }
+
       /* Track */
       &::-webkit-scrollbar-track {
         background: transparent;
@@ -60,18 +66,23 @@
         background: transparent;
       }
     }
+
     @include device("mobile") {
       margin-top: 0px;
       padding-bottom: 160px;
       margin-bottom: unset;
     }
   }
+
   #contact-note {
-    opacity: 70%;
+    opacity: 80%;
     font-size: 14px;
+    color: var(--text-color);
+
     @include device("tablet") {
       padding-top: 40px;
     }
+
     @include device("mobile") {
       text-align: center;
       padding-top: unset;

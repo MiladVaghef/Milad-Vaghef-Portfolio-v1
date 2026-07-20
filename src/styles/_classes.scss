@@ -28,7 +28,7 @@
 }
 
 .blue-text {
-  color: $primary-color;
+  color: var(--primary-color);
 }
 
 .light {
@@ -53,19 +53,18 @@
   justify-content: center;
 
   border-radius: 999px;
-  background-color: rgba($primary-color, 0.04);
-
+  background-color: color-mix(in srgb, var(--primary-color) 4%, transparent);
   min-width: 50px;
   height: 50px;
   svg {
-    fill: $primary-color;
+    fill: var(--primary-color);
     width: 25px;
     height: 25px;
-    path{
-      fill: $primary-color;
+    path {
+      fill: var(--primary-color);
     }
-    g{
-      fill: $primary-color;
+    g {
+      fill: var(--primary-color);
     }
   }
 }
@@ -75,7 +74,7 @@
   text-align: center;
   width: fit-content;
   padding: 2.5px 16px;
-  background-color: $primary-color;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 15px;
   font-size: 12px;
@@ -91,8 +90,8 @@
   text-align: center;
   width: fit-content;
   padding: 2.5px 16px;
-  background-color: rgb(255, 149, 0);
   color: white;
+  border: 1px solid var(--primary-color);
   border-radius: 15px;
   font-size: 12px;
   font-weight: 600;
@@ -105,8 +104,8 @@
 
 .not-available-button {
   pointer-events: none;
-  background-color: $secondary-text-color;
-  color: $text-color;
+  background-color: var(--secondary-text-color);
+  color: var(--text-color);
   border: 0;
   font-size: 14px;
   padding: 4px 21px;
@@ -114,12 +113,12 @@
 }
 
 .primary-text {
-  color: $primary-color;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
 .primary-button {
-  background-color: $primary-color;
+  background-color: var(--primary-color);
   color: white;
   border: 0;
   font-size: 14px;

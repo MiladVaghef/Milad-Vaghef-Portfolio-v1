@@ -1,5 +1,5 @@
 // Import logo image
-import logo from "../assets/images/logo/logo.png";
+import logo from "../assets/images/logo/logo-white.png";
 
 const Logo = () => {
   return <img src={logo} alt="MiladVaghef Logo" />;

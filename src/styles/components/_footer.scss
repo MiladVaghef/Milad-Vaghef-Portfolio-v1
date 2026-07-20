@@ -15,19 +15,18 @@ footer {
   border-radius: 999px;
 
   /* Glass */
-  background: rgba(255, 255, 255, 0.896);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  background: var(--footer-background-color);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
 
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--glass-border-color);
 
-  /* Soft depth */
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: var(--footer-shadow);
 
   z-index: 1900;
 
   transition: all 0.3s ease;
+
   @include device("tablet") {
     border-top: unset;
     position: fixed;
@@ -35,8 +34,9 @@ footer {
     left: 50%;
     width: 95%;
     min-height: 70px;
-    box-shadow: 0px 0px 4px 0px #acacac;
+    box-shadow: var(--footer-shadow-mobile);
   }
+
   @include device("mobile") {
     width: 92%;
   }
@@ -44,25 +44,27 @@ footer {
 
 #footer-navbar {
   width: 100%;
-  @include device("mobile") {
 
+  @include device("mobile") {
   }
+
   nav {
     height: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    
 
     @include device("tablet") {
       padding-left: 20px;
       padding-right: 20px;
     }
+
     @include device("mobile") {
       padding: 0;
     }
+
     .active {
-      color: $primary-color;
+      color: var(--primary-color);
 
       &::after {
         width: 100%;
@@ -78,56 +80,67 @@ footer {
       justify-content: center;
       margin: 0;
       position: relative;
+
       @include device("tablet") {
         justify-content: space-between;
         min-width: 320px;
         width: 40%;
         gap: 0%;
       }
+
       @include device("mobile") {
         min-width: unset;
         width: 75%;
       }
+
       li {
         display: flex;
         justify-content: center;
         align-items: center;
+
         .active-mobile {
           svg {
-            fill: $primary-color;
+            fill: var(--primary-color);
           }
+
           span {
-            color: $primary-color;
+            color: var(--primary-color);
           }
         }
       }
+
       .footer-link-mobile {
         display: flex;
         justify-content: center;
         align-items: center;
+
         svg {
-          fill: #acacac;
+          fill: var(--footer-icon-color);
           width: 22px;
           transition: all 0.3s ease-in-out;
           transform: translateY(-5 px);
           margin-bottom: 7px;
         }
       }
+
       li button {
         text-decoration: none;
-        color: $text-color;
+        color: var(--text-color);
         font-size: 16px;
         position: relative;
         cursor: pointer;
         padding: 10px;
         background-color: transparent;
         border: 0;
+
         @include device("laptop") {
           font-size: 14px;
         }
+
         @include device("mobile") {
           padding: 0;
         }
+
         @media (max-width: 350px) {
           font-size: 12px;
         }
@@ -140,17 +153,17 @@ footer {
           width: 0;
           height: 2px;
           transition: width 0.3s ease-in-out;
-          background-color: $primary-color;
+          background-color: var(--primary-color);
           transform: translateX(-50%);
         }
 
         &:hover {
-          color: $primary-color;
+          color: var(--primary-color);
         }
 
         span {
           font-size: 12px;
-          color: #acacac;
+          color: var(--secondary-text-color);
         }
       }
     }
@@ -169,18 +182,20 @@ footer {
   }
 
   svg {
-    fill: $text-color;
+    fill: var(--text-color);
     width: 20px;
     height: 20px;
     transition: all 0.3s ease-in-out;
     padding: 10px;
     cursor: pointer;
+
     @include device("laptop") {
       width: 18px;
       height: 18px;
     }
+
     &:hover {
-      fill: $primary-color;
+      fill: var(--primary-color);
       transition: all 0.3s ease-in-out;
     }
   }

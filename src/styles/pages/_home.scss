@@ -6,10 +6,12 @@
   padding-left: 3rem;
   padding-right: 3rem;
   position: relative;
+
   @include device("tablet") {
     padding-left: 0;
     padding-right: 0;
   }
+
   &::-webkit-scrollbar {
     width: 0.3vw;
     max-width: 7px;
@@ -24,13 +26,15 @@
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background: $secondary-color;
+    background: var(--secondary-color);
     border-radius: 20px;
   }
+
   @include device("tablet") {
     &::-webkit-scrollbar {
       width: 0vw;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       background: transparent;
@@ -41,32 +45,54 @@
       background: transparent;
     }
   }
+
   #introduction {
     width: 100%;
     padding-top: 60px;
-    padding-bottom: 70px;
-    color: $text-color;
+    padding-bottom: 50px;
+    color: var(--text-color);
     display: none;
+
     #intro-icons {
       padding-left: 1.3rem;
       padding-right: 1.3rem;
       margin-top: 30px;
       gap: 25px;
-
+    
       a {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+    
         width: 30px;
         height: 30px;
-        border-radius: 8px;
-        box-shadow: 0px 0px 20px 0px #00000012;
+        padding: 10px;
+    
+        border-radius: 10px;
+    
+        background: var(--icon-card-background);
+        border: 1px solid var(--icon-card-border);
+    
+        box-shadow: var(--icon-card-shadow);
+    
+        transition: all 0.25s ease;
+    
+        &:hover {
+          transform: translateY(-3px);
+          background: var(--icon-card-hover-background-color);
+          border-color: var(--icon-card-hover-border-color);
+          box-shadow: var(--icon-card-hover-shadow);
+        }
+    
         svg {
-          fill: $primary-color;
+          fill: var(--primary-color);
           width: 20px;
           height: 20px;
-          transition: all 0.3s ease-in-out;
+          transition: all 0.25s ease;
+        }
+    
+        &:hover svg {
+          transform: scale(1.08);
         }
       }
     }
@@ -75,28 +101,35 @@
       margin: 0;
       font-size: 36px;
       font-weight: 700;
+
       @include device("laptop") {
         font-size: 32px;
       }
     }
+
     h2 {
       span {
         font-size: 20px;
         font-weight: 600;
+
         @include device("laptop") {
           font-size: 17px;
         }
       }
     }
+
     p {
       width: 80%;
+
       @include device("laptop") {
         font-size: 13px;
       }
+
       @include device("tablet") {
         max-width: 380px;
       }
     }
+
     @include device("tablet") {
       display: block;
     }
@@ -106,15 +139,17 @@
     width: 100%;
     position: sticky;
     top: 0;
-    background-color: rgba(249, 249, 249, 0.842);
-    backdrop-filter: blur(10px);
+    background-color: var(--sticky-title-background-color);
+    backdrop-filter: var(--sticky-title-filter);
     display: none;
+
     @include device("tablet") {
       display: block;
     }
+
     h3 {
       text-transform: uppercase;
-      color: rgb(60, 60, 60);
+      color: var(--sticky-title-text-color);
       margin: 0;
       padding: 20px 0;
       font-size: 15px;
@@ -123,6 +158,7 @@
       padding-right: 1.3rem;
     }
   }
+
   #home-holder {
     max-width: 1100px;
     gap: 60px;
@@ -132,6 +168,7 @@
       padding-bottom: 130px;
       max-width: unset;
     }
+
     @include device("mobile") {
       padding-bottom: 150px;
     }
@@ -140,59 +177,71 @@
       gap: 20px;
       text-align: justify;
       position: relative;
+
       @include device("tablet") {
         text-align: unset;
       }
+
       .biography-paragraph {
         gap: 30px;
         padding-bottom: 20px;
-        border-bottom: 1px solid rgb(228, 228, 228);
+        border-bottom: 1px solid var(--biography-divider-color);
+
         &:last-child {
           border-bottom: unset;
           padding-bottom: 0px;
         }
+
         @include device("mobile") {
           gap: 0;
           padding-bottom: 0;
           border-bottom: unset;
         }
+
         .icon-box {
           @include device("mobile") {
             display: none;
           }
         }
       }
+
       p {
         margin: 0;
         line-height: 135%;
         font-size: 14px;
       }
+
       .highlight {
         @include device("mobile") {
           gap: 20px;
         }
+
         .highlight-line {
           display: none;
           border-radius: 50px;
           width: 4px;
           height: 100%;
-          background-color: $secondary-color;
+          background-color: var(--secondary-color);
+
           @include device("mobile") {
             display: block;
           }
         }
       }
     }
+
     #home-row-projects {
       gap: 40px;
       position: relative;
     }
+
     #all-projects-link {
       margin-top: 30px;
       margin-bottom: 40px;
+
       button {
         display: flex;
-        color: $text-color;
+        color: var(--text-color);
         font-size: 14px;
         background-color: transparent;
         border: none;
@@ -200,22 +249,27 @@
         transition: all 0.2s ease-in-out;
         align-items: center;
         gap: 10px;
+
         svg {
-          stroke: $text-color;
+          stroke: var(--text-color);
         }
+
         &:hover {
           gap: 20px;
+
           span {
             gap: 20px;
             transition: all 0.2s ease-in-out;
-            color: $primary-color;
+            color: var(--primary-color);
           }
+
           svg {
-            stroke: $primary-color;
+            stroke: var(--primary-color);
           }
         }
       }
     }
+
     #home-work-history {
       margin-top: 40px;
       position: relative;

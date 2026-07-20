@@ -5,67 +5,81 @@ aside {
   width: 25%;
   padding-top: 50px;
   padding-bottom: 30px;
-  color: $text-color;
+  color: var(--text-color);
   overflow: hidden;
   padding-left: 3rem;
-  background-color: #f8fafb;
-  border-right: 1px solid rgba(225, 225, 225, 0.369);
-  box-shadow: 0px 0px 4px 0px rgba(103, 103, 103, 0.1529411765);
+  background-color: var(--aside-color);
+  border-right: 1px solid var(--aside-border-color);
+  box-shadow: var(--aside-shadow);
   z-index: 2000;
+
   @include device("laptop") {
     padding-left: 2rem;
   }
-   @include device("tablet") {
+
+  @include device("tablet") {
     padding-left: 1.3rem;
   }
+
   @include device("tablet") {
     gap: 0px;
     width: 100%;
     padding-top: 60px;
   }
+
   section {
     margin-bottom: 10vh;
+
     h1 {
       margin: 0;
       font-size: 36px;
       font-weight: 700;
+
       @include device("laptop") {
         font-size: 32px;
       }
     }
+
     h2 {
       span {
         font-size: 20px;
         font-weight: 600;
+
         @include device("laptop") {
           font-size: 17px;
         }
       }
     }
+
     p {
       width: 80%;
+
       @include device("laptop") {
         font-size: 13px;
       }
+
       @include device("tablet") {
         max-width: 380px;
       }
     }
   }
+
   #aside-logo {
     width: 25%;
     display: flex;
     align-items: center;
+
     @include device("tablet") {
       padding-left: 35px;
     }
-  
+
     @include device("mobile") {
       display: none;
     }
-  
+
     img {
       width: 150px;
+
       @include device("laptop") {
         width: 125px;
       }

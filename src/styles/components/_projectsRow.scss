@@ -3,7 +3,7 @@
   display: flex;
   gap: 20px;
   flex-direction: row;
-  color: $text-color;
+  color: var(--text-color);
   width: fit-content;
   padding: 3px;
 
@@ -83,7 +83,7 @@
 
         path {
           transition: all 0.15s ease-in-out;
-          stroke: $text-color;
+          stroke: var(--text-color);
         }
       }
     }
@@ -114,13 +114,13 @@
 
 a .projects-row:hover {
   .projects-row-title {
-    color: $primary-color;
+    color: var(--primary-color);
 
     svg {
       transform: translateX(3px) translateY(-3px);
 
       path {
-        stroke: $primary-color;
+        stroke: var(--primary-color);
       }
     }
   }

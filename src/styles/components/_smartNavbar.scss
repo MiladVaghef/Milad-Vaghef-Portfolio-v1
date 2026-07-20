@@ -12,13 +12,13 @@
       padding-left: 70px;
       &:before {
         width: 60px;
-        background-color: $secondary-color;
+        background-color: var(--secondary-color);
       }
     }
 
     li a {
       padding: 7px;
-      color: $text-color;
+      color: var(--text-color);
       text-decoration: none;
       padding-left: 40px;
       font-size: 14px;
@@ -35,7 +35,7 @@
       &:before {
         content: "";
         position: absolute;
-        background-color: $secondary-text-color;
+        background-color: var(--secondary-text-color);
         width: 30px;
         height: 2px;
         bottom: 50%;
@@ -44,7 +44,7 @@
       }
       &:hover:before {
         width: 60px;
-        background-color: $secondary-color;
+        background-color: var(--secondary-color);
       }
     }
   }

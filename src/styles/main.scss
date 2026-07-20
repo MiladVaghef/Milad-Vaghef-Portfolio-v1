@@ -18,7 +18,7 @@
 }
 
 body {
-  background: #fcfdfc;
+  background: var(--background-color);
   min-height: 100vh;
   margin: 0;
   display: flex;
@@ -26,17 +26,17 @@ body {
   font-family: Inter;
   -webkit-tap-highlight-color: transparent;
   &::selection {
-    background-color: $primary-color;
+    background-color: var(--primary-color);
     color: white;
-  }
-  @include device("tablet") {
-    background: rgb(249, 249, 249);
-    height: 100%;
   }
 }
 
 a {
   text-decoration: none;
+}
+
+a,p,h1,h2,h3,h4,h5,h6{
+  color: var(--text-color);
 }
 
 #root {
