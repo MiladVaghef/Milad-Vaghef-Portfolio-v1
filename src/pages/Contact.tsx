@@ -1,10 +1,13 @@
 import { lazy, Suspense } from "react";
 import { socialMediaData } from "../data/socialMedia";
 import PageLayout from "../components/PageLayout";
+import useAppReady from "../hooks/useAppReady";
 
 const SocialMedia = lazy(() => import("../components/SocialMedia"));
 
 const Contact = () => {
+  useAppReady();
+
   return (
     <PageLayout>
     <div id="contact" className="allow-vertical-pan">

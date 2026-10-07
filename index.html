@@ -4,6 +4,143 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <style>
+      /* Paints the canvas dark before the app CSS loads (prevents white flash).
+         IMPORTANT: only <body> gets a background. Giving <html> one would stop
+         body's background from propagating to the canvas, letting body's opaque
+         box paint OVER the z-index:-1 project images and hide them. */
+
+      body {
+        background: #171717;
+        margin: 0;
+      }
+
+      /* Pre-app splash — shown from first paint until React mounts and takes
+         over. It mirrors the React LoadingScreen so the hand-off is seamless. */
+
+      #app-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background-color: #171717;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 30px;
+        transition: opacity 0.2s ease;
+      }
+
+      #app-loader.app-loader--superseded {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+      }
+
+      #app-loader::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(92vw, 760px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          closest-side,
+          rgba(249, 115, 22, 0.09),
+          transparent 68%
+        );
+        animation: app-loader-glow 2.6s ease-in-out infinite;
+      }
+
+      #app-loader::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          120% 120% at 50% 50%,
+          transparent 62%,
+          rgba(0, 0, 0, 0.45) 100%
+        );
+      }
+
+      #app-loader .app-loader__stage {
+        position: relative;
+        z-index: 1;
+        width: clamp(120px, 16vw, 168px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(249, 115, 22, 0.12);
+        border-radius: 50%;
+        background: rgba(33, 33, 33, 0.5);
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        animation: app-loader-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s
+          both;
+      }
+
+      #app-loader .app-loader__stage img {
+        width: 64%;
+        height: auto;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      #app-loader .app-loader__tagline {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        color: #a3a3a3;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      #app-loader .app-loader__tagline span {
+        animation: app-loader-rise 0.45s ease-out both;
+      }
+
+      @keyframes app-loader-glow {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.12);
+        }
+      }
+
+      @keyframes app-loader-pop {
+        from {
+          opacity: 0;
+          transform: scale(0.88);
+          filter: blur(8px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes app-loader-rise {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+
     <link rel="icon" href="src/assets/ico/milad-vaghef-logo.ico" />
     <link rel="canonical" href="https://miladvaghef.ir/" />
 
@@ -63,6 +200,25 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Static pre-app splash — replaced on screen by the React LoadingScreen -->
+    <div id="app-loader" role="status" aria-label="Loading portfolio">
+      <div class="app-loader__stage">
+        <img
+          src="src/assets/images/logo/logo-white.png"
+          alt="Milad Vaghef logo"
+        />
+      </div>
+
+      <div class="app-loader__tagline" aria-hidden="true">
+        <span style="animation-delay: 340ms">Front-End</span>
+        <span style="animation-delay: 410ms">Developer</span>
+        <span style="animation-delay: 480ms">·</span>
+        <span style="animation-delay: 550ms">UI</span>
+        <span style="animation-delay: 620ms">Designer</span>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

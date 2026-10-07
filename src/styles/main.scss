@@ -7,6 +7,7 @@
 @import "components/projectsRow";
 @import "components/workHistory";
 @import "components/socialMedia";
+@import "components/loadingScreen";
 @import "components/projectsColumn";
 @import "pages/home";
 @import "pages/projects";
@@ -15,6 +16,9 @@
 @font-face {
   font-family: Inter;
   src: url(../assets/fonts/Inter-VariableFont.ttf);
+  /* Blocks fallback-font flash — text stays hidden until Inter is loaded,
+     which the loading screen waits for before the reveal. */
+  font-display: block;
 }
 
 body {

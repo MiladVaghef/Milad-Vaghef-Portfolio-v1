@@ -4,7 +4,8 @@ import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
 import { projectsData } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
-import { useNavigation } from "../hooks/useNavigation";
+import { useNavigation } from "../hooks/navigationContext";
+import useAppReady from "../hooks/useAppReady";
 import PageLayout from "../components/PageLayout";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
@@ -15,6 +16,8 @@ interface HomeProps {
 }
 
 const Home = ({ setInViewSections }: HomeProps) => {
+  useAppReady();
+
   const { navigateTo } = useNavigation();
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 10 }, (_, i) => i * 0.1);

@@ -1,0 +1,321 @@
+@import "../responsive";
+
+// Loading screen — "curtain reveal"
+// Hooks: .loading-screen, .loading-screen--exiting,
+// .loading-screen__content--exit, body.page-is-loading
+
+// The app renders and settles BEHIND the opaque loader panels during the
+// whole load, so by the time the curtains part it is already fully painted.
+// It must NOT be hidden with opacity — that would postpone its first paint
+// until the reveal and cause the page to "load" while the curtains open.
+// The opaque panels take care of covering it.
+
+body.page-is-loading {
+  overflow: hidden;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  // While the curtains part, kill the decorative animations — no gradient or
+  // shine repaints during the reveal, so it stays perfectly smooth.
+  &--exiting {
+    pointer-events: none;
+
+    .loading-screen__content::before {
+      animation: none;
+      opacity: 0;
+    }
+
+    .loading-screen__bar::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+}
+
+// Dark canvas (visible during the initial fade-in and reveal gaps)
+.loading-screen__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--background-color);
+  animation: loading-screen-fade-in 0.28s ease-out both;
+  will-change: opacity;
+
+  // The fade-in keyframes above fill forwards, and a filling CSS animation
+  // outranks normal declarations — so a plain `opacity: 0` here would never
+  // apply. That is exactly what kept a solid dark scrim visible through the
+  // parting curtains ("opens to an empty background, then the UI jumps in").
+  // Kill the animation so the backdrop drops out instantly: it is fully
+  // hidden behind the opaque panels at that moment, so the curtains part
+  // straight onto the already-rendered site with no pop.
+  .loading-screen--exiting & {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+// The "doors" — two opaque panels that part to reveal the app
+.loading-screen__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    var(--background-color) 0%,
+    #1c1c1c 55%,
+    var(--aside-color) 100%
+  );
+  // Promote to its own GPU layer so the slide is pure compositing.
+  transform: translateZ(0);
+  will-change: transform;
+
+  &--left {
+    left: 0;
+  }
+
+  &--right {
+    right: 0;
+  }
+}
+@keyframes loading-screen-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-screen-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+    filter: blur(9px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes loading-screen-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loading-screen-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+@keyframes loading-screen-sheen {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+// Stage content — above the panels so it stays visible while loading
+.loading-screen__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  transition:
+    opacity 0.24s ease-in,
+    transform 0.24s ease-in;
+  will-change: opacity, transform;
+
+  // Animated brand glow behind the stage
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(92vw, 760px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      closest-side,
+      rgba(249, 115, 22, 0.09),
+      transparent 68%
+    );
+    z-index: 0;
+    animation: loading-screen-glow-pulse 2.6s ease-in-out infinite;
+    // Fades with the stage when the exit class kills the pulse, so the glow
+    // never pops out from behind the logo mid-choreography.
+    transition: opacity 0.24s ease-in;
+  }
+
+  // Soft vignette for depth
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      120% 120% at 50% 50%,
+      transparent 62%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
+    z-index: 3;
+  }
+
+  &--exit {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.94);
+  }
+
+  .loading-screen__stage {
+    position: relative;
+    z-index: 1;
+    width: clamp(120px, 16vw, 168px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--glass-border-color);
+    border-radius: 50%;
+    background: rgba(33, 33, 33, 0.5);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+    animation: loading-screen-pop-in 0.7s cubic-bezier(0.22, 1, 0.36, 1)
+      0.05s both;
+
+    img {
+      width: 74%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+  }
+
+  .loading-screen__counter {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(42px, 6vw, 58px);
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    color: var(--text-color);
+    animation: loading-screen-fade-in 0.55s ease-out 0.22s both;
+
+    .loading-screen__counter-value {
+      display: inline-block;
+      min-width: 3ch;
+      text-align: center;
+    }
+
+    .loading-screen__counter-unit {
+      margin-left: 2px;
+      font-size: 0.5em;
+      font-weight: 500;
+      color: var(--secondary-text-color);
+    }
+  }
+.loading-screen__bar {
+    position: relative;
+    z-index: 1;
+    width: clamp(200px, 30vw, 320px);
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    animation: loading-screen-fade-in 0.55s ease-out 0.26s both;
+
+    // Animated gradient fill
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+      box-shadow: 0 0 14px rgba(249, 115, 22, 0.5);
+      transform: scaleX(var(--loading-progress, 0));
+      transform-origin: left center;
+    }
+
+    // Moving sheen highlight
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.5),
+        transparent
+      );
+      animation: loading-screen-sheen 1.5s ease-in-out 0.4s infinite;
+      // Fades out with the stage at exit instead of popping off the bar.
+      transition: opacity 0.24s ease-in;
+    }
+  }
+
+  .loading-screen__tagline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: var(--secondary-text-color);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    .loading-screen__tagline-word {
+      display: inline-block;
+      margin-right: 8px;
+      animation: loading-screen-rise-in 0.45s ease-out both;
+    }
+  }
+}
+
+@include device("mobile") {
+  .loading-screen__content {
+    gap: 24px;
+  }
+
+  .loading-screen__stage {
+    width: 118px;
+  }
+
+  .loading-screen__tagline {
+    font-size: 12px;
+  }
+}
+
+// Reduced-motion: keep it a simple crossfade
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__backdrop,
+  .loading-screen__stage,
+  .loading-screen__counter,
+  .loading-screen__bar,
+  .loading-screen__content::before,
+  .loading-screen__bar::after {
+    animation: none;
+  }
+}

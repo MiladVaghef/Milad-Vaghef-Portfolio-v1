@@ -1,14 +1,21 @@
-import { lazy, useState, useEffect, useRef, useMemo } from "react";
+import { lazy, Suspense, useState, useEffect, useRef, useMemo } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
 import useSwipe from "./hooks/useSwipe";
-import { useNavigation } from "./hooks/useNavigation";
+import { useNavigation } from "./hooks/navigationContext";
 import Footer from "./components/Footer";
 
-const Home = lazy(() => import("./pages/Home"));
-const Projects = lazy(() => import("./pages/Projects"));
-const Contact = lazy(() => import("./pages/Contact"));
+// Start downloading every page chunk as soon as this module evaluates (the
+// moment the app bundle runs) instead of waiting for each route's first
+// render — by the time the curtains open, all pages are already local.
+const homeChunk = import("./pages/Home");
+const projectsChunk = import("./pages/Projects");
+const contactChunk = import("./pages/Contact");
+
+const Home = lazy(() => homeChunk);
+const Projects = lazy(() => projectsChunk);
+const Contact = lazy(() => contactChunk);
 
 interface PathRoutesProps {
   setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
@@ -194,7 +201,9 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               path="/"
               element={
                 <motion.div {...pageProps}>
-                  <Home setInViewSections={setInViewSections} />
+                  <Suspense fallback={null}>
+                    <Home setInViewSections={setInViewSections} />
+                  </Suspense>
                 </motion.div>
               }
             />
@@ -203,7 +212,9 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               path="/home"
               element={
                 <motion.div {...pageProps}>
-                  <Home setInViewSections={setInViewSections} />
+                  <Suspense fallback={null}>
+                    <Home setInViewSections={setInViewSections} />
+                  </Suspense>
                 </motion.div>
               }
             />
@@ -212,7 +223,9 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               path="/projects"
               element={
                 <motion.div {...pageProps}>
-                  <Projects />
+                  <Suspense fallback={null}>
+                    <Projects />
+                  </Suspense>
                 </motion.div>
               }
             />
@@ -221,7 +234,9 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
               path="/contact-me"
               element={
                 <motion.div {...pageProps}>
-                  <Contact />
+                  <Suspense fallback={null}>
+                    <Contact />
+                  </Suspense>
                 </motion.div>
               }
             />
