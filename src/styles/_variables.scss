@@ -58,4 +58,8 @@
   --project-image-placeholder-start: #2c2c2c;
   --project-image-placeholder-middle: #393939;
   --project-image-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+
+  // Shared skeleton / lazy-image shimmer colors (dark theme).
+  --skeleton-base: #2c2c2c;
+  --skeleton-highlight: #3a3a3a;
 }

@@ -16,9 +16,8 @@
     width: 262px;
     border-radius: 5px;
     overflow: hidden;
-    background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    // Shimmer placeholder + fade/zoom reveal come from the shared
+    // .lazy-image system (components/_skeleton.scss).
     box-shadow: 0px 0px 4px 0px #00000047;
     margin-left: 5px;
     z-index: -1;
@@ -38,23 +37,11 @@
     }
 
     img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-
       object-position: top;
     }
 
     &.loaded {
-      animation: none;
-      background: none;
-
       img {
-        opacity: 1;
         z-index: -1;
       }
     }
@@ -123,14 +110,5 @@ a .projects-row:hover {
         stroke: var(--primary-color);
       }
     }
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }

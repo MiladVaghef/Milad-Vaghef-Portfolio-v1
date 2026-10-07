@@ -278,17 +278,8 @@
 
       border-radius: 13px 13px 0 0;
 
-      background: linear-gradient(
-        90deg,
-        var(--project-image-placeholder-start) 25%,
-        var(--project-image-placeholder-middle) 50%,
-        var(--project-image-placeholder-start) 75%
-      );
-
-      background-size: 200% 100%;
-
-      animation: shimmer 1.5s infinite;
-
+      // Shimmer placeholder + fade/zoom reveal come from the shared
+      // .lazy-image system (components/_skeleton.scss).
       box-shadow: var(--project-image-shadow);
 
       &::before {
@@ -297,31 +288,6 @@
         display: block;
 
         padding-top: calc(var(--aspect-ratio) * 100%);
-      }
-
-      img {
-        position: absolute;
-
-        inset: 0;
-
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-
-        opacity: 0;
-
-        transition: opacity 0.5s ease;
-      }
-
-      &.loaded {
-        animation: none;
-
-        background: none;
-
-        img {
-          opacity: 1;
-        }
       }
     }
 
@@ -389,24 +355,5 @@
     .projects-column-grid-column {
       width: 100%;
     }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
-    }
-
-    100% {
-      background-position: -200% 0;
-    }
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }

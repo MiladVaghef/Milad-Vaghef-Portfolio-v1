@@ -1,5 +1,6 @@
-import { useState } from "react";
 import Icon from "./Icon";
+import LazyImage from "./LazyImage";
+import Reveal from "./Reveal";
 
 interface DataProps {
   isPractice: boolean;
@@ -22,19 +23,9 @@ const ProjectsRow = ({
   desc,
   tech,
 }: DataProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
   const content = (
     <div className="projects-row">
-      <div className={`projects-row-image ${imageLoaded ? "loaded" : ""}`}>
-        <img
-          src={image}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setImageLoaded(true)}
-        />
-      </div>
+      <LazyImage className="projects-row-image" src={image} alt={alt} />
 
       <div className="column">
         <div className="projects-row-title row">
@@ -56,17 +47,22 @@ const ProjectsRow = ({
     </div>
   );
 
-  return activeLink ? (
-    <a
-      href={link}
-      className="fit-content"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {content}
-    </a>
-  ) : (
-    content
+  // Reveal animates the row in the first time it scrolls into view.
+  return (
+    <Reveal>
+      {activeLink ? (
+        <a
+          href={link}
+          className="fit-content"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {content}
+        </a>
+      ) : (
+        content
+      )}
+    </Reveal>
   );
 };
 

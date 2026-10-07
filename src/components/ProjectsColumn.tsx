@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { projectsData } from "../data/projects";
 import Icon, { type IconType } from "./Icon";
+import LazyImage from "./LazyImage";
+import Reveal from "./Reveal";
 
 // Swiper
 import Swiper from "swiper";
@@ -235,27 +237,32 @@ const ProjectCard = ({
 
   return (
 
-    <div className="projects-column">
+    // Reveal slides the card up the first time it enters the viewport.
+    <Reveal>
 
-      {project.activeLink ? (
+      <div className="projects-column">
 
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noreferrer"
-        >
+        {project.activeLink ? (
+
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noreferrer"
+          >
+
+            <ProjectContent project={project} />
+
+          </a>
+
+        ) : (
 
           <ProjectContent project={project} />
 
-        </a>
+        )}
 
-      ) : (
+      </div>
 
-        <ProjectContent project={project} />
-
-      )}
-
-    </div>
+    </Reveal>
 
   );
 
@@ -269,9 +276,6 @@ const ProjectContent = ({
   project: Project;
 }) => {
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-
   const aspectRatio =
     project.height / project.width;
 
@@ -280,28 +284,21 @@ const ProjectContent = ({
 
     <>
 
-      <div
-        className={`image-wrapper ${
-          imageLoaded ? "loaded" : ""
-        }`}
+      <LazyImage
+
+        className="image-wrapper"
+
+        src={project.image}
+
+        alt={project.alt}
 
         style={{
+
           "--aspect-ratio": aspectRatio,
+
         } as React.CSSProperties}
-      >
 
-        <img
-          src={project.image}
-          alt={project.alt}
-          loading="lazy"
-          decoding="async"
-
-          onLoad={() =>
-            setImageLoaded(true)
-          }
-        />
-
-      </div>
+      />
 
 
 

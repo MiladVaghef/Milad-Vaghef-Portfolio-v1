@@ -80,13 +80,30 @@
   }
 }
 
+/* Card-shaped skeleton shown while the SocialMedia chunk resolves —
+   mirrors the real card's dimensions so nothing shifts when it lands. */
 .social-media-box-lazy {
   width: 295px;
   height: 218px;
+  box-sizing: border-box;
   border-radius: 12px;
   margin: 9px;
+  padding: 24px 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--social-card-background-color);
+  box-shadow: var(--social-card-shadow);
+  overflow: hidden;
+
+  .social-media-box-lazy-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   @media (max-width: 705px) {
+    width: 100%;
     min-width: 100%;
   }
 }

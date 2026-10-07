@@ -1,0 +1,110 @@
+// ── Lazy-loading skeletons & image placeholders ──────────────────────
+//
+// One shared shimmer system: `.skeleton` bones fill content slots while
+// their chunks resolve, `.lazy-image` fills image slots until the network
+// delivers the pixels. Both collapse to a static surface under
+// prefers-reduced-motion.
+
+.lazy-image {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-highlight) 50%,
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+
+  > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  // Loaded — kill the shimmer and reveal the pixels with a soft zoom-out.
+  &.loaded {
+    animation: none;
+    background: none;
+
+    > img {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  // Broken image — keep the slot filled with a calm, static surface.
+  &.error {
+    animation: none;
+    background: var(--skeleton-base);
+
+    > img {
+      display: none;
+    }
+  }
+}
+
+.skeleton {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-highlight) 50%,
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+.skeleton--text {
+  width: 100%;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.skeleton--block {
+  width: 100%;
+  min-height: 30px;
+}
+
+.skeleton--image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+}
+
+.skeleton--circle {
+  aspect-ratio: 1;
+}
+
+.skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lazy-image,
+  .skeleton {
+    animation: none;
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

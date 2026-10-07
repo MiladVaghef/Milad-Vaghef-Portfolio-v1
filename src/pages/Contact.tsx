@@ -2,6 +2,8 @@ import { lazy, Suspense } from "react";
 import { socialMediaData } from "../data/socialMedia";
 import PageLayout from "../components/PageLayout";
 import useAppReady from "../hooks/useAppReady";
+import Reveal from "../components/Reveal";
+import { SocialMediaSkeleton } from "../components/Skeleton";
 
 const SocialMedia = lazy(() => import("../components/SocialMedia"));
 
@@ -18,14 +20,11 @@ const Contact = () => {
       <div id="contact-box-holder">
         {" "}
         {socialMediaData.map((mediaData, index) => (
-          <Suspense
-            key={index}
-            fallback={
-              <div className="social-media-box-lazy lazy-animation"></div>
-            }
-          >
-            <SocialMedia {...mediaData} />
-          </Suspense>
+          <Reveal key={index}>
+            <Suspense fallback={<SocialMediaSkeleton />}>
+              <SocialMedia {...mediaData} />
+            </Suspense>
+          </Reveal>
         ))}
       </div>
     </div>

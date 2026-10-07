@@ -29,6 +29,16 @@
     overflow-x: hidden;
     touch-action: pan-y;
 
+    // Reveal wrappers around each card must lay their anchor out as a flex
+    // item (blockification) and span the full row on narrow screens.
+    > .reveal {
+      display: flex;
+
+      @media (max-width: 705px) {
+        width: 100%;
+      }
+    }
+
     margin-bottom: 180px;
 
     &::-webkit-scrollbar {

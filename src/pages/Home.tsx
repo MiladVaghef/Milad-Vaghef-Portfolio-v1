@@ -7,6 +7,8 @@ import { workHistoryData } from "../data/workHistory";
 import { useNavigation } from "../hooks/navigationContext";
 import useAppReady from "../hooks/useAppReady";
 import PageLayout from "../components/PageLayout";
+import Reveal from "../components/Reveal";
+import { WorkHistorySkeleton } from "../components/Skeleton";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -83,7 +85,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
             <div className="sticky-title">
               <h3>About</h3>
             </div>
-            <div className="biography-paragraph home-mobile-padding row">
+            <Reveal className="biography-paragraph home-mobile-padding row">
               <div className="icon-box">
                 <Icon name="code"></Icon>
               </div>
@@ -95,9 +97,12 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 for long-term growth. My work is driven by performance,
                 accessibility, and delivering polished user experiences.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="biography-paragraph home-mobile-padding row highlight">
+            <Reveal
+              className="biography-paragraph home-mobile-padding row highlight"
+              delay={0.08}
+            >
               <div className="icon-box">
                 <Icon name="brush"></Icon>
               </div>
@@ -110,9 +115,9 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 production-ready interfaces while preserving the intent behind
                 every design.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="biography-paragraph home-mobile-padding row">
+            <Reveal className="biography-paragraph home-mobile-padding row" delay={0.16}>
               <div className="icon-box">
                 <Icon name="rocket"></Icon>
               </div>
@@ -127,7 +132,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 digital products that provide real value to both users and
                 businesses.
               </p>
-            </div>
+            </Reveal>
           </div>
 
           <div ref={projectsRef}>
@@ -166,12 +171,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
               {workHistoryData.map((workData, index) => (
                 <Suspense
                   key={index}
-                  fallback={
-                    <div className="work-history-lazy">
-                      <div className="lazy-animation"></div>
-                      <span className="lazy-animation"></span>
-                    </div>
-                  }
+                  fallback={<WorkHistorySkeleton />}
                 >
                   <WorkHistory {...workData} />
                 </Suspense>
