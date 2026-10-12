@@ -7,6 +7,7 @@ import swiperJsExperiment from "../assets/images/projects/swiper-js-experiment.p
 import tvTimeClone from "../assets/images/projects/tv-time-clone.png";
 import chakodHome from "../assets/images/projects/chakod-home.png";
 import statuies from "../assets/images/projects/statuies.png";
+import miladVaghefLanding from "../assets/images/projects/milad-vaghef-landing.png";
 import miladVaghefPortfolio from "../assets/images/projects/milad-vaghef-portfolio.png";
 
 export interface Project {
@@ -22,6 +23,12 @@ export interface Project {
   link: string;
   desc: string;
   tech: string[];
+  /**
+   * Extra images/pages shown in the popup lightbox slider. When present with
+   * 2+ items the card shows a "N pages" badge and clicking opens the slider.
+   * Projects without it fall back to their single cover `image`.
+   */
+  gallery?: string[];
 }
 
 export const projectsData: Project[] = [
@@ -94,6 +101,7 @@ export const projectsData: Project[] = [
     title: "Milad Vaghef - Personal Portfolio",
     desc: "A personal portfolio designed and developed from scratch to showcase my work, experience, and front-end development capabilities. Built with a focus on responsive design, custom UI interactions, smooth animations, reusable components, and a scalable front-end architecture.",
     tech: ["React", "TypeScript", "SCSS", "Framer Motion", "Vite"],
+    gallery: [miladVaghefPortfolio, miladVaghefLanding],
   },
   {
     isPractice: true,

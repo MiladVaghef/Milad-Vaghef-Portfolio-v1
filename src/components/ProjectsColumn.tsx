@@ -1,29 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { projectsData } from "../data/projects";
+import { projectsData, type Project } from "../data/projects";
 import Icon, { type IconType } from "./Icon";
 import LazyImage from "./LazyImage";
 import Reveal from "./Reveal";
+import ProjectModal from "./ProjectModal";
 
 // Swiper
 import Swiper from "swiper";
 import type SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
-
-export interface Project {
-  title: string;
-  category: string;
-  image: string;
-  width: number;
-  height: number;
-  alt: string;
-  desc: string;
-  tech: string[];
-  link?: string;
-  activeLink: boolean;
-  showWide?: boolean;
-  isPractice?: boolean;
-}
 
 const categories: { label: string; icon: IconType }[] = [
   { label: "Front-End", icon: "front-end" },
@@ -34,8 +20,16 @@ const categories: { label: string; icon: IconType }[] = [
 const ProjectsColumn = () => {
   const location = useLocation();
 
+  // Which project's lightbox is currently open (null = closed).
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
+
+  // Scroll container behind the sticky category bar + the bar itself — used to
+  // fade the bar's blur veil in only once cards actually scroll under it.
+  const gridWrapperRef = useRef<HTMLDivElement | null>(null);
+  const categoryBarRef = useRef<HTMLDivElement | null>(null);
 
   const currentHash = decodeURIComponent(location.hash.replace("#", ""));
 
@@ -90,6 +84,32 @@ const ProjectsColumn = () => {
   }, []);
 
 
+  // The bar's blur veil (its ::before layer) only makes sense once cards are
+  // actually scrolling underneath it. At rest — before any scroll — the sticky
+  // bar sits directly over the FIRST card's top edge, so an always-on veil
+  // smears a white blurred band across the image for no reason. Toggle a
+  // class instead of state: the scroll event fires often and re-rendering the
+  // whole grid for it would be wasteful (React never rewrites this className,
+  // so the DOM-toggled class survives re-renders).
+  useEffect(() => {
+    const grid = gridWrapperRef.current;
+    const bar = categoryBarRef.current;
+
+    if (!grid || !bar) return;
+
+    const sync = () => {
+      bar.classList.toggle("scrolled", grid.scrollTop > 0);
+    };
+
+    grid.addEventListener("scroll", sync, { passive: true });
+    sync();
+
+    // Re-sync after tab switches: the grid's content (and scroll height)
+    // changes, which can clamp scrollTop back to 0.
+    return () => grid.removeEventListener("scroll", sync);
+  }, [activeTab]);
+
+
   const filteredProjects = projectsData.filter(
     (project) => project.category === activeTab
   );
@@ -126,7 +146,13 @@ const ProjectsColumn = () => {
   return (
     <div className="column projects-column-container">
 
-      <div className="category-slider-wrapper" data-no-swipe>
+      <div ref={gridWrapperRef} className="projects-column-grid-wrapper">
+
+      <div
+        ref={categoryBarRef}
+        className="category-slider-wrapper"
+        data-no-swipe
+      >
 
         <div
           ref={swiperRef}
@@ -184,8 +210,6 @@ const ProjectsColumn = () => {
 
 
 
-      <div className="projects-column-grid-wrapper">
-
         <div className="projects-column-grid">
 
 
@@ -196,6 +220,7 @@ const ProjectsColumn = () => {
               <ProjectCard
                 key={project.title}
                 project={project}
+                onOpen={setActiveProject}
               />
 
             ))}
@@ -211,6 +236,7 @@ const ProjectsColumn = () => {
               <ProjectCard
                 key={project.title}
                 project={project}
+                onOpen={setActiveProject}
               />
 
             ))}
@@ -223,6 +249,11 @@ const ProjectsColumn = () => {
       </div>
 
 
+      <ProjectModal
+        project={activeProject}
+        onClose={() => setActiveProject(null)}
+      />
+
     </div>
   );
 };
@@ -231,8 +262,10 @@ const ProjectsColumn = () => {
 
 const ProjectCard = ({
   project,
+  onOpen,
 }: {
   project: Project;
+  onOpen: (project: Project) => void;
 }) => {
 
   return (
@@ -242,23 +275,16 @@ const ProjectCard = ({
 
       <div className="projects-column">
 
-        {project.activeLink ? (
-
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noreferrer"
-          >
-
-            <ProjectContent project={project} />
-
-          </a>
-
-        ) : (
+        <button
+          type="button"
+          className="projects-column-open"
+          onClick={() => onOpen(project)}
+          aria-label={`Open ${project.title}`}
+        >
 
           <ProjectContent project={project} />
 
-        )}
+        </button>
 
       </div>
 
@@ -284,21 +310,39 @@ const ProjectContent = ({
 
     <>
 
-      <LazyImage
+      <div className="projects-column-media">
 
-        className="image-wrapper"
+        <LazyImage
 
-        src={project.image}
+          className="image-wrapper"
 
-        alt={project.alt}
+          src={project.image}
 
-        style={{
+          alt={project.alt}
 
-          "--aspect-ratio": aspectRatio,
+          style={{
 
-        } as React.CSSProperties}
+            "--aspect-ratio": aspectRatio,
 
-      />
+          } as React.CSSProperties}
+
+        />
+
+
+        {/* "N pages" badge — only for multi-image projects */}
+        {project.gallery && project.gallery.length > 1 && (
+
+          <span className="projects-column-badge">
+
+            <Icon name="grid" />
+
+            {project.gallery.length} pages
+
+          </span>
+
+        )}
+
+      </div>
 
 
 

@@ -1,0 +1,503 @@
+// Swiper base + the modules this slider uses (Navigation, Pagination, Keyboard,
+// Thumbs). Loaded via SCSS to match the project's Vite/sass pipeline (no JS CSS
+// imports, which tsc rejects). Scoped inside .project-modal so the global swiper
+// base only affects this lightbox.
+@use "swiper/css";
+@use "swiper/css/navigation";
+@use "swiper/css/pagination";
+
+.project-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  // Keep the persistent left sidebar visible: on desktop the popup is confined
+  // to the main content area to the right of the aside (which is 25% wide).
+  left: 25%;
+  z-index: 3000; // above the mobile footer nav (1900)
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  // Tablet & mobile: the aside is hidden (.remove), so use the full viewport
+  // and let the dialog scroll over everything (incl. the fixed footer nav).
+  @include device("tablet") {
+    left: 0;
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .project-modal-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+  }
+
+  .project-modal-dialog {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: min(1180px, 100%);
+    max-height: calc(100vh - 48px);
+
+    border-radius: 18px;
+
+    background-color: var(--project-card-background-color);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+
+    overflow: hidden;
+
+    @include device("tablet") {
+      max-height: 100vh;
+      border-radius: 0;
+    }
+  }
+
+  .project-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 5;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--project-nav-background-color);
+    box-shadow: var(--project-nav-shadow);
+
+    color: var(--primary-color);
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    svg {
+      width: 12px;
+      height: 12px;
+      transform: rotate(45deg);
+
+      path {
+        stroke: var(--primary-color);
+      }
+    }
+
+    &:hover {
+      background: var(--primary-color);
+
+      svg path {
+        stroke: #fff;
+      }
+    }
+  }
+
+  .project-modal-body {
+    display: flex;
+    flex-direction: row;
+
+    min-height: 0;
+    max-height: calc(100vh - 48px);
+
+    @include device("tablet") {
+      flex-direction: column;
+      max-height: none;
+      overflow-y: auto;
+    }
+  }
+
+  .project-modal-slider-area {
+    position: relative;
+
+    flex: 1 1 60%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding: 24px;
+
+    background: rgba(0, 0, 0, 0.18);
+
+    @include device("tablet") {
+      flex: none;
+      padding: 16px;
+      padding-top: 56px; // room for the close button
+    }
+
+    .project-modal-slider {
+      width: 100%;
+
+      // Fixed-height window (~300–420px). Tall screenshots reveal themselves
+      // by scrolling inside it (auto-scrolled in JS, or by hand) instead of
+      // expanding the popup to the image's full natural height.
+      height: clamp(300px, 45vh, 420px);
+
+      .swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
+
+        // Scroll viewport that wraps every slide image. For normal shots it
+        // just centers the image; for tall ones (see [data-tall]) it becomes
+        // the region that scrolls (auto-scrolled in JS, or by the visitor).
+        .project-modal-scroll {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          width: 100%;
+          height: 100%;
+
+          overflow: hidden;
+
+          img {
+            display: block;
+
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+
+            object-fit: contain;
+
+            border-radius: 12px;
+
+            box-shadow: var(--project-image-shadow);
+
+            user-select: none;
+          }
+        }
+
+        // Tall full-page screenshots (>3000px): show them full-width at their
+        // real height and let this viewport scroll so nothing gets squished.
+        &[data-tall="true"] {
+          .project-modal-scroll {
+            align-items: flex-start;
+            justify-content: center;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            // Smooth it out whether driven by JS or by hand.
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+
+            // Thin, on-brand scrollbar.
+            scrollbar-width: thin;
+            scrollbar-color: rgba(249, 115, 22, 0.5) transparent;
+            &::-webkit-scrollbar {
+              width: 6px;
+            }
+            &::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: rgba(249, 115, 22, 0.5);
+              border-radius: 20px;
+            }
+
+            img {
+              height: auto;
+              max-height: none; // let it be its full natural height
+              object-fit: contain;
+              border-radius: 0; // full-bleed inside the scroll viewport
+            }
+          }
+        }
+      }
+
+      // On mobile the slider-area is `flex: none`, so give the slider a
+      // concrete height — otherwise tall images have nothing to scroll within.
+      @include device("tablet") {
+        height: clamp(280px, 56vh, 420px);
+      }
+
+    }
+
+    .project-modal-arrow {
+      position: absolute;
+      top: 42%;
+      z-index: 4;
+
+      width: 44px;
+      height: 44px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transform: translateY(-50%);
+
+      border-radius: 50%;
+
+      background: var(--project-nav-background-color);
+      box-shadow: var(--project-nav-shadow);
+
+      color: var(--primary-color);
+
+      cursor: pointer;
+
+      transition: 0.25s;
+
+      svg {
+        width: 11px;
+        height: 11px;
+
+        path {
+          stroke: var(--primary-color);
+        }
+      }
+
+      &:hover {
+        background: var(--primary-color);
+
+        svg path {
+          stroke: #fff;
+        }
+      }
+
+      &.swiper-button-disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+    }
+
+    .project-modal-prev {
+      left: 36px;
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .project-modal-next {
+      right: 36px;
+    }
+
+    // Counter + pagination dots share one row under the big slider.
+    .project-modal-slider-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 16px;
+
+      .project-modal-counter {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        color: var(--secondary-text-color);
+      }
+
+      .project-modal-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+
+        .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+
+          margin: 0;
+
+          background: var(--secondary-text-color);
+
+          opacity: 0.5;
+
+          border-radius: 20px;
+
+          cursor: pointer;
+
+          transition: 0.25s;
+
+          &-active {
+            width: 22px;
+
+            background: var(--primary-color);
+
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    // Thumbnail strip — jumps to any page on click (linked via Swiper Thumbs).
+    .project-modal-thumbs {
+      width: 100%;
+      padding-bottom: 2px;
+
+      .project-modal-thumb {
+        width: 96px;
+        height: 62px;
+
+        padding: 3px;
+
+        border-radius: 10px;
+        border: 2px solid transparent;
+
+        cursor: pointer;
+
+        opacity: 0.5;
+
+        transition: 0.25s;
+
+        img {
+          display: block;
+
+          width: 100%;
+          height: 100%;
+
+          object-fit: cover;
+
+          border-radius: 7px;
+
+          pointer-events: none;
+        }
+
+        &:hover {
+          opacity: 0.85;
+        }
+
+        &.swiper-slide-thumb-active {
+          border-color: var(--primary-color);
+
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .project-modal-info {
+    flex: 1 1 40%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding: 40px 32px 32px;
+
+    overflow-y: auto;
+
+    @include device("tablet") {
+      flex: none;
+      padding: 24px 16px 40px;
+    }
+
+    .project-modal-category {
+      width: fit-content;
+
+      padding: 3px 14px;
+
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+
+      color: var(--primary-color);
+
+      border: 1px solid var(--glass-border-color);
+      border-radius: 15px;
+
+      background: rgba(249, 115, 22, 0.08);
+    }
+
+    .project-modal-title-row {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+    }
+
+    .project-modal-title {
+      margin: 0;
+
+      font-size: 26px;
+      line-height: 1.25;
+
+      color: var(--text-color);
+    }
+
+    // Compact "open live site" icon-button that sits beside the title.
+    .project-modal-visit {
+      flex-shrink: 0;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 50%;
+
+      background: var(--project-nav-background-color);
+      box-shadow: var(--project-nav-shadow);
+
+      color: var(--primary-color);
+
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition: 0.25s;
+
+      svg {
+        width: 14px;
+        height: 14px;
+
+        path {
+          stroke: var(--primary-color);
+        }
+      }
+
+      &:hover {
+        background: var(--primary-color);
+
+        svg path {
+          stroke: #fff;
+        }
+      }
+    }
+
+    .project-modal-desc {
+      margin: 0;
+
+      font-size: 14px;
+      line-height: 1.7;
+
+      color: var(--secondary-text-color);
+    }
+
+    .project-modal-tech {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      padding: 0;
+      margin: 4px 0 0;
+
+      list-style: none;
+    }
+  }
+}
+
