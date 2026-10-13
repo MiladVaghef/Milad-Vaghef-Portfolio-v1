@@ -1,4 +1,5 @@
 .projects-column-container {
+  position: relative; // anchors the custom scrollbar thumb below
   gap: 20px;
   align-items: center;
   height: 100%; /* keep this */
@@ -10,6 +11,38 @@
 
   .swiper-button-disabled {
     opacity: 0.5 !important;
+  }
+
+  // Custom scrollbar thumb — the wrapper's NATIVE scrollbar is hidden below
+  // because its track spanned the whole page (top to bottom). This one runs
+  // inside a track that starts below the category bar and stops just above
+  // the floating footer nav pill (gaps on both ends — geometry comes from
+  // the scroll/resize sync in ProjectsColumn). Desktop only, matching the old native scrollbar.
+  .projects-scroll-thumb {
+    position: absolute;
+    top: 0;
+    // The wrapper is width: 95% and centred — line up where the old 4px
+    // native track sat, just inside its right edge.
+    right: calc(2.5% + 4px);
+    width: 4px;
+
+    z-index: 25; // above the cards and the bar's veil, below the modal
+
+    border-radius: 20px;
+    background: var(--secondary-color);
+
+    pointer-events: none; // never intercept clicks on the cards
+
+    opacity: 0;
+    transition: opacity 0.25s ease;
+
+    &.is-visible {
+      opacity: 1;
+    }
+
+    @include device("tablet") {
+      display: none; // no scrollbar below desktop, as before
+    }
   }
 
   .category-slider-wrapper {
@@ -97,7 +130,15 @@
     }
 
     .projects-column-category {
-      width: min(760px, 100%);
+      // Never let the chip strip run into the prev/next arrow lanes: the
+      // arrows pin to the bar edges once calc(50% - 380px - 45px) collapses
+      // to 0 (narrow desktop windows), and the chips used to slide right
+      // underneath them — the edge mask faded them, but they still showed
+      // through behind the opaque arrow circles. Reserve 60px per side
+      // (120px total) so the whole strip — and its fade — stays clear of the
+      // 45px arrows; the 760px cap keeps wide screens exactly as before,
+      // with the arrows sitting just outside it.
+      width: min(760px, calc(100% - 120px));
       overflow: hidden;
       padding: 12px 0;
 
@@ -211,9 +252,15 @@
     .projects-prev,
     .projects-next {
       position: absolute;
+      // Swiper's base CSS (loaded via _projectModal.scss) gives `.swiper` —
+      // the category chip slider — a z-index of 1, making it a stacking
+      // context that painted OVER these arrows (z-index: auto) wherever they
+      // overlapped. Lift the arrows above the chips; 10 matches Swiper's own
+      // nav-button z-index and stays under the bar's 20 / modal's 3000.
+      z-index: 10;
       // Vertically centered on the bar — aligned with the category buttons
       // and the blur veil behind them.
-      top: 50%;
+      top: 54%;
 
       width: 45px;
       height: 45px;
@@ -248,6 +295,9 @@
         width: 8px;
       }
 
+      @include device("tablet") {
+        display: none;
+      }
       @include device("mobile") {
         display: none;
       }
@@ -267,7 +317,9 @@
   // The scroll container: the sticky category bar lives INSIDE it, so the
   // cards scroll cleanly behind the bar while scrolling — and the region
   // bleeds past the viewport bottom, behind the floating footer pill, same
-  // as the original layout.
+  // as the original layout. Its NATIVE scrollbar is hidden (the track spanned
+  // the whole page, top to bottom) — the inset scrollbar is the custom
+  // `.projects-scroll-thumb` defined against the container above.
   .projects-column-grid-wrapper {
     width: 95%;
     min-height: 0;
@@ -280,49 +332,32 @@
     // mid-air, detached from the window top. Starting the scroll area flush
     // pins the bar (and its veil) to the top section from the very first
     // pixel of scroll. The bar's own padding keeps the chips ~24px down.
-    padding: 0 30px 125px 8px;
+    // The right padding doubles as breathing room between the cards and the
+    // custom scrollbar thumb: the wrapper is centred and content-box sized,
+    // so the thumb (right: calc(2.5% + 4px) of the container) lands inside
+    // this padding — and only half of the padding becomes actual gap.
+    // 60px ≈ 18px of clear space next to the 4px thumb.
+    padding: 0 60px 125px 8px;
 
     pointer-events: auto;
     touch-action: pan-y;
+    // Keep end-of-scroll rubber-banding inside this scroller instead of
+    // chaining against the overflow-hidden app shell around it.
+    overscroll-behavior: contain;
 
-    // Firefox-only: when the standard scrollbar properties are set, Chrome
-    // (121+) DROPS the custom ::-webkit-scrollbar styling below and falls
-    // back to its native thin scrollbar — arrows and all. Gate them so
-    // webkit keeps the fully custom (arrowless) rendering.
-    @supports not selector(::-webkit-scrollbar) {
-      scrollbar-width: thin;
-      scrollbar-color: var(--secondary-color) transparent;
-    }
+    // Native scrollbar hidden at every width: its track is the wrapper's
+    // full height, which runs from the top of the page to past the bottom.
+    // The visible scrollbar is the custom `.projects-scroll-thumb` above.
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--secondary-color);
-      border-radius: 20px;
-    }
-
-    // Windows: custom ::-webkit-scrollbar styling still draws the default
-    // up/down arrow buttons unless they're explicitly hidden.
-    &::-webkit-scrollbar-button {
-      display: none;
+      width: 0;
     }
 
     @include device("tablet") {
       width: 100%;
       padding: 0;
       padding-bottom: 90px;
-
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        width: 0;
-      }
     }
 
     @include device("mobile") {

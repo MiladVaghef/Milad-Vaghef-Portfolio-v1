@@ -7,7 +7,7 @@ import Icon from "./Icon";
 // Swiper — loaded via SCSS (in _projectModal.scss) to match the project pipeline.
 import Swiper from "swiper";
 import type SwiperCore from "swiper";
-import { Pagination, Keyboard, Thumbs } from "swiper/modules";
+import { Pagination, Keyboard, Thumbs, Mousewheel } from "swiper/modules";
 
 interface ProjectModalProps {
   project: Project | null;
@@ -53,11 +53,14 @@ function ProjectSlide({
   alt,
   index,
   active,
+  zoom,
 }: {
   src: string;
   alt: string;
   index: number;
   active: boolean;
+  /** Per-image zoom flag — entry's own `zoom`, else the project's `zoomImages`. */
+  zoom?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number>(0);
@@ -164,6 +167,7 @@ function ProjectSlide({
     <div
       className="swiper-slide project-modal-slide"
       data-tall={isTall ? "true" : undefined}
+      data-zoom={zoom ? "true" : undefined}
     >
       <div ref={scrollRef} className="project-modal-scroll">
         <img
@@ -199,12 +203,21 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  // The images to show — fall back to the single cover when no gallery exists.
-  const images = project?.gallery?.length
-    ? project.gallery
-    : project
-      ? [project.image]
-      : [];
+  // The images to show — fall back to the single cover when no gallery
+  // exists. Gallery entries may be plain URLs or objects with per-image
+  // options; each resolved slide gets its own `zoom` flag (the entry's own
+  // `zoom` wins, otherwise the project-wide `zoomImages` default applies).
+  const images: { src: string; zoom?: boolean }[] = (
+    project?.gallery?.length
+      ? project.gallery
+      : project
+        ? [project.image]
+        : []
+  ).map((entry) =>
+    typeof entry === "string"
+      ? { src: entry, zoom: project?.zoomImages }
+      : { src: entry.src, zoom: entry.zoom ?? project?.zoomImages },
+  );
 
   // Close on Escape + lock background scroll while the lightbox is open.
   useEffect(() => {
@@ -258,11 +271,20 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
     // `new Swiper(null, …)` throws and crashes the whole React tree (black screen).
     if (images.length > 1 && thumbsSliderRef.current) {
       thumbsSwiper.current = new Swiper(thumbsSliderRef.current, {
-        modules: [Thumbs],
+        modules: [Thumbs, Mousewheel],
         slidesPerView: "auto",
         spaceBetween: 10,
         watchSlidesProgress: true,
         slideToClickedSlide: true,
+        // Scrolling (wheel / trackpad) over the thumbnail strip pans it left
+        // and right: forceToAxis maps any wheel direction onto the strip's
+        // horizontal axis; at either end the gesture releases so the wheel
+        // can keep scrolling whatever sits behind the dialog.
+        mousewheel: {
+          enabled: true,
+          forceToAxis: true,
+          releaseOnEdges: true,
+        },
       });
     }
 
@@ -353,13 +375,14 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   className="swiper project-modal-slider"
                 >
                   <div className="swiper-wrapper">
-                    {images.map((src, index) => (
+                    {images.map(({ src, zoom }, index) => (
                       <ProjectSlide
                         key={`${project.title}-${index}`}
                         src={src}
                         alt={project.alt}
                         index={index}
                         active={activeIndex === index}
+                        zoom={zoom}
                       />
                     ))}
                   </div>
@@ -381,7 +404,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     className="swiper project-modal-thumbs"
                   >
                     <div className="swiper-wrapper">
-                      {images.map((src, index) => (
+                      {images.map(({ src }, index) => (
                         <div
                           className="swiper-slide project-modal-thumb"
                           key={`${project.title}-thumb-${index}`}

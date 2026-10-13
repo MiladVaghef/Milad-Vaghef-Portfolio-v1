@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import SmartNavbar from "./SmartNavbar";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { VALID_PATHS, ValidPath } from "../config/routes";
 import { InViewSections } from "../App";
 import Logo from "../components/Logo";
@@ -87,4 +87,6 @@ const Aside = ({ inViewSections }: AsideProps) => {
   );
 };
 
-export default Aside;
+// Memoized: in-view ratio updates flow through App state — skip re-rendering
+// the sidebar unless those ratios actually change.
+export default memo(Aside);

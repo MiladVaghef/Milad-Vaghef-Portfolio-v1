@@ -39,14 +39,48 @@ export interface Project {
    * Extra images/pages shown in the popup lightbox slider. When present with
    * 2+ items the card shows a "N pages" badge and clicking opens the slider.
    * Projects without it fall back to their single cover `image`.
+   *
+   * Each entry is either a plain image URL (no zoom) or an object carrying
+   * per-image options — e.g. zoom THIS image only:
+   *   gallery: [
+   *     desktopShot,
+   *     { src: phoneShot, zoom: true },
+   *     anotherShot,
+   *   ]
    */
-  gallery?: string[];
+  gallery?: GalleryImage[];
+  /**
+   * Project-wide DEFAULT for the modal presentation: show this project's
+   * lightbox images ZOOMED — at their native 1:1 pixel size, never shrunk to
+   * fit — inside a fixed-height viewport that can be panned by hand in both
+   * axes. Use it for screenshots whose fine detail gets lost in the default
+   * fit-to-frame view. Optional (off by default).
+   *
+   * Gallery entries written as objects can override this per image via their
+   * own `zoom` flag (see `GalleryImage`), so a project can mix zoomed and
+   * fit-to-frame images.
+   */
+  zoomImages?: boolean;
 }
+
+/**
+ * One lightbox image: a plain URL (no zoom), or an object with per-image
+ * options. `zoom` on the object overrides the project-wide `zoomImages`
+ * default for that single image.
+ */
+export type GalleryImage =
+  | string
+  | {
+      src: string;
+      /**
+       * Show THIS image zoomed — native 1:1 pixels in a pannable window.
+       * Falls back to the project's `zoomImages` flag when omitted.
+       */
+      zoom?: boolean;
+    };
 
 export const projectsData: Project[] = [
   {
-    // Test/mock entry — placeholder copy, to be replaced with the real
-    // Zerva project later.
     isPractice: true,
     showWide: false,
     category: "Figma",

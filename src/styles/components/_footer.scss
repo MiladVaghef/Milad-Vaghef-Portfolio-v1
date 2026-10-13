@@ -9,6 +9,9 @@ footer {
   position: fixed;
   left: 63.5%;
   bottom: 20px;
+  // Sit above the iPhone home-indicator strip (env() is 0 where there's no
+  // inset, so desktop is unchanged).
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
   width: 65%;
 
@@ -30,7 +33,10 @@ footer {
   @include device("tablet") {
     border-top: unset;
     position: fixed;
-    bottom: 5;
+    // Was `bottom: 5` (no unit — invalid CSS, silently dropped, so the base
+    // 20px actually applied). Real 5px + home-indicator clearance.
+    bottom: 5px;
+    bottom: calc(15px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     width: 95%;
     min-height: 70px;

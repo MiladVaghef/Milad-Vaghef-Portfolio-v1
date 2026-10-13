@@ -3,6 +3,13 @@
   align-items: center;
   overflow-x: hidden;
   height: 100vh;
+  // dvh (with vh fallback): on iOS Safari the scroller must match the
+  // VISIBLE viewport, otherwise its bottom — and the end of its scroll —
+  // sits permanently behind Safari's bottom toolbar.
+  height: 100dvh;
+  // Contain overscroll so reaching the end of this scroller can't chain
+  // into a rubber-band against the (non-scrollable) ancestors.
+  overscroll-behavior: contain;
   padding-left: 3rem;
   padding-right: 3rem;
   position: relative;

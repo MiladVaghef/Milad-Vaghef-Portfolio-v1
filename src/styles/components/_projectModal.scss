@@ -45,6 +45,9 @@
 
     width: min(1180px, 100%);
     max-height: calc(100vh - 48px);
+    // dvh (with vh fallback): the dialog must fit the VISIBLE viewport on
+    // iOS Safari, or its bottom closes/controls hide behind the toolbar.
+    max-height: calc(100dvh - 48px);
 
     border-radius: 18px;
 
@@ -55,6 +58,7 @@
 
     @include device("tablet") {
       max-height: 100vh;
+      max-height: 100dvh;
       border-radius: 0;
     }
   }
@@ -274,6 +278,9 @@
             // chasing animation per frame (jitter). Manual wheel/touch
             // scrolling is unaffected by this property.
             -webkit-overflow-scrolling: touch;
+            // Keep the auto-scroll pass from chaining the user's manual
+            // momentum into surrounding containers on iOS.
+            overscroll-behavior: contain;
 
             // Thin, on-brand scrollbar. Standard properties are Firefox-only
             // — see the note on `.project-modal-body`.
@@ -302,6 +309,76 @@
               max-height: none; // let it be its full natural height
               object-fit: contain;
               border-radius: 0; // full-bleed inside the scroll viewport
+            }
+          }
+        }
+
+        // Per-project ZOOM viewport (`zoomImages` in the project data): the
+        // image renders at its NATIVE 1:1 pixel size — never shrunk to fit —
+        // inside a fixed-height window that pans by hand in both axes. For
+        // screenshots whose fine detail gets lost in the fit-to-frame view.
+        // Declared AFTER the tall block so these overrides win when a tall
+        // image is also flagged for zoom.
+        &[data-zoom="true"] {
+          .project-modal-scroll {
+            // Start every pan from the top-left. The img's auto margins still
+            // center it whenever it fits (auto margins collapse to 0 when the
+            // image overflows, keeping the far edges reachable — plain
+            // `center` alignment would strand them outside the scroll area).
+            align-items: flex-start;
+            justify-content: flex-start;
+
+            // The same window cap the slider never grows past.
+            height: var(--modal-slide-max-height);
+
+            // Pan both axes — native-size images overflow both.
+            overflow: auto;
+
+            -webkit-overflow-scrolling: touch;
+            // Manual momentum must not chain into surrounding containers.
+            overscroll-behavior: contain;
+
+            // Slim scrollbars on both axes, matching the tall viewport's
+            // styling — horizontal gets one too, since there's real width to
+            // pan now. Standard properties are Firefox-only — see the note on
+            // `.project-modal-body`.
+            @supports not selector(::-webkit-scrollbar) {
+              scrollbar-width: thin;
+              scrollbar-color: rgba(249, 115, 22, 0.5) transparent;
+            }
+            &::-webkit-scrollbar {
+              width: 6px;
+              height: 6px;
+            }
+            &::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: rgba(249, 115, 22, 0.5);
+              border-radius: 20px;
+            }
+            // Windows draws arrow buttons on custom scrollbars unless hidden.
+            &::-webkit-scrollbar-button {
+              display: none;
+            }
+
+            img {
+              // Native 1:1 pixels — no cap in either axis.
+              width: auto;
+              max-width: none;
+              height: auto;
+              max-height: none;
+
+              // Images narrower than the window still fill it (upscaled)
+              // instead of leaving dead space beside them.
+              min-width: 100%;
+
+              // Center when the image fits; collapse to the start edge when
+              // it overflows (see the note above).
+              margin: auto;
+
+              // Full-bleed corners inside the scroll viewport, like tall.
+              border-radius: 0;
             }
           }
         }

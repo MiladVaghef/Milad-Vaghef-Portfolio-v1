@@ -4,6 +4,8 @@
   gap: 30px;
   align-items: center;
   height: 100vh;
+  // dvh (with vh fallback) — same iOS Safari toolbar fix as #home.
+  height: 100dvh;
   padding-left: 2rem;
   padding-right: 2rem;
   margin-top: 50px;
@@ -28,6 +30,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     touch-action: pan-y;
+    // Keep end-of-scroll rubber-banding inside this scroller.
+    overscroll-behavior: contain;
 
     // Reveal wrappers around each card must lay their anchor out as a flex
     // item (blockification) and span the full row on narrow screens.

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import Icon from "../components/Icon";
 import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
@@ -24,33 +24,65 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 10 }, (_, i) => i * 0.1);
 
+  // The observers fire on threshold crossings throughout a scroll gesture.
+  // Quantize each ratio to a 5% bucket and coalesce all three sections into
+  // at most ONE state update per animation frame — otherwise the whole App
+  // re-renders continuously while scrolling, which iOS Safari experiences as
+  // dropped scroll frames ("hard to scroll").
+  const pendingSectionsRef = useRef<Partial<InViewSections>>({});
+  const inViewRafRef = useRef(0);
+
+  const queueInViewUpdate = useCallback(
+    (key: keyof InViewSections, ratio: number) => {
+      if (!setInViewSections) return;
+
+      pendingSectionsRef.current[key] = Math.round(ratio * 20) / 20;
+
+      if (inViewRafRef.current) return;
+
+      inViewRafRef.current = requestAnimationFrame(() => {
+        inViewRafRef.current = 0;
+
+        const pending = pendingSectionsRef.current;
+        pendingSectionsRef.current = {};
+
+        setInViewSections((prev) => {
+          const changed = (
+            Object.keys(pending) as (keyof InViewSections)[]
+          ).some((key) => prev[key] !== pending[key]);
+
+          // Returning the same reference skips the re-render entirely when
+          // every bucket is unchanged.
+          return changed ? { ...prev, ...pending } : prev;
+        });
+      });
+    },
+    [setInViewSections],
+  );
+
+  useEffect(
+    () => () => cancelAnimationFrame(inViewRafRef.current),
+    [],
+  );
+
   const { ref: bioRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections?.((prev) => ({
-        ...prev,
-        "#biography": entry.intersectionRatio,
-      }));
+      queueInViewUpdate("#biography", entry.intersectionRatio);
     },
   });
 
   const { ref: projectsRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections?.((prev) => ({
-        ...prev,
-        "#home-row-projects": entry.intersectionRatio,
-      }));
+      queueInViewUpdate("#home-row-projects", entry.intersectionRatio);
     },
   });
 
   const { ref: workRef } = useInView({
     threshold: thresholdSteps,
     onChange: (_, entry) => {
-      setInViewSections?.((prev) => ({
-        ...prev,
-        "#home-work-history": entry.intersectionRatio,
-      }));
+      queueInViewUpdate("#home-work-history", entry.intersectionRatio);
     },
   });
 

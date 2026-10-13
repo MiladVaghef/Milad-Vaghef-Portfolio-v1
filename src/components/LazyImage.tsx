@@ -54,6 +54,11 @@ const LazyImage = ({
     .filter(Boolean)
     .join(" ");
 
+  // NOTE: no native `loading="lazy"` on the img — the IntersectionObserver
+  // above is already the lazy gate (it prefetches 300px early). The native
+  // heuristic can additionally defer fetching for images inside INNER scroll
+  // containers until the user scrolls, leaving the shimmer skeleton on an
+  // already-visible card.
   return (
     <div
       ref={ref}
@@ -66,7 +71,6 @@ const LazyImage = ({
           ref={setImgRef}
           src={src}
           alt={alt}
-          loading="lazy"
           decoding="async"
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}

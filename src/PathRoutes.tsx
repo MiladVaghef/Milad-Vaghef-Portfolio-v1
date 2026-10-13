@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect, useRef, useMemo } from "react";
+import { lazy, Suspense, memo, useState, useEffect, useRef, useMemo } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
@@ -21,7 +21,7 @@ interface PathRoutesProps {
   setInViewSections: React.Dispatch<React.SetStateAction<InViewSections>>;
 }
 
-export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
+const PathRoutesBase = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
   const swipeHandlers = useSwipe();
 
@@ -155,6 +155,11 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
   const pageProps = {
     drag: isMobile && isDragEnabled ? ("x" as const) : false,
 
+    // Lock the gesture to its initial axis: a mostly-vertical scroll can
+    // never accumulate horizontal drag (and therefore can never trigger a
+    // page change), while deliberate horizontal swipes still work.
+    dragDirectionLock: true,
+
     onPointerDown: handlePointerDown,
 
     dragElastic: 0.1,
@@ -248,3 +253,7 @@ export const PathRoutes = ({ setInViewSections }: PathRoutesProps) => {
     </main>
   );
 };
+
+// Memoized: App-level state (the in-view ratios) must not re-render the whole
+// route tree on every update — only real navigation/context changes should.
+export const PathRoutes = memo(PathRoutesBase);

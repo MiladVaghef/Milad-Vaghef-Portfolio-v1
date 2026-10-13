@@ -31,6 +31,11 @@ const ProjectsColumn = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const barRef = useRef<HTMLDivElement | null>(null);
 
+  // The container anchors the custom scrollbar thumb (the wrapper's native
+  // scrollbar is hidden — its track spanned the whole page).
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const thumbRef = useRef<HTMLDivElement | null>(null);
+
   const currentHash = decodeURIComponent(location.hash.replace("#", ""));
 
   const activeTab =
@@ -84,26 +89,68 @@ const ProjectsColumn = () => {
   }, []);
 
 
-  // Keep the bar's veil in sync with the scroll, and start every tab at the
-  // top: a stale scroll offset would mount the remounted cards clipped above
-  // the viewport, where their reveal observers never fire (a whole column
-  // reads as empty).
+  // Keep the bar's veil in sync with the scroll, start every tab at the
+  // top (a stale scroll offset would mount the remounted cards clipped above
+  // the viewport, where their reveal observers never fire — a whole column
+  // reads as empty), and drive the custom scrollbar thumb: its track starts
+  // below the category bar and stops just above the floating footer nav pill
+  // (the container itself bleeds 30px past the visible page bottom).
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const bar = barRef.current;
+    const container = containerRef.current;
+    const thumb = thumbRef.current;
 
-    if (!wrapper || !bar) return;
+    if (!wrapper || !bar || !container || !thumb) return;
 
     wrapper.scrollTop = 0;
 
+    // Px between the bar's bottom edge and the top of the thumb's track.
+    const TRACK_TOP_GAP = 8;
+    // Px between the container's bottom edge and the end of the track.
+    // The container bleeds 30px past the visible page bottom, and the fixed
+    // footer nav pill floats ~100px above it (20px offset + ~80px tall) —
+    // 145 lands the track's end ~115px above the visible bottom, a touch
+    // clear of the pill instead of sliding underneath it.
+    const TRACK_BOTTOM_GAP = 145;
+    // Smallest thumb so the handle stays visible when content barely
+    // overflows.
+    const MIN_THUMB = 48;
+
     const sync = () => {
-      bar.classList.toggle("scrolled", wrapper.scrollTop > 0);
+      const { scrollTop, scrollHeight, clientHeight } = wrapper;
+
+      bar.classList.toggle("scrolled", scrollTop > 0);
+
+      const trackTop = bar.offsetHeight + TRACK_TOP_GAP;
+      const trackH = container.offsetHeight - trackTop - TRACK_BOTTOM_GAP;
+      const scrollable = scrollHeight - clientHeight;
+
+      if (scrollable <= 1 || trackH < MIN_THUMB) {
+        thumb.classList.remove("is-visible");
+        return;
+      }
+
+      const thumbH = Math.min(
+        trackH,
+        Math.max(MIN_THUMB, (trackH * clientHeight) / scrollHeight),
+      );
+      const progress = scrollTop / scrollable;
+      const y = trackTop + progress * (trackH - thumbH);
+
+      thumb.style.height = `${Math.round(thumbH)}px`;
+      thumb.style.transform = `translateY(${Math.round(y)}px)`;
+      thumb.classList.add("is-visible");
     };
 
     wrapper.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
     sync();
 
-    return () => wrapper.removeEventListener("scroll", sync);
+    return () => {
+      wrapper.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+    };
   }, [activeTab]);
 
 
@@ -141,7 +188,7 @@ const ProjectsColumn = () => {
 
 
   return (
-    <div className="column projects-column-container">
+    <div ref={containerRef} className="column projects-column-container">
 
       <div ref={wrapperRef} className="projects-column-grid-wrapper">
 
@@ -243,6 +290,11 @@ const ProjectsColumn = () => {
 
       </div>
 
+      {/* Custom scrollbar thumb — the wrapper's native scrollbar is hidden
+          (its track spanned the whole page); this one starts below the
+          category bar and stops above the floating footer nav pill. Positions
+          come from the scroll/resize sync effect above. */}
+      <div ref={thumbRef} className="projects-scroll-thumb" aria-hidden="true" />
 
       <ProjectModal
         project={activeProject}
@@ -265,10 +317,13 @@ const ProjectCard = ({
 
   return (
 
-    // Reveal slides the card up the first time it enters the viewport. A
-    // low amount keeps tall cards (which can never show 20% of themselves
-    // in a single fold) from staying stuck at opacity 0.
-    <Reveal amount={0.05}>
+    // Reveal slides the card up the first time it enters the viewport. The
+    // amount must be tiny: full-page screenshot cards (e.g. Bushehr Khorma,
+    // ~5× their width ≈ 3400px tall) can only show a sliver of themselves in
+    // one fold — with 5% required, such a card sat INVISIBLE on screen until
+    // the user scrolled. 1% reveals every card the moment a real slice of it
+    // is on screen, while fully off-screen cards still stay hidden.
+    <Reveal amount={0.01}>
 
       <div className="projects-column">
 
