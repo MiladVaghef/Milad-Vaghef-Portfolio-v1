@@ -133,8 +133,8 @@
         justify-content: center;
 
         // Inactive chips stay readable but clearly de-emphasised next to the
-        // active one. The old 0.55 made them vanish into the soft blur scrim.
-        opacity: 0.74;
+        // active one.
+        opacity: 0.9;
         transform: scale(0.94);
         transition: 0.25s;
 
@@ -255,7 +255,7 @@
 
     .projects-prev {
       left: max(0px, calc(50% - 380px - 45px));
-      transform: translateY(-50%);
+      transform: translateY(-50%) rotate(180deg);
     }
 
     .projects-next {

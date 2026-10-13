@@ -16,29 +16,37 @@ interface ProjectModalProps {
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// Screenshots taller than this get the auto-scroll treatment (full-page shots).
-const TALL_THRESHOLD = 3000;
+// Portrait-ish screenshots (height ≥ ~width — full-page and phone shots)
+// get the zoomed-in auto-scroll treatment; landscape shots just fit the
+// frame. An absolute pixel threshold missed "merely" 2k-px-tall phone
+// captures, which rendered as tiny letterboxed slivers instead.
+const TALL_RATIO = 0.9;
 // Auto-scroll cruise speed for tall screenshots — CONSTANT regardless of the
 // image's height (heights vary wildly, from ~2.5k up to 12k px, so deriving
 // speed from height made every shot feel different).
 const CRUISE_SPEED = 120; // px / second
-// Seconds to ramp from half speed up to CRUISE_SPEED (mirrored while
-// arriving). Starting at half speed keeps the first frames at ~1px/frame or
-// more — a slower crawl would visibly stutter frame by frame.
-const RAMP_SECONDS = 3;
+// Seconds to ease from a slow crawl up to CRUISE_SPEED (mirrored while
+// arriving). Long enough that the build-up reads as one smooth glide; the
+// 0.3 floor keeps the opening frames moving (~0.6px/frame) so the crawl
+// never stalls into visible frame-holds.
+const RAMP_SECONDS = 5;
 // Dwell at each end before the next pass starts — the slow reveal gives the
 // visitor time to read the section that just scrolled past.
 const PAUSE_MS = 3000;
+// Grace period after the lightbox opens a tall project before the auto-scroll
+// first moves — time to orient before anything starts sliding.
+const START_DELAY_MS = 2000;
 // After the visitor interrupts the auto-scroll, how long of calm it takes
 // before the pass quietly resumes from wherever they left it.
 const RESUME_MS = 5000;
 
 /**
- * One lightbox slide. Tall screenshots (>3000px) render at full width inside a
+ * One lightbox slide. Portrait-ish screenshots (ratio ≥ 0.9 — full-page and
+ * phone shots) render at full width inside a
  * scroll viewport that auto-scrolls at a steady, height-independent pace (a
- * gentle 3s ramp, a short dwell at each end). The visitor can take over at any
- * time by scrolling or dragging; the pass quietly resumes a few seconds after
- * they stop interacting.
+ * 3s pause after opening, then a gentle 3s ramp, a short dwell at each end).
+ * The visitor can take over at any time by scrolling or dragging; the pass
+ * quietly resumes a few seconds after they stop interacting.
  */
 function ProjectSlide({
   src,
@@ -64,10 +72,11 @@ function ProjectSlide({
 
     let pos = 0;
     let dir: 1 | -1 = 1;
-    let phase: "pass" | "pause" = "pass";
+    // "wait" = the opening grace period before the very first pass.
+    let phase: "wait" | "pass" | "pause" = "wait";
     let last = performance.now();
     let ramped = 0; // seconds spent accelerating in the current pass
-    let pauseStart = 0;
+    let pauseStart = performance.now();
     let resumeTimer = 0;
 
     el.scrollTop = 0;
@@ -83,12 +92,16 @@ function ProjectSlide({
       last = now;
 
       if (phase === "pass") {
-        // Linear ramp 0.5 → 1 × CRUISE_SPEED over RAMP_SECONDS, then hold.
-        // Speed is constant per pixel of image, so 12k-px shots and 2.5k-px
-        // shots feel the same.
+        // Ease-in ramp 0.3 → 1 × CRUISE_SPEED over RAMP_SECONDS, then hold:
+        // the quadratic build-up starts as a slow crawl and glides into
+        // pace instead of jumping off the line. Speed stays constant per
+        // pixel of image, so 12k-px shots and 2.5k-px shots feel the same.
         ramped = Math.min(RAMP_SECONDS, ramped + dt);
 
-        pos += dir * (CRUISE_SPEED * (0.5 + 0.5 * (ramped / RAMP_SECONDS))) * dt;
+        pos +=
+          dir *
+          (CRUISE_SPEED * (0.3 + 0.7 * (ramped / RAMP_SECONDS) ** 2)) *
+          dt;
 
         const target = dir === 1 ? max : 0;
 
@@ -103,8 +116,12 @@ function ProjectSlide({
         // Only write while passing — during the dwell the position is
         // settled, and writing would fight a visitor scrolling by hand.
         el.scrollTop = pos;
-      } else if (now - pauseStart >= PAUSE_MS) {
-        // Dwell over — start the next pass, easing up from slow again.
+      } else if (
+        (phase === "wait" && now - pauseStart >= START_DELAY_MS) ||
+        (phase === "pause" && now - pauseStart >= PAUSE_MS)
+      ) {
+        // Opening grace period or end dwell over — start the next pass,
+        // easing up from slow again.
         phase = "pass";
         ramped = 0;
       }
@@ -155,9 +172,10 @@ function ProjectSlide({
           loading="lazy"
           decoding="async"
           draggable={false}
-          onLoad={(e) =>
-            setIsTall(e.currentTarget.naturalHeight > TALL_THRESHOLD)
-          }
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            setIsTall(img.naturalHeight / img.naturalWidth >= TALL_RATIO);
+          }}
         />
       </div>
     </div>
