@@ -6,10 +6,16 @@
   padding-left: 3rem;
   padding-right: 3rem;
   position: relative;
-    margin-top: 50px;
+
+  // The old 50px TOP MARGIN gave the scroll area a hard clipped edge —
+  // while scrolling, texts vanished on a line 50px below the window top.
+  // Padding does the same job without that edge: the content rests in
+  // exactly the same place, but scrolls up THROUGH the top strip and out
+  // the top of the screen.
+  padding-top: 50px;
 
   @include device("tablet") {
-    margin-top: 0;
+    padding-top: 0;
     padding-left: 0;
     padding-right: 0;
   }

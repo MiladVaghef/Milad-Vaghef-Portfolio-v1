@@ -1,15 +1,17 @@
 #projects {
   padding-bottom: 50px;
-  height: 100%;
+
+  // Reach the very top of the main column: the old 30px top margin gave the
+  // scroll area a hard top edge — while scrolling, cards vanished on that
+  // line and the sticky bar's blur veil got clipped right above it. Grow the
+  // page by those 30px instead of pushing it down, so the BOTTOM edge stays
+  // exactly where it was (same bleed toward the footer pill).
+  height: calc(100% + 30px);
   padding-left: 3rem;
   padding-right: 3rem;
-  margin-top: 30px;
-  @include device("tablet"){
-      margin-top: 15px;
-
-  }
 
   @include device("tablet") {
+    height: 100%;
     padding-bottom: 60px;
     padding-left: 1.3rem;
     padding-right: 1.3rem;

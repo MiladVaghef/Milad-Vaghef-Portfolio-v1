@@ -7,7 +7,7 @@ import Icon from "./Icon";
 // Swiper — loaded via SCSS (in _projectModal.scss) to match the project pipeline.
 import Swiper from "swiper";
 import type SwiperCore from "swiper";
-import { Navigation, Pagination, Keyboard, Thumbs } from "swiper/modules";
+import { Pagination, Keyboard, Thumbs } from "swiper/modules";
 
 interface ProjectModalProps {
   project: Project | null;
@@ -18,13 +18,27 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 // Screenshots taller than this get the auto-scroll treatment (full-page shots).
 const TALL_THRESHOLD = 3000;
-// Seconds for one full top→bottom pass of a tall screenshot.
-const SCROLL_SECONDS = 16;
+// Auto-scroll cruise speed for tall screenshots — CONSTANT regardless of the
+// image's height (heights vary wildly, from ~2.5k up to 12k px, so deriving
+// speed from height made every shot feel different).
+const CRUISE_SPEED = 120; // px / second
+// Seconds to ramp from half speed up to CRUISE_SPEED (mirrored while
+// arriving). Starting at half speed keeps the first frames at ~1px/frame or
+// more — a slower crawl would visibly stutter frame by frame.
+const RAMP_SECONDS = 3;
+// Dwell at each end before the next pass starts — the slow reveal gives the
+// visitor time to read the section that just scrolled past.
+const PAUSE_MS = 3000;
+// After the visitor interrupts the auto-scroll, how long of calm it takes
+// before the pass quietly resumes from wherever they left it.
+const RESUME_MS = 5000;
 
 /**
  * One lightbox slide. Tall screenshots (>3000px) render at full width inside a
- * scroll viewport that auto-scrolls top→bottom; the visitor can take over at
- * any time by scrolling or dragging, which stops the animation for that slide.
+ * scroll viewport that auto-scrolls at a steady, height-independent pace (a
+ * gentle 3s ramp, a short dwell at each end). The visitor can take over at any
+ * time by scrolling or dragging; the pass quietly resumes a few seconds after
+ * they stop interacting.
  */
 function ProjectSlide({
   src,
@@ -41,12 +55,6 @@ function ProjectSlide({
   const rafRef = useRef<number>(0);
   const [isTall, setIsTall] = useState(false);
 
-  // Cancel any running auto-scroll (user took over, or slide went inactive).
-  const stopScroll = () => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = 0;
-  };
-
   useEffect(() => {
     const el = scrollRef.current;
     if (!isTall || !active || !el) return;
@@ -54,34 +62,85 @@ function ProjectSlide({
     const max = el.scrollHeight - el.clientHeight;
     if (max <= 0) return;
 
-    const speed = max / SCROLL_SECONDS; // px / second
     let pos = 0;
-    let dir = 1;
+    let dir: 1 | -1 = 1;
+    let phase: "pass" | "pause" = "pass";
     let last = performance.now();
+    let ramped = 0; // seconds spent accelerating in the current pass
+    let pauseStart = 0;
+    let resumeTimer = 0;
 
     el.scrollTop = 0;
 
+    const stopRaf = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    };
+
     const tick = (now: number) => {
-      const dt = now - last;
+      // Clamp long frames (tab switches, breaks) so the position never jumps.
+      const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
 
-      pos += dir * speed * (dt / 1000);
+      if (phase === "pass") {
+        // Linear ramp 0.5 → 1 × CRUISE_SPEED over RAMP_SECONDS, then hold.
+        // Speed is constant per pixel of image, so 12k-px shots and 2.5k-px
+        // shots feel the same.
+        ramped = Math.min(RAMP_SECONDS, ramped + dt);
 
-      // Ping-pong: glide to the bottom, then back to the top, and repeat.
-      if (pos >= max) {
-        pos = max;
-        dir = -1;
-      } else if (pos <= 0) {
-        pos = 0;
-        dir = 1;
+        pos += dir * (CRUISE_SPEED * (0.5 + 0.5 * (ramped / RAMP_SECONDS))) * dt;
+
+        const target = dir === 1 ? max : 0;
+
+        if ((dir === 1 && pos >= max) || (dir === -1 && pos <= 0)) {
+          pos = target;
+          // The next pass goes the other way — after this dwell.
+          dir = dir === 1 ? -1 : 1;
+          phase = "pause";
+          pauseStart = now;
+        }
+
+        // Only write while passing — during the dwell the position is
+        // settled, and writing would fight a visitor scrolling by hand.
+        el.scrollTop = pos;
+      } else if (now - pauseStart >= PAUSE_MS) {
+        // Dwell over — start the next pass, easing up from slow again.
+        phase = "pass";
+        ramped = 0;
       }
 
-      el.scrollTop = pos;
       rafRef.current = requestAnimationFrame(tick);
     };
 
+    // The visitor takes over by scrolling or grabbing the image: halt the
+    // auto-scroll, then quietly resume from wherever they left it after
+    // RESUME_MS of calm (each new interaction resets the timer).
+    const onInteract = () => {
+      stopRaf();
+      window.clearTimeout(resumeTimer);
+
+      resumeTimer = window.setTimeout(() => {
+        pos = el.scrollTop; // wherever the visitor scrolled to
+        ramped = 0;
+        last = performance.now();
+        phase = "pass";
+        rafRef.current = requestAnimationFrame(tick);
+      }, RESUME_MS);
+    };
+
     rafRef.current = requestAnimationFrame(tick);
-    return stopScroll;
+
+    el.addEventListener("wheel", onInteract, { passive: true });
+    el.addEventListener("touchstart", onInteract, { passive: true });
+    el.addEventListener("pointerdown", onInteract);
+
+    return () => {
+      stopRaf();
+      window.clearTimeout(resumeTimer);
+      el.removeEventListener("wheel", onInteract);
+      el.removeEventListener("touchstart", onInteract);
+      el.removeEventListener("pointerdown", onInteract);
+    };
   }, [isTall, active]);
 
   return (
@@ -89,13 +148,7 @@ function ProjectSlide({
       className="swiper-slide project-modal-slide"
       data-tall={isTall ? "true" : undefined}
     >
-      <div
-        ref={scrollRef}
-        className="project-modal-scroll"
-        onWheel={stopScroll}
-        onTouchStart={stopScroll}
-        onPointerDown={stopScroll}
-      >
+      <div ref={scrollRef} className="project-modal-scroll">
         <img
           src={src}
           alt={`${alt} — image ${index + 1}`}
@@ -123,6 +176,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
   const isOpen = project !== null;
 
+  // Latest onClose, kept in a ref so the history effect below can subscribe
+  // once per open — the parent passes a fresh closure on every render.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
   // The images to show — fall back to the single cover when no gallery exists.
   const images = project?.gallery?.length
     ? project.gallery
@@ -149,6 +207,29 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
     };
   }, [isOpen, onClose]);
 
+  // Treat the phone/browser back button as "close" while the lightbox is
+  // open: push a sentinel history entry on open and close on popstate. When
+  // the modal is dismissed any other way (X, Escape, backdrop), the cleanup
+  // drops the sentinel again so the next back press doesn't hit a stale entry.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    window.history.pushState({ projectModalOpen: true }, "");
+
+    const onPopState = () => onCloseRef.current();
+
+    window.addEventListener("popstate", onPopState);
+
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+
+      // Only undo our own sentinel — after a popstate close it's already gone.
+      if (window.history.state?.projectModalOpen) {
+        window.history.back();
+      }
+    };
+  }, [isOpen]);
+
   // Build the main slider + linked thumbnail slider whenever a project opens.
   useEffect(() => {
     if (!isOpen || !mainSliderRef.current) return;
@@ -168,7 +249,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
     }
 
     mainSwiper.current = new Swiper(mainSliderRef.current, {
-      modules: [Navigation, Pagination, Keyboard, Thumbs],
+      modules: [Pagination, Keyboard, Thumbs],
       slidesPerView: 1,
       spaceBetween: 24,
       grabCursor: true,
@@ -179,10 +260,6 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
       pagination: {
         el: ".project-modal-pagination",
         clickable: true,
-      },
-      navigation: {
-        nextEl: ".project-modal-next",
-        prevEl: ".project-modal-prev",
       },
       on: {
         slideChange(swiper) {
@@ -227,14 +304,28 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.35, ease: EASE }}
           >
-            <button
-              type="button"
-              className="project-modal-close"
-              onClick={onClose}
-              aria-label="Close project"
-            >
-              <Icon name="path-link" />
-            </button>
+            {/* Title bar — project name left, close button right */}
+            <div className="project-modal-header">
+              <span className="project-modal-header-title medium">
+                {project.title}
+              </span>
+
+              <button
+                type="button"
+                className="project-modal-close"
+                onClick={onClose}
+                aria-label="Close project"
+              >
+                {/* Inline × — the shared Icon set has no close glyph. */}
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M6 6l12 12M18 6L6 18"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
 
             <div className="project-modal-body">
               {/* Main image slider */}
@@ -254,17 +345,6 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                       />
                     ))}
                   </div>
-
-                  {images.length > 1 && (
-                    <>
-                      <div className="project-modal-prev project-modal-arrow">
-                        <Icon name="right-arrow" />
-                      </div>
-                      <div className="project-modal-next project-modal-arrow">
-                        <Icon name="right-arrow" />
-                      </div>
-                    </>
-                  )}
                 </div>
 
                 {/* Counter + pagination row */}
@@ -308,25 +388,6 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   {project.category}
                 </span>
 
-                <div className="project-modal-title-row">
-                  <h2 className="project-modal-title medium">
-                    {project.title}
-                  </h2>
-
-                  {project.activeLink && (
-                    <a
-                      className="project-modal-visit"
-                      href={project.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      title="Visit Project"
-                      aria-label={`Visit ${project.title}`}
-                    >
-                      <Icon name="path-link" />
-                    </a>
-                  )}
-                </div>
-
                 <p className="project-modal-desc light">
                   {project.desc}
                 </p>
@@ -341,6 +402,23 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     <li className="concept-tag">Concept</li>
                   )}
                 </ul>
+
+                {/* Full-width footer button — pinned to the bottom of the
+                    details column when the content is shorter than the
+                    dialog (margin-top: auto). */}
+                {project.activeLink && (
+                  <a
+                    className="project-modal-visit"
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Visit Project"
+                    aria-label={`Visit ${project.title}`}
+                  >
+                    <Icon name="path-link" />
+                    <span>Visit Project</span>
+                  </a>
+                )}
               </div>
             </div>
           </motion.div>

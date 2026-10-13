@@ -10,6 +10,18 @@ import statuies from "../assets/images/projects/statuies.png";
 import miladVaghefLanding from "../assets/images/projects/milad-vaghef-landing.png";
 import miladVaghefPortfolio from "../assets/images/projects/milad-vaghef-portfolio.png";
 
+// Zerva test/mock project — design screenshots sitting in the repo root.
+// TODO: move these into src/assets/images/projects/ (and commit them) once
+// the placeholder entry is replaced with the real project.
+import zervaHomeDesktop from "../../Home - Desktop.png";
+import zervaHomeMobile from "../../Home - Mobile.png";
+import zervaAboutDesktop from "../../About - Desktop.png";
+import zervaAboutMobile from "../../About - Mobile.png";
+import zervaProjectsTablet from "../../Projects - Tablet.png";
+import zervaProjectsMobile from "../../Projects - Mobile.png";
+import zervaContactDesktop from "../../Contact - Desktop.png";
+import zervaContactMobile from "../../Contact - Mobile.png";
+
 export interface Project {
   isPractice: boolean;
   showWide: boolean;
@@ -32,6 +44,32 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
+  {
+    // Test/mock entry — placeholder copy, to be replaced with the real
+    // Zerva project later.
+    isPractice: true,
+    showWide: false,
+    category: "Figma",
+    activeLink: false,
+    width: 2510,
+    height: 1536,
+    link: "#",
+    image: zervaHomeDesktop,
+    alt: "Zerva design screens",
+    title: "Zerva - UI Design (WIP)",
+    desc: "Placeholder description — to be written.",
+    tech: ["Figma"],
+    gallery: [
+      zervaHomeDesktop,
+      zervaHomeMobile,
+      zervaAboutDesktop,
+      zervaAboutMobile,
+      zervaProjectsTablet,
+      zervaProjectsMobile,
+      zervaContactDesktop,
+      zervaContactMobile,
+    ],
+  },
     {
     isPractice: true,
     showWide: false,

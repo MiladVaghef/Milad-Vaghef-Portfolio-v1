@@ -26,10 +26,10 @@ const ProjectsColumn = () => {
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
 
-  // Scroll container behind the sticky category bar + the bar itself — used to
-  // fade the bar's blur veil in only once cards actually scroll under it.
-  const gridWrapperRef = useRef<HTMLDivElement | null>(null);
-  const categoryBarRef = useRef<HTMLDivElement | null>(null);
+  // The scroll container and the sticky category bar inside it — the bar's
+  // blur veil only turns on once cards actually scroll under it.
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
 
   const currentHash = decodeURIComponent(location.hash.replace("#", ""));
 
@@ -84,29 +84,26 @@ const ProjectsColumn = () => {
   }, []);
 
 
-  // The bar's blur veil (its ::before layer) only makes sense once cards are
-  // actually scrolling underneath it. At rest — before any scroll — the sticky
-  // bar sits directly over the FIRST card's top edge, so an always-on veil
-  // smears a white blurred band across the image for no reason. Toggle a
-  // class instead of state: the scroll event fires often and re-rendering the
-  // whole grid for it would be wasteful (React never rewrites this className,
-  // so the DOM-toggled class survives re-renders).
+  // Keep the bar's veil in sync with the scroll, and start every tab at the
+  // top: a stale scroll offset would mount the remounted cards clipped above
+  // the viewport, where their reveal observers never fire (a whole column
+  // reads as empty).
   useEffect(() => {
-    const grid = gridWrapperRef.current;
-    const bar = categoryBarRef.current;
+    const wrapper = wrapperRef.current;
+    const bar = barRef.current;
 
-    if (!grid || !bar) return;
+    if (!wrapper || !bar) return;
+
+    wrapper.scrollTop = 0;
 
     const sync = () => {
-      bar.classList.toggle("scrolled", grid.scrollTop > 0);
+      bar.classList.toggle("scrolled", wrapper.scrollTop > 0);
     };
 
-    grid.addEventListener("scroll", sync, { passive: true });
+    wrapper.addEventListener("scroll", sync, { passive: true });
     sync();
 
-    // Re-sync after tab switches: the grid's content (and scroll height)
-    // changes, which can clamp scrollTop back to 0.
-    return () => grid.removeEventListener("scroll", sync);
+    return () => wrapper.removeEventListener("scroll", sync);
   }, [activeTab]);
 
 
@@ -146,13 +143,9 @@ const ProjectsColumn = () => {
   return (
     <div className="column projects-column-container">
 
-      <div ref={gridWrapperRef} className="projects-column-grid-wrapper">
+      <div ref={wrapperRef} className="projects-column-grid-wrapper">
 
-      <div
-        ref={categoryBarRef}
-        className="category-slider-wrapper"
-        data-no-swipe
-      >
+      <div ref={barRef} className="category-slider-wrapper" data-no-swipe>
 
         <div
           ref={swiperRef}
@@ -210,7 +203,9 @@ const ProjectsColumn = () => {
 
 
 
-        <div className="projects-column-grid">
+        {/* Remounting on tab change gives every category fresh reveal
+            observers; the scroll reset itself lives on the scroll wrapper. */}
+        <div key={activeTab} className="projects-column-grid">
 
 
           <div className="projects-column-grid-column">
@@ -270,8 +265,10 @@ const ProjectCard = ({
 
   return (
 
-    // Reveal slides the card up the first time it enters the viewport.
-    <Reveal>
+    // Reveal slides the card up the first time it enters the viewport. A
+    // low amount keeps tall cards (which can never show 20% of themselves
+    // in a single fold) from staying stuck at opacity 0.
+    <Reveal amount={0.05}>
 
       <div className="projects-column">
 

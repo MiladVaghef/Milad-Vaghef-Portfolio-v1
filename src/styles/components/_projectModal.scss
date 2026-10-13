@@ -1,9 +1,8 @@
-// Swiper base + the modules this slider uses (Navigation, Pagination, Keyboard,
-// Thumbs). Loaded via SCSS to match the project's Vite/sass pipeline (no JS CSS
+// Swiper base + the modules this slider uses (Pagination, Keyboard, Thumbs).
+// Loaded via SCSS to match the project's Vite/sass pipeline (no JS CSS
 // imports, which tsc rejects). Scoped inside .project-modal so the global swiper
 // base only affects this lightbox.
 @use "swiper/css";
-@use "swiper/css/navigation";
 @use "swiper/css/pagination";
 
 .project-modal {
@@ -60,14 +59,44 @@
     }
   }
 
-  .project-modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    z-index: 5;
+  // Title bar across the top of the dialog: project name on the left, the
+  // close button on the right.
+  .project-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    width: 40px;
-    height: 40px;
+    gap: 16px;
+
+    padding: 10px 20px;
+
+    border-bottom: 1px solid var(--biography-divider-color);
+
+    .project-modal-header-title {
+      min-width: 0;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      font-size: 18px;
+
+      color: var(--text-color);
+
+      // Tighter type on phones.
+      @include device("mobile") {
+        font-size: 15px;
+      }
+    }
+  }
+
+  // Round glass button like the rest of the lightbox controls, with a clean
+  // × that quarter-spins on hover — docked on the title bar's right side.
+  .project-modal-close {
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
 
     display: flex;
     align-items: center;
@@ -86,21 +115,19 @@
     transition: 0.25s;
 
     svg {
-      width: 12px;
-      height: 12px;
-      transform: rotate(45deg);
+      width: 15px;
+      height: 15px;
 
       path {
-        stroke: var(--primary-color);
+        stroke: currentColor;
       }
     }
 
     &:hover {
       background: var(--primary-color);
+      color: #fff;
 
-      svg path {
-        stroke: #fff;
-      }
+      transform: rotate(90deg);
     }
   }
 
@@ -108,12 +135,41 @@
     display: flex;
     flex-direction: row;
 
+    // Fills the dialog below the title bar — the dialog's own max-height
+    // bounds the whole popup.
+    flex: 1;
     min-height: 0;
-    max-height: calc(100vh - 48px);
+
+    // Slim, on-brand scrollbar (matches the site's 4px scrollers) for the
+    // stacked tablet/mobile layout, where the dialog body scrolls. The
+    // standard properties are Firefox-only: in Chrome (121+) they would
+    // override the custom ::-webkit-scrollbar styling below and fall back to
+    // the native thin scrollbar — arrows and all.
+    @supports not selector(::-webkit-scrollbar) {
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary-color) transparent;
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--secondary-color);
+      border-radius: 20px;
+    }
+
+    // Windows draws default arrow buttons on custom scrollbars unless hidden.
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
 
     @include device("tablet") {
       flex-direction: column;
-      max-height: none;
       overflow-y: auto;
     }
   }
@@ -135,44 +191,59 @@
 
     @include device("tablet") {
       flex: none;
+      // Symmetric padding — the close button floats over the image's
+      // top-right corner instead of needing reserved room above it.
       padding: 16px;
-      padding-top: 56px; // room for the close button
     }
 
     .project-modal-slider {
       width: 100%;
 
-      // Fixed-height window (~300–420px). Tall screenshots reveal themselves
-      // by scrolling inside it (auto-scrolled in JS, or by hand) instead of
-      // expanding the popup to the image's full natural height.
-      height: clamp(300px, 45vh, 420px);
+      // The slider hugs its image instead of forcing a fixed-height window —
+      // but never grows past this cap. Tall screenshots (>3000px) fill exactly
+      // this cap and reveal themselves by scrolling inside it (auto-scrolled in
+      // JS, or by hand) instead of expanding the popup to their full height.
+      --modal-slide-max-height: 400px;
+
+      max-height: var(--modal-slide-max-height);
+
+      // Swiper's base CSS sets height: 100% on both — auto lets the image
+      // drive the height so short screenshots shrink the window around
+      // themselves.
+      .swiper-wrapper,
+      .swiper-slide {
+        height: auto;
+      }
 
       .swiper-slide {
         display: flex;
         align-items: center;
         justify-content: center;
 
-        height: 100%;
-
         // Scroll viewport that wraps every slide image. For normal shots it
-        // just centers the image; for tall ones (see [data-tall]) it becomes
-        // the region that scrolls (auto-scrolled in JS, or by the visitor).
+        // just hugs and centers the image; for tall ones (see [data-tall]) it
+        // becomes the region that scrolls (auto-scrolled in JS, or by the
+        // visitor) at the slider's max height.
         .project-modal-scroll {
           display: flex;
           align-items: center;
           justify-content: center;
 
           width: 100%;
-          height: 100%;
+          height: auto;
 
           overflow: hidden;
 
           img {
             display: block;
 
-            width: 100%;
+            // Intrinsic size, capped both ways — the browser keeps the aspect
+            // ratio, so the slide ends up hugging the image either way.
+            width: auto;
+            max-width: 100%;
+
             height: auto;
-            max-height: 100%;
+            max-height: var(--modal-slide-max-height);
 
             object-fit: contain;
 
@@ -191,16 +262,25 @@
             align-items: flex-start;
             justify-content: center;
 
+            // The fixed window the tall image scrolls within — same cap the
+            // slider itself never grows past.
+            height: var(--modal-slide-max-height);
+
             overflow-y: auto;
             overflow-x: hidden;
 
-            // Smooth it out whether driven by JS or by hand.
-            scroll-behavior: smooth;
+            // Note: NO `scroll-behavior: smooth` — the JS auto-scroll assigns
+            // a position every frame, and smooth behavior would start a new
+            // chasing animation per frame (jitter). Manual wheel/touch
+            // scrolling is unaffected by this property.
             -webkit-overflow-scrolling: touch;
 
-            // Thin, on-brand scrollbar.
-            scrollbar-width: thin;
-            scrollbar-color: rgba(249, 115, 22, 0.5) transparent;
+            // Thin, on-brand scrollbar. Standard properties are Firefox-only
+            // — see the note on `.project-modal-body`.
+            @supports not selector(::-webkit-scrollbar) {
+              scrollbar-width: thin;
+              scrollbar-color: rgba(249, 115, 22, 0.5) transparent;
+            }
             &::-webkit-scrollbar {
               width: 6px;
             }
@@ -210,6 +290,11 @@
             &::-webkit-scrollbar-thumb {
               background: rgba(249, 115, 22, 0.5);
               border-radius: 20px;
+            }
+            // Windows draws default arrow buttons on custom scrollbars unless
+            // hidden.
+            &::-webkit-scrollbar-button {
+              display: none;
             }
 
             img {
@@ -221,70 +306,6 @@
           }
         }
       }
-
-      // On mobile the slider-area is `flex: none`, so give the slider a
-      // concrete height — otherwise tall images have nothing to scroll within.
-      @include device("tablet") {
-        height: clamp(280px, 56vh, 420px);
-      }
-
-    }
-
-    .project-modal-arrow {
-      position: absolute;
-      top: 42%;
-      z-index: 4;
-
-      width: 44px;
-      height: 44px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      transform: translateY(-50%);
-
-      border-radius: 50%;
-
-      background: var(--project-nav-background-color);
-      box-shadow: var(--project-nav-shadow);
-
-      color: var(--primary-color);
-
-      cursor: pointer;
-
-      transition: 0.25s;
-
-      svg {
-        width: 11px;
-        height: 11px;
-
-        path {
-          stroke: var(--primary-color);
-        }
-      }
-
-      &:hover {
-        background: var(--primary-color);
-
-        svg path {
-          stroke: #fff;
-        }
-      }
-
-      &.swiper-button-disabled {
-        opacity: 0.3;
-        pointer-events: none;
-      }
-    }
-
-    .project-modal-prev {
-      left: 36px;
-      transform: translateY(-50%) rotate(180deg);
-    }
-
-    .project-modal-next {
-      right: 36px;
     }
 
     // Counter + pagination dots share one row under the big slider.
@@ -393,13 +414,46 @@
 
     gap: 14px;
 
-    padding: 40px 32px 32px;
+    padding: 24px 32px 32px;
 
     overflow-y: auto;
 
+    // Slim, on-brand scrollbar (matches the site's 4px scrollers) for the
+    // details column when it overflows on desktop. Standard properties are
+    // Firefox-only — see the note on `.project-modal-body`.
+    @supports not selector(::-webkit-scrollbar) {
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary-color) transparent;
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--secondary-color);
+      border-radius: 20px;
+    }
+
+    // Windows draws default arrow buttons on custom scrollbars unless hidden.
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
     @include device("tablet") {
-      flex: none;
-      padding: 24px 16px 40px;
+      // Grow to fill the phone-height dialog so the footer button's
+      // margin-top: auto always lands it at the very bottom.
+      flex: 1 0 auto;
+      padding: 24px 16px 0px;
+
+      // The dialog body is the scroller on phones — keep this column out of
+      // the scroll-container chain so the sticky footer can reach the
+      // body's scrollport.
+      overflow-y: visible;
     }
 
     .project-modal-category {
@@ -420,39 +474,34 @@
       background: rgba(249, 115, 22, 0.08);
     }
 
-    .project-modal-title-row {
-      display: flex;
-      align-items: center;
-
-      gap: 12px;
-    }
-
-    .project-modal-title {
-      margin: 0;
-
-      font-size: 26px;
-      line-height: 1.25;
-
-      color: var(--text-color);
-    }
-
-    // Compact "open live site" icon-button that sits beside the title.
+    // "Open live site" — a full-width footer button at the end of the
+    // details column, pinned to the bottom (margin-top: auto) when the
+    // content is shorter than the dialog. On phones it sticks to the bottom
+    // edge of the screen while the details scroll behind it.
     .project-modal-visit {
       flex-shrink: 0;
+      margin-top: auto;
+
+      // Stretch instead of `width: 100%` — there is no global border-box
+      // sizing here, so 100% + horizontal padding would overflow the column
+      // and make it scroll side to side.
+      align-self: stretch;
 
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
 
-      width: 38px;
-      height: 38px;
+      padding: 10px 16px;
 
-      border-radius: 50%;
+      border-radius: 10px;
 
-      background: var(--project-nav-background-color);
-      box-shadow: var(--project-nav-shadow);
+      background: var(--primary-color);
 
-      color: var(--primary-color);
+      color: #fff;
+
+      font-size: 14px;
+      font-weight: 500;
 
       text-decoration: none;
 
@@ -461,20 +510,32 @@
       transition: 0.25s;
 
       svg {
-        width: 14px;
-        height: 14px;
+        width: 15px;
+        height: 15px;
 
         path {
-          stroke: var(--primary-color);
+          stroke: #fff;
         }
       }
 
-      &:hover {
-        background: var(--primary-color);
+      span {
+        white-space: nowrap;
+      }
 
-        svg path {
-          stroke: #fff;
-        }
+      &:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+      }
+
+      @include device("tablet") {
+        // Pin to the bottom of the phone screen while the dialog body
+        // scrolls; bleed across the column's side padding.
+        bottom: 12px;
+
+        border-radius: 0px;
+
+        margin-left: -16px;
+        margin-right: -16px;
       }
     }
 
@@ -485,6 +546,10 @@
       line-height: 1.7;
 
       color: var(--secondary-text-color);
+
+      @include device("mobile") {
+        font-size: 12px;
+      }
     }
 
     .project-modal-tech {
@@ -500,4 +565,3 @@
     }
   }
 }
-
