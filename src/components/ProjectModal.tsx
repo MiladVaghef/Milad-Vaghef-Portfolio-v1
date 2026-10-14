@@ -2,7 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Project } from "../data/projects";
-import Icon from "./Icon";
+import { formatProjectAge } from "../utils/projectDate";
+// NOTE: no shared Icon import — the "path-link" glyph is a 30×30 / stroke-4
+// drawing that renders as a chunky blob at button scale. The CTA inlines its
+// own arrow instead (same reason the close × and zoom buttons are inlined).
 
 // Swiper — loaded via SCSS (in _projectModal.scss) to match the project pipeline.
 import Swiper from "swiper";
@@ -508,9 +511,16 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
               {/* Project details */}
               <div className="project-modal-info">
-                <span className="project-modal-category">
-                  {project.category}
-                </span>
+                {/* Category pill + relative age ("2 years ago") */}
+                <div className="project-modal-meta">
+                  <span className="project-modal-category">
+                    {project.category}
+                  </span>
+
+                  <time className="project-modal-date" dateTime={project.date}>
+                    {formatProjectAge(project.date)}
+                  </time>
+                </div>
 
                 <p className="project-modal-desc light">
                   {project.desc}
@@ -529,17 +539,30 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
                 {/* Full-width footer button — pinned to the bottom of the
                     details column when the content is shorter than the
-                    dialog (margin-top: auto). */}
+                    dialog (margin-top: auto); on phones it's a flush action
+                    bar glued to the screen's bottom edge. Tooltip + aria-
+                    label disclose the new tab (best practice for
+                    target="_blank"). */}
                 {project.activeLink && (
                   <a
                     className="project-modal-visit"
                     href={project.link}
                     target="_blank"
                     rel="noreferrer"
-                    title="Visit Project"
-                    aria-label={`Visit ${project.title}`}
+                    title="Visit Project (opens in a new tab)"
+                    aria-label={`Visit ${project.title} (opens in a new tab)`}
                   >
-                    <Icon name="path-link" />
+                    {/* Inline ↗ arrow — 24-box / 2.2 stroke to visually match
+                        the close × and zoom controls; stroke comes from
+                        currentColor via SCSS so it tracks the label color. */}
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M7 17L17 7M9 7h8v8"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                     <span>Visit Project</span>
                   </a>
                 )}

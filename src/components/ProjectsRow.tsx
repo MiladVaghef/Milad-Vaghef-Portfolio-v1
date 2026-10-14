@@ -1,4 +1,5 @@
 import type { Project } from "../data/projects";
+import { formatProjectAge } from "../utils/projectDate";
 import Icon from "./Icon";
 import LazyImage from "./LazyImage";
 import Reveal from "./Reveal";
@@ -24,7 +25,17 @@ const ProjectsRow = ({ project, onOpen }: ProjectsRowProps) => {
         aria-label={`Open ${title}`}
       >
         <div className="projects-row">
-          <LazyImage className="projects-row-image" src={image} alt={alt} />
+          {/* Wrapper makes the cover the positioning context for the date
+              pill (bottom-left corner); it carries the image's old 5px
+              optical offset so the row's geometry is unchanged. */}
+          <div className="projects-row-media">
+            <LazyImage className="projects-row-image" src={image} alt={alt} />
+
+            {/* "2 years ago" — glassy pill in the cover's bottom-left corner */}
+            <time className="project-image-date" dateTime={project.date}>
+              {formatProjectAge(project.date)}
+            </time>
+          </div>
 
           <div className="column">
             <div className="projects-row-title row">

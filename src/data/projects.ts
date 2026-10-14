@@ -1,26 +1,19 @@
 import customadeLanding from "../assets/images/projects/customade-landing.png";
 import bushehrKhormaLanding from "../assets/images/projects/bushehr-khorma-landing.png";
-import cyberWorldLanding from "../assets/images/projects/cyber-world-landing.png";
 import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
 import bmwI8magazine from "../assets/images/projects/bmw-i8-magazine.png";
 import swiperJsExperiment from "../assets/images/projects/swiper-js-experiment.png";
-import tvTimeClone from "../assets/images/projects/tv-time-clone.png";
 import chakodHome from "../assets/images/projects/chakod-home.png";
-import statuies from "../assets/images/projects/statuies.png";
-import miladVaghefLanding from "../assets/images/projects/milad-vaghef-landing.png";
-import miladVaghefPortfolio from "../assets/images/projects/milad-vaghef-portfolio.png";
 
-// Zerva test/mock project — design screenshots sitting in the repo root.
-// TODO: move these into src/assets/images/projects/ (and commit them) once
-// the placeholder entry is replaced with the real project.
-import zervaHomeDesktop from "../../Home - Desktop.png";
-import zervaHomeMobile from "../../Home - Mobile.png";
-import zervaAboutDesktop from "../../About - Desktop.png";
-import zervaAboutMobile from "../../About - Mobile.png";
-import zervaProjectsTablet from "../../Projects - Tablet.png";
-import zervaProjectsMobile from "../../Projects - Mobile.png";
-import zervaContactDesktop from "../../Contact - Desktop.png";
-import zervaContactMobile from "../../Contact - Mobile.png";
+// Zerva test/mock project — design screenshots.
+import zervaHomeDesktop from "../assets/images/projects/zerva-home-desktop.png";
+import zervaHomeMobile from "../assets/images/projects/zerva-home-mobile.png";
+import zervaAboutDesktop from "../assets/images/projects/zerva-about-desktop.png";
+import zervaAboutMobile from "../assets/images/projects/zerva-about-mobile.png";
+import zervaProjectsTablet from "../assets/images/projects/zerva-projects-tablet.png";
+import zervaProjectsMobile from "../assets/images/projects/zerva-projects-mobile.png";
+import zervaContactDesktop from "../assets/images/projects/zerva-contact-desktop.png";
+import zervaContactMobile from "../assets/images/projects/zerva-contact-mobile.png";
 
 export interface Project {
   isPractice: boolean;
@@ -35,6 +28,13 @@ export interface Project {
   link: string;
   desc: string;
   tech: string[];
+  /**
+   * When the project was made, as an ISO year-month string ("YYYY-MM").
+   * Shown everywhere as a relative age ("2 years ago") via
+   * `formatProjectAge` — month granularity keeps the label stable (it only
+   * flips when the project's month comes around, not mid-month).
+   */
+  date: string;
   /**
    * Extra images/pages shown in the popup lightbox slider. When present with
    * 2+ items the card shows a "N pages" badge and clicking opens the slider.
@@ -89,7 +89,7 @@ export type GalleryImage =
 
 export const projectsData: Project[] = [
   {
-    isPractice: true,
+    isPractice: false,
     showWide: false,
     category: "Figma",
     activeLink: false,
@@ -97,15 +97,13 @@ export const projectsData: Project[] = [
     height: 1536,
     link: "#",
     image: zervaHomeDesktop,
-    alt: "Zerva design screens",
-    title: "Zerva - UI Design (WIP)",
-    desc: "Placeholder description — to be written.",
+    alt: "Zerva website UI design",
+    title: "Zerva — Architecture Studio ",
+    desc: "Designed a complete website UI for an architecture studio, including the homepage, about, projects, and contact pages, with responsive layouts for desktop, tablet, and mobile. The original studio name, images, and content have been replaced with fictional branding and assets for portfolio presentation and confidentiality purposes.",
     tech: ["Figma"],
+    date: "2026-10",
     gallery: [
       zervaHomeDesktop,
-      // Phone screenshots are narrow but ratio-tall, so the auto-detection
-      // would blow them up into the scrolling "tall" window. Force them to
-      // fit the frame instead so they never zoom/auto-scroll.
       { src: zervaHomeMobile, tall: false },
       zervaAboutDesktop,
       { src: zervaAboutMobile, tall: false },
@@ -114,20 +112,6 @@ export const projectsData: Project[] = [
       zervaContactDesktop,
       { src: zervaContactMobile, tall: false },
     ],
-  },
-    {
-    isPractice: true,
-    showWide: false,
-    category: "Figma",
-    activeLink: false,
-    width: 1920,
-    height: 1080,
-    link: "#",
-    image: statuies,
-    alt: "Statues Landing Page",
-    title: "Statuies - Landing Page Concept",
-    desc: "A UI design practice created in Figma, focusing on visual hierarchy, composition, and modern aesthetics. The concept explores a dark, minimal landing page with a classical statue centerpiece, emphasizing balance, lighting, and clean typography.",
-    tech: ["Figma", "Auto Layout"],
   },
   {
     isPractice: false,
@@ -142,6 +126,7 @@ export const projectsData: Project[] = [
     title: "Chakod - Growth Platform",
     desc: "Developed the complete front-end of a business growth platform, building 30+ responsive pages with reusable components, interactive features, and modern user experiences while collaborating with the back-end team.",
     tech: ["SCSS", "JavaScript", "Swiper.js"],
+    date: "2026-07",
   },
   {
     isPractice: false,
@@ -156,6 +141,7 @@ export const projectsData: Project[] = [
     title: "Customade - Custom Shoe E-Commerce Website",
     desc: "Developed a fully functional e-commerce website for a custom shoe brand, converting the UI design into a responsive WordPress experience using Elementor, WooCommerce, and JetEngine.",
     tech: ["WordPress", "WooCommerce", "Elementor", "JetEngine"],
+    date: "2025-03",
   },
   {
     isPractice: true,
@@ -170,21 +156,7 @@ export const projectsData: Project[] = [
     title: "Swiper.js Experiment",
     desc: "This project was built to practice creating responsive sliders and exploring different slider types using the Swiper.js library.",
     tech: ["Swiper.js", "Javascript"],
-  },
-  {
-    isPractice: false,
-    showWide: true,
-    category: "Front-End",
-    activeLink: false,
-    width: 1565,
-    height: 904,
-    link: "#",
-    image: miladVaghefPortfolio,
-    alt: "Milad Vaghef Portfolio",
-    title: "Milad Vaghef - Personal Portfolio",
-    desc: "A personal portfolio designed and developed from scratch to showcase my work, experience, and front-end development capabilities. Built with a focus on responsive design, custom UI interactions, smooth animations, reusable components, and a scalable front-end architecture.",
-    tech: ["React", "TypeScript", "SCSS", "Framer Motion", "Vite"],
-    gallery: [miladVaghefPortfolio, miladVaghefLanding],
+    date: "2026-07",
   },
   {
     isPractice: true,
@@ -199,6 +171,7 @@ export const projectsData: Project[] = [
     title: "Netflix - Login Page",
     desc: "A very clean and easy to use Netflix login page. As simple as it sounds.",
     tech: ["JavaScript", "Css"],
+    date: "2025-04",
   },
   {
     isPractice: false,
@@ -213,6 +186,7 @@ export const projectsData: Project[] = [
     title: "Customade - Selling Custom Shoes",
     desc: "Created the complete UI design for a custom shoe e-commerce platform, focusing on a clean shopping experience and modern visual identity. The design was then transformed into a fully functional WordPress website using Elementor and JetEngine.",
     tech: ["Figma", "Auto Layout"],
+    date: "2025-03",
   },
   {
     isPractice: false,
@@ -227,6 +201,7 @@ export const projectsData: Project[] = [
     title: "Bushehr Dates - Date sales industry",
     desc: "Solely developed the front-end of a 30+ page business growth platform, architecting a custom SCSS utility framework, building reusable UI components, and delivering responsive, interactive user experiences while collaborating with the back-end team.",
     tech: ["Figma"],
+    date: "2025-03",
   },
   {
     isPractice: true,
@@ -241,33 +216,6 @@ export const projectsData: Project[] = [
     title: "BMW i8 - Super Cars Magazine",
     desc: "This BMW i8 supercar magazine is a concept created for a college assignment, designed to show my ability to craft clean editorial layouts and present automotive content with a professional, modern style.",
     tech: ["Figma", "Adobe Ilustrator"],
-  },
-  {
-    isPractice: true,
-    showWide: false,
-    category: "Figma",
-    activeLink: false,
-    width: 935,
-    height: 1530,
-    link: "#",
-    image: tvTimeClone,
-    alt: "Netflix Login Page",
-    title: "Netflix - Login Page",
-    desc: "A very clean and easy to use Netflix login page. As simple as it sounds.",
-    tech: ["JavaScript", "Css"],
-  },
-  {
-    isPractice: true,
-    showWide: false,
-    category: "Figma",
-    activeLink: false,
-    width: 1920,
-    height: 1080,
-    link: "#",
-    image: cyberWorldLanding,
-    alt: "Milad Vaghef Landing",
-    title: "Cyber World - Characters Showcase",
-    desc: "My designs are not limited to website boundaries. I can design user interfaces for any device and application, regardless of the concept.",
-    tech: ["Figma", "Auto Layout"],
+    date: "2025-11",
   },
 ];

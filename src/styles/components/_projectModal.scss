@@ -579,14 +579,28 @@
 
     @include device("tablet") {
       // Grow to fill the phone-height dialog so the footer button's
-      // margin-top: auto always lands it at the very bottom.
+      // margin-top: auto always lands it near the very bottom.
       flex: 1 0 auto;
-      padding: 24px 16px 0px;
+      // Real bottom padding (was 0): without it the tech chips — the last
+      // content when a project has no Visit bar — sat flush against the
+      // phone's bottom edge. Matches the top padding; the sticky CTA still
+      // locks to bottom: 0 while scrolling.
+      padding: 24px 16px;
 
       // The dialog body is the scroller on phones — keep this column out of
       // the scroll-container chain so the sticky footer can reach the
       // body's scrollport.
       overflow-y: visible;
+    }
+
+    // Category pill and the project's relative age ("2 years ago") share
+    // one line; wraps instead of overflowing on narrow dialogs.
+    .project-modal-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .project-modal-category {
@@ -607,10 +621,20 @@
       background: rgba(249, 115, 22, 0.08);
     }
 
-    // "Open live site" — a full-width footer button at the end of the
-    // details column, pinned to the bottom (margin-top: auto) when the
-    // content is shorter than the dialog. On phones it sticks to the bottom
-    // edge of the screen while the details scroll behind it.
+    // Relative age ("2 years ago") — deliberately plainer than the image
+    // overlay pills: no border, no padding, just muted meta text sitting at
+    // the far end of the category line (space-between).
+    .project-modal-date {
+      color: var(--secondary-text-color);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    // "Visit Project" — the details column's primary CTA. On desktop it's a
+    // full-width footer button pinned to the bottom of the column
+    // (margin-top: auto) when the content is shorter than the dialog. On
+    // phones it becomes a FLUSH action bar glued to the bottom edge of the
+    // screen (bottom: 0, full bleed) while the details scroll behind it.
     .project-modal-visit {
       flex-shrink: 0;
       margin-top: auto;
@@ -620,35 +644,78 @@
       // and make it scroll side to side.
       align-self: stretch;
 
-      display: inline-flex;
+      // Plain flex with the label optically centered; the arrow is pulled
+      // out of the flow and pinned to the far right edge (see svg below) —
+      // it must NOT be a flex/grid sibling, or it shifts the label off
+      // center (and grid auto-placement even dropped it onto its own row).
+      position: relative;
+
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
 
-      padding: 10px 16px;
+      // ~56px tall — comfortably past the 44px minimum touch-target size
+      // (WCAG 2.5.8) without looking bulky.
+      padding: 20px 20px;
 
-      border-radius: 10px;
+      border-radius: 12px;
 
-      background: var(--primary-color);
+      // Brand gradient instead of a flat fill so it clearly reads as THE
+      // primary action of the dialog. Oversized + left-anchored so the
+      // hover sweep below has room to travel.
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--secondary-color) 100%
+      );
+      background-size: 220% 220%;
+      background-position: 0% 50%;
 
       color: #fff;
 
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1;
 
       text-decoration: none;
 
       cursor: pointer;
 
+      // Warm orange lift shadow — same family as the site's
+      // --category-card-active-shadow glow — plus a hairline inner
+      // highlight so the gradient edge looks raised, not painted-on.
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 6px 16px rgba(249, 115, 22, 0.28),
+        0 2px 6px rgba(0, 0, 0, 0.25);
+
+      // `all` (like the rest of the lightbox controls) — also animates the
+      // background-position sheen and the icon nudge in one place.
       transition: 0.25s;
 
+      // Inline ↗ arrow (see ProjectModal.tsx) — sized off the 24-box, so
+      // stroke 2.2 renders as a crisp ~1.5px line, unlike the shared
+      // path-link glyph (stroke 4 in a 30-box = a blob at this size).
+      // Absolutely positioned so it docks at the far right WITHOUT
+      // affecting the label's centering. Every transform below must keep
+      // the -50% Y translation or the icon drops off-center.
       svg {
-        width: 15px;
-        height: 15px;
+        display: block;
 
-        path {
-          stroke: #fff;
-        }
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: 17px;
+        height: 17px;
+
+        // Inherit the button's color so hover/press states never desync the
+        // icon from the label.
+        stroke: currentColor;
+
+        transition: 0.25s;
       }
 
       span {
@@ -656,19 +723,84 @@
       }
 
       &:hover {
-        opacity: 0.85;
-        transform: translateY(-1px);
+        // Sweep the gradient across on hover — a subtle sheen instead of a
+        // hard background swap (gradients don't tween between stops).
+        background-position: 100% 50%;
+
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.28),
+          0 10px 24px rgba(249, 115, 22, 0.38),
+          0 4px 10px rgba(0, 0, 0, 0.3);
+
+        transform: translateY(-2px);
+
+        // The ↗ glyph drifts toward the top-right corner — the universal
+        // "leaves the site / opens a new tab" hint. Keep the -50% centering.
+        svg {
+          transform: translateY(-50%) translate(2px, -2px);
+        }
+      }
+
+      // Visible focus ring for keyboard users only — mouse/touch clicks keep
+      // the clean look (:focus-visible heuristics). None of the other modal
+      // controls had one; the primary CTA should never be a focus trap with
+      // no visual feedback.
+      &:focus-visible {
+        outline: 2px solid var(--secondary-color);
+        outline-offset: 3px;
+      }
+
+      // Pressed feedback — a quick sink so clicks/taps feel physical.
+      // Faster timing so the press lands before the release animates back.
+      &:active {
+        transform: translateY(0) scale(0.985);
+
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 3px 10px rgba(249, 115, 22, 0.3);
+
+        transition: 0.08s;
       }
 
       @include device("tablet") {
-        // Pin to the bottom of the phone screen while the dialog body
-        // scrolls; bleed across the column's side padding.
-        bottom: 12px;
+        // FLUSH bottom action bar — bottom: 0 (no floating gap content can
+        // peek through), full bleed across the column's side padding. Sticky
+        // against the body scrollport (the column keeps `overflow-y: visible`
+        // on phones precisely so this footer can stick there); it stays
+        // pinned until the column's own end scrolls into view.
+        position: sticky;
+        bottom: 0;
 
-        border-radius: 0px;
+        border-radius: 0;
 
         margin-left: -16px;
         margin-right: -16px;
+
+        // Lift the bar off the details scrolling behind it — the gradient
+        // is opaque, the shadow makes the separation read deliberately.
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 -10px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      // No lifts, sheens, or nudges for vestibular-sensitive visitors — the
+      // button still changes color contextually, just without motion.
+      @media (prefers-reduced-motion: reduce) {
+        &,
+        svg {
+          transition: none;
+        }
+
+        &:hover,
+        &:active {
+          transform: none;
+        }
+
+        // Back to the centering transform (not `none`) so the icon stays
+        // vertically centered with the label.
+        &:hover svg {
+          transform: translateY(-50%);
+        }
       }
     }
 

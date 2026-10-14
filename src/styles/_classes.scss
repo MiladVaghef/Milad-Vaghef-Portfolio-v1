@@ -97,6 +97,38 @@
   font-weight: 600;
 }
 
+// "2 years ago" — glassy pill overlaid in the BOTTOM-LEFT corner of a
+// project's cover image (home rows and projects-page cards). Mirrors the
+// .projects-column-badge "N pages" pill (top-right) so the two corners
+// balance; the dark translucent backdrop keeps the label readable over any
+// screenshot.
+.project-image-date {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+
+  padding: 5px 11px;
+
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.7;
+  white-space: nowrap;
+
+  color: #fff;
+  background: rgba(23, 23, 23, 0.72);
+  backdrop-filter: blur(6px);
+
+  border: 1px solid var(--glass-border-color);
+  border-radius: 20px;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    @include device("tablet") {
+    left: 8px;
+    bottom: 8px;
+  }
+}
+
 .not-available {
   opacity: 60%;
   pointer-events: none;

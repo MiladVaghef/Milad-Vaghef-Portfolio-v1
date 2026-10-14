@@ -11,6 +11,17 @@
     flex-direction: column;
   }
 
+  // Positioning context for the cover's corner date pill. It carries the
+  // image's old 5px optical offset so the row's geometry is unchanged.
+  .projects-row-media {
+    position: relative;
+    margin-left: 5px;
+
+    @include device("tablet") {
+      margin-left: 0;
+    }
+  }
+
   .projects-row-image {
     position: relative;
     width: 262px;
@@ -19,15 +30,10 @@
     // Shimmer placeholder + fade/zoom reveal come from the shared
     // .lazy-image system (components/_skeleton.scss).
     box-shadow: 0px 0px 4px 0px #00000047;
-    margin-left: 5px;
     z-index: -1;
 
     @include device(1080px) {
       width: 232px;
-    }
-
-    @include device("tablet") {
-      margin-left: 0;
     }
 
     &::before {
@@ -78,11 +84,26 @@
     p {
       font-size: 14px;
       max-width: 480px;
-      line-height: 115%;
+      // 16px lines — a hair under the old 115% (16.1px) — so the 4-line
+      // clamp below tops out at exactly the 64px ceiling.
+      line-height: 16px;
       margin: 0;
+
+      // Cap the teaser at 4 lines (~64px): longer summaries ellipsize
+      // instead of stretching the row taller than its neighbours. 4 lines
+      // matches the visual target — the Statuies description. (`-webkit-`
+      // prefix is the de-facto cross-browser clamp; unprefixed `line-clamp`
+      // isn't shipped anywhere yet, and `overflow: hidden` is required.)
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
 
       @include device("laptop") {
         font-size: 12px;
+        // Keeps the pre-clamp leading ratio (~1.15) at the smaller size:
+        // 4 lines = 56px, still under the ceiling.
+        line-height: 14px;
       }
 
       @include device("mobile") {

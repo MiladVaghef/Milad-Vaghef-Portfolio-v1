@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { projectsData, type Project } from "../data/projects";
+import { formatProjectAge } from "../utils/projectDate";
 import Icon, { type IconType } from "./Icon";
 import LazyImage from "./LazyImage";
 import Reveal from "./Reveal";
@@ -393,6 +394,14 @@ const ProjectContent = ({
           </span>
 
         )}
+
+        {/* "2 years ago" — glassy pill in the cover's bottom-left corner */}
+        <time
+          className="project-image-date"
+          dateTime={project.date}
+        >
+          {formatProjectAge(project.date)}
+        </time>
 
       </div>
 
