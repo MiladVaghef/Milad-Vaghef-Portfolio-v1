@@ -99,7 +99,22 @@
   }
 }
 
-a .projects-row:hover {
+.projects-row-open {
+  // Reset the wrapping button so it lays out exactly like the old anchor:
+  // content-sized, transparent, and inheriting the row's own styling.
+  display: block;
+  width: fit-content;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.projects-row-open:hover {
   .projects-row-title {
     color: var(--primary-color);
 

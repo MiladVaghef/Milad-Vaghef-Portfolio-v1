@@ -65,8 +65,8 @@ export interface Project {
 
 /**
  * One lightbox image: a plain URL (no zoom), or an object with per-image
- * options. `zoom` on the object overrides the project-wide `zoomImages`
- * default for that single image.
+ * options. `zoom` and `tall` on the object override the project-wide
+ * `zoomImages` default / the aspect-ratio auto-detection for that single image.
  */
 export type GalleryImage =
   | string
@@ -77,6 +77,14 @@ export type GalleryImage =
        * Falls back to the project's `zoomImages` flag when omitted.
        */
       zoom?: boolean;
+      /**
+       * Override the "tall" auto-detection (ratio ≥ 0.9 → scrollable full-
+       * width window). `tall: false` forces fit-to-frame so the whole image
+       * stays visible at once (e.g. narrow phone screenshots that would
+       * otherwise be blown up and auto-scrolled); `tall: true` forces the
+       * tall treatment. Omit to auto-detect from the image's aspect ratio.
+       */
+      tall?: boolean;
     };
 
 export const projectsData: Project[] = [
@@ -95,13 +103,16 @@ export const projectsData: Project[] = [
     tech: ["Figma"],
     gallery: [
       zervaHomeDesktop,
-      zervaHomeMobile,
+      // Phone screenshots are narrow but ratio-tall, so the auto-detection
+      // would blow them up into the scrolling "tall" window. Force them to
+      // fit the frame instead so they never zoom/auto-scroll.
+      { src: zervaHomeMobile, tall: false },
       zervaAboutDesktop,
-      zervaAboutMobile,
+      { src: zervaAboutMobile, tall: false },
       zervaProjectsTablet,
-      zervaProjectsMobile,
+      { src: zervaProjectsMobile, tall: false },
       zervaContactDesktop,
-      zervaContactMobile,
+      { src: zervaContactMobile, tall: false },
     ],
   },
     {

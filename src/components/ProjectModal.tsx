@@ -54,6 +54,7 @@ function ProjectSlide({
   index,
   active,
   zoom,
+  tall,
 }: {
   src: string;
   alt: string;
@@ -61,14 +62,34 @@ function ProjectSlide({
   active: boolean;
   /** Per-image zoom flag — entry's own `zoom`, else the project's `zoomImages`. */
   zoom?: boolean;
+  /**
+   * Per-image tall override — entry's own `tall`. When defined it beats the
+   * aspect-ratio auto-detection (`false` keeps narrow-but-tall shots fitting
+   * the frame instead of zooming into the scrolling window).
+   */
+  tall?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number>(0);
-  const [isTall, setIsTall] = useState(false);
+  // Start from the explicit override when there is one; otherwise wait for
+  // onLoad to auto-detect from the image's aspect ratio.
+  const [isTall, setIsTall] = useState(tall ?? false);
+  // Landscape / ≈16:9 shots (wider than tall) fill the frame when fit, so they
+  // never get the zoom affordance — set on load from the natural size.
+  const [isWide, setIsWide] = useState(false);
+  // Manual zoom toggle — the visitor can flip any non-`zoom` image into the
+  // native 1:1 pannable view (and back). `isZoomed` is the effective state:
+  // permanently-zoomed slides (`zoom` prop) are always zoomed, everything
+  // else follows the local toggle.
+  const [zoomed, setZoomed] = useState(false);
+  const isZoomed = !!zoom || zoomed;
 
   useEffect(() => {
     const el = scrollRef.current;
-    if (!isTall || !active || !el) return;
+    // Auto-scroll only the tall view while it is NOT zoomed — once the visitor
+    // flips into the manual pan (zoom) view, the pass stops so it can't fight
+    // their panning.
+    if (!isTall || !active || !el || isZoomed) return;
 
     const max = el.scrollHeight - el.clientHeight;
     if (max <= 0) return;
@@ -161,15 +182,35 @@ function ProjectSlide({
       el.removeEventListener("touchstart", onInteract);
       el.removeEventListener("pointerdown", onInteract);
     };
-  }, [isTall, active]);
+  }, [isTall, active, isZoomed]);
 
   return (
     <div
       className="swiper-slide project-modal-slide"
       data-tall={isTall ? "true" : undefined}
-      data-zoom={zoom ? "true" : undefined}
+      data-zoom={isZoomed ? "true" : undefined}
     >
-      <div ref={scrollRef} className="project-modal-scroll">
+      <div
+        ref={scrollRef}
+        className={`project-modal-scroll${zoomed ? " is-zoom-out" : ""}`}
+        // When runtime-zoomed the (icon-less) image itself becomes the zoom-
+        // out control — click/tap or Enter/Space returns it to the fit view.
+        // Default-zoomed images (`zoom` prop) never set `zoomed`, so they
+        // ignore this and stay zoomed.
+        role={zoomed ? "button" : undefined}
+        tabIndex={zoomed ? 0 : undefined}
+        aria-label={zoomed ? "Zoom out" : undefined}
+        onClick={() => {
+          if (zoomed) setZoomed(false);
+        }}
+        onKeyDown={(e) => {
+          if (!zoomed) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setZoomed(false);
+          }
+        }}
+      >
         <img
           src={src}
           alt={`${alt} — image ${index + 1}`}
@@ -178,10 +219,49 @@ function ProjectSlide({
           draggable={false}
           onLoad={(e) => {
             const img = e.currentTarget;
+            // Landscape / ≈16:9 shots already fill the frame — no zoom
+            // affordance for them.
+            setIsWide(img.naturalWidth > img.naturalHeight);
+            // An explicit `tall` override always wins; otherwise auto-detect
+            // from the image's aspect ratio.
+            if (tall !== undefined) {
+              setIsTall(tall);
+              return;
+            }
             setIsTall(img.naturalHeight / img.naturalWidth >= TALL_RATIO);
           }}
         />
       </div>
+
+      {/* Zoom-in affordance — only on portrait-ish fit-to-frame shots. Tall
+          auto-scroll images (`isTall`) are already shown zoomed-in with the
+          scrolling animation, and landscape/≈16:9 shots (`isWide`) already fill
+          the frame — neither gets the button; nor do slides that are
+          default-zoomed (`zoom`/`zoomImages`). The button also disappears once
+          the visitor zooms in — while zoomed, the image itself acts as the
+          zoom-out control (see the scroll div above). */}
+      {!isTall && !isWide && !isZoomed && (
+        <button
+          type="button"
+          className="project-modal-zoom-btn"
+          onClick={() => setZoomed(true)}
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            {/* Magnifier + plus */}
+            <path
+              d="M10.5 4.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M8 10.5h5" strokeWidth="2" strokeLinecap="round" />
+            <path d="M10.5 8v5" strokeWidth="2" strokeLinecap="round" />
+            <path d="M14.75 14.75 20 20" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
@@ -206,8 +286,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   // The images to show — fall back to the single cover when no gallery
   // exists. Gallery entries may be plain URLs or objects with per-image
   // options; each resolved slide gets its own `zoom` flag (the entry's own
-  // `zoom` wins, otherwise the project-wide `zoomImages` default applies).
-  const images: { src: string; zoom?: boolean }[] = (
+  // `zoom` wins, otherwise the project-wide `zoomImages` default applies) and
+  // `tall` override (the entry's own `tall`, if any — otherwise the slide
+  // auto-detects from the image's aspect ratio).
+  const images: { src: string; zoom?: boolean; tall?: boolean }[] = (
     project?.gallery?.length
       ? project.gallery
       : project
@@ -216,7 +298,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   ).map((entry) =>
     typeof entry === "string"
       ? { src: entry, zoom: project?.zoomImages }
-      : { src: entry.src, zoom: entry.zoom ?? project?.zoomImages },
+      : { src: entry.src, zoom: entry.zoom ?? project?.zoomImages, tall: entry.tall },
   );
 
   // Close on Escape + lock background scroll while the lightbox is open.
@@ -375,7 +457,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   className="swiper project-modal-slider"
                 >
                   <div className="swiper-wrapper">
-                    {images.map(({ src, zoom }, index) => (
+                    {images.map(({ src, zoom, tall }, index) => (
                       <ProjectSlide
                         key={`${project.title}-${index}`}
                         src={src}
@@ -383,6 +465,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                         index={index}
                         active={activeIndex === index}
                         zoom={zoom}
+                        tall={tall}
                       />
                     ))}
                   </div>

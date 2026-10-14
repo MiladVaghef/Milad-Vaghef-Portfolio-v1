@@ -1,13 +1,14 @@
-import React, { lazy, Suspense, useCallback, useEffect, useRef } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Icon from "../components/Icon";
 import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
-import { projectsData } from "../data/projects";
+import { projectsData, type Project } from "../data/projects";
 import { workHistoryData } from "../data/workHistory";
 import { useNavigation } from "../hooks/navigationContext";
 import useAppReady from "../hooks/useAppReady";
 import PageLayout from "../components/PageLayout";
 import Reveal from "../components/Reveal";
+import ProjectModal from "../components/ProjectModal";
 import { WorkHistorySkeleton } from "../components/Skeleton";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
@@ -23,6 +24,9 @@ const Home = ({ setInViewSections }: HomeProps) => {
   const { navigateTo } = useNavigation();
   const limitedProjects = projectsData.slice(0, 4);
   const thresholdSteps = Array.from({ length: 10 }, (_, i) => i * 0.1);
+
+  // Which project's lightbox is currently open (null = closed).
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   // The observers fire on threshold crossings throughout a scroll gesture.
   // Quantize each ratio to a 5% bucket and coalesce all three sections into
@@ -174,7 +178,11 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
             <div id="home-row-projects" className="home-mobile-padding column">
               {limitedProjects.map((project) => (
-                <ProjectsRow key={project.title} {...project} />
+                <ProjectsRow
+                  key={project.title}
+                  project={project}
+                  onOpen={setActiveProject}
+                />
               ))}
             </div>
 
@@ -211,6 +219,13 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </div>
           </div>
         </div>
+
+        {/* Project lightbox — opened by the row cards above. Portals to
+            document.body, so its position in the tree doesn't matter. */}
+        <ProjectModal
+          project={activeProject}
+          onClose={() => setActiveProject(null)}
+        />
       </div>
     </PageLayout>
   );
