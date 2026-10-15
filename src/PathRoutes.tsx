@@ -2,7 +2,6 @@ import { lazy, Suspense, memo, useState, useEffect, useRef, useMemo } from "reac
 import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { InViewSections } from "./App";
-import useSwipe from "./hooks/useSwipe";
 import { useNavigation } from "./hooks/navigationContext";
 import Footer from "./components/Footer";
 
@@ -23,7 +22,6 @@ interface PathRoutesProps {
 
 const PathRoutesBase = ({ setInViewSections }: PathRoutesProps) => {
   const location = useLocation();
-  const swipeHandlers = useSwipe();
 
   const { direction, navigateTo } = useNavigation();
 
@@ -176,6 +174,10 @@ const PathRoutesBase = ({ setInViewSections }: PathRoutesProps) => {
     style: {
       height: "100%",
       width: "100%",
+      // The whole page IS the drag layer on mobile — flag it single-sided so
+      // the compositor never spends memory rasterizing its back face while
+      // the gesture translates this (very large) layer.
+      backfaceVisibility: "hidden" as const,
     },
 
     custom: direction,
@@ -189,11 +191,14 @@ const PathRoutesBase = ({ setInViewSections }: PathRoutesProps) => {
     exit: "exit" as const,
   };
 
+  // Mobile page-swipes run through the drag system in `pageProps` alone: it
+  // axis-locks the gesture and already knows the no-swipe zones. The old
+  // touch-handler path (useSwipe) tracked the SAME finger — a getComputedStyle
+  // ancestor scan on every touchstart plus a second navigateTo on release.
   return (
     <main
       className="column"
       style={isMobile ? { touchAction: "pan-x pan-y" } : undefined}
-      {...(isMobile ? swipeHandlers : {})}
     >
       <div className="page-slider">
         <AnimatePresence

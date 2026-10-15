@@ -1,4 +1,6 @@
 import customadeLanding from "../assets/images/projects/customade-landing.png";
+import customadeAndroid from "../assets/images/projects/customade-android-1.png";
+import customadeAndroid2 from "../assets/images/projects/customade-android-2.png";
 import bushehrKhormaLanding from "../assets/images/projects/bushehr-khorma-landing.png";
 import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
 import bmwI8magazine1 from "../assets/images/projects/bmw-i8-magazine-1.png";
@@ -147,6 +149,11 @@ export const projectsData: Project[] = [
     title: "Customade - Custom Shoe E-Commerce Website",
     desc: "Developed a fully functional e-commerce website for a custom shoe brand, converting the UI design into a responsive WordPress experience using Elementor, WooCommerce, and JetEngine.",
     tech: ["WordPress", "WooCommerce", "Elementor", "JetEngine"],
+    gallery: [
+      customadeLanding,
+      { src: customadeAndroid, tall: false },
+      { src: customadeAndroid2, tall: false },
+    ],
     date: "2025-03",
   },
   {
@@ -234,8 +241,8 @@ export const projectsData: Project[] = [
       { src: bmwI8magazine5, tall: false },
       // Double-page landscape spreads — below the tall ratio already, so they
       // fit the frame natively and need no override.
-      bmwI8magazine6,
       bmwI8magazine7,
+      bmwI8magazine6,
     ],
   },
 ];

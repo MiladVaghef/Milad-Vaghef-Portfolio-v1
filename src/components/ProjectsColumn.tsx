@@ -1,5 +1,13 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {
+  lazy,
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { projectsData, type Project } from "../data/projects";
 import { formatProjectAge } from "../utils/projectDate";
 import Icon, { type IconType } from "./Icon";
@@ -23,9 +31,19 @@ const categories: { label: string; icon: IconType }[] = [
   { label: "Figma", icon: "figma" },
 ];
 
-const ProjectsColumn = () => {
-  const location = useLocation();
+// Index of the category named by the URL hash (0 = Front-End when there's no
+// hash or it doesn't match) — seeds both the active-tab state and Swiper's
+// starting slide so deep links land on the right chip.
+const seededCategoryIndex = () => {
+  const hash = decodeURIComponent(window.location.hash.replace("#", ""));
 
+  return Math.max(
+    0,
+    categories.findIndex((category) => category.label === hash),
+  );
+};
+
+const ProjectsColumn = () => {
   // Which project's lightbox is currently open (null = closed).
   const [activeProject, setActiveProject] = useState<Project | null>(null);
 
@@ -54,22 +72,15 @@ const ProjectsColumn = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const thumbRef = useRef<HTMLDivElement | null>(null);
 
-  const currentHash = decodeURIComponent(location.hash.replace("#", ""));
-
-  const activeTab =
-    categories.find((c) => c.label === currentHash)?.label ||
-    categories[0].label;
-
-
-  useEffect(() => {
-    const index = categories.findIndex(
-      (category) => category.label === activeTab
-    );
-
-    if (index !== -1 && swiperInstance.current) {
-      swiperInstance.current.slideTo(index);
-    }
-  }, [activeTab]);
+  // Which category the strip is showing — LOCAL state, seeded from the URL
+  // hash. Swipes and taps update it directly and keep the hash in sync via
+  // replaceState: a category change no longer round-trips through the router
+  // (which re-rendered the whole route tree — full-page motion wrappers
+  // included — at the end of every swipe) and no longer pushes a history
+  // entry per swipe.
+  const [activeTab, setActiveTab] = useState(() =>
+    categories[seededCategoryIndex()].label
+  );
 
 
   useEffect(() => {
@@ -82,6 +93,10 @@ const ProjectsColumn = () => {
       grabCursor: true,
       spaceBetween: 0,
 
+      // Land on the hash-seeded chip on mount (deep links) — later changes
+      // flow through slideChange below.
+      initialSlide: seededCategoryIndex(),
+
       navigation: {
         nextEl: ".projects-next",
         prevEl: ".projects-prev",
@@ -93,7 +108,16 @@ const ProjectsColumn = () => {
 
           if (!category) return;
 
-          window.location.hash = encodeURIComponent(category.label);
+          setActiveTab(category.label);
+
+          // replaceState, not hash-assignment: the URL stays shareable and
+          // refresh-safe without a history entry per swipe or a router
+          // re-render at the end of the gesture.
+          const hash = `#${encodeURIComponent(category.label)}`;
+
+          if (window.location.hash !== hash) {
+            window.history.replaceState(null, "", hash);
+          }
         },
       },
     });
@@ -172,36 +196,42 @@ const ProjectsColumn = () => {
   }, [activeTab]);
 
 
-  const filteredProjects = projectsData.filter(
-    (project) => project.category === activeTab
+  // Recomputed only when the category actually changes — previously these ran
+  // on every render (modal opens, etc.), feeding the gesture-commit spike.
+  const filteredProjects = useMemo(
+    () => projectsData.filter((project) => project.category === activeTab),
+    [activeTab],
   );
 
 
   // Masonry column calculation
-  const columns: Project[][] = [[], []];
+  const columns = useMemo(() => {
+    const result: Project[][] = [[], []];
 
-  const columnHeights = [0, 0];
+    const columnHeights = [0, 0];
 
-
-  filteredProjects.forEach((project) => {
-    const imageRatio = project.height / project.width;
-
-
-    // Estimate image height based on column width.
-    // 500 is approximate width of the card.
-    // You can adjust this if needed.
-    const estimatedHeight = imageRatio * 500;
+    filteredProjects.forEach((project) => {
+      const imageRatio = project.height / project.width;
 
 
-    const shortestColumn = columnHeights.indexOf(
-      Math.min(...columnHeights)
-    );
+      // Estimate image height based on column width.
+      // 500 is approximate width of the card.
+      // You can adjust this if needed.
+      const estimatedHeight = imageRatio * 500;
 
 
-    columns[shortestColumn].push(project);
+      const shortestColumn = columnHeights.indexOf(
+        Math.min(...columnHeights)
+      );
 
-    columnHeights[shortestColumn] += estimatedHeight;
-  });
+
+      result[shortestColumn].push(project);
+
+      columnHeights[shortestColumn] += estimatedHeight;
+    });
+
+    return result;
+  }, [filteredProjects]);
 
 
 
@@ -339,7 +369,10 @@ const ProjectsColumn = () => {
 
 
 
-const ProjectCard = ({
+// Memoized: its props (module-data project + stable openProject) never change,
+// so category-swipe commits and lightbox state flips don't re-render every
+// card on the grid — only the tab-keyed remount rebuilds them.
+const ProjectCard = memo(({
   project,
   onOpen,
 }: {
@@ -376,7 +409,7 @@ const ProjectCard = ({
 
   );
 
-};
+});
 
 
 
