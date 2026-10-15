@@ -43,6 +43,40 @@ const START_DELAY_MS = 2000;
 // before the pass quietly resumes from wherever they left it.
 const RESUME_MS = 5000;
 
+type ImageStatus = "loading" | "loaded" | "error";
+
+/**
+ * Tracks whether an image's pixels have arrived, for the shimmer
+ * placeholders. The mount-time `complete` check matters: a screenshot that's
+ * already in the HTTP cache (e.g. the cover the card just rendered) finishes
+ * before React attaches `onLoad`, which would otherwise strand the skeleton
+ * forever.
+ */
+function useImageStatus(src: string) {
+  const ref = useRef<HTMLImageElement | null>(null);
+  const [status, setStatus] = useState<ImageStatus>("loading");
+
+  useEffect(() => {
+    const img = ref.current;
+
+    if (img?.complete) {
+      // naturalWidth is 0 on a failed decode — that path belongs to onError,
+      // which has normally already fired by the time this effect runs.
+      if (img.naturalWidth > 0) setStatus("loaded");
+      return;
+    }
+
+    setStatus("loading");
+  }, [src]);
+
+  return {
+    ref,
+    status,
+    markLoaded: () => setStatus("loaded"),
+    markError: () => setStatus("error"),
+  };
+}
+
 /**
  * One lightbox slide. Portrait-ish screenshots (ratio ≥ 0.9 — full-page and
  * phone shots) render at full width inside a
@@ -87,12 +121,21 @@ function ProjectSlide({
   const [zoomed, setZoomed] = useState(false);
   const isZoomed = !!zoom || zoomed;
 
+  // Shimmer state for this slide's screenshot — the scroll viewport fills the
+  // slot (see SCSS) until the pixels land, then fades the image in. Destructured
+  // so the effect below depends on the primitive `status`, not the fresh
+  // object the hook returns on every render (which would restart the pass).
+  const { ref: imageRef, status, markLoaded, markError } = useImageStatus(src);
+
   useEffect(() => {
     const el = scrollRef.current;
     // Auto-scroll only the tall view while it is NOT zoomed — once the visitor
     // flips into the manual pan (zoom) view, the pass stops so it can't fight
-    // their panning.
+    // their panning. It also waits for the image to load: scrollHeight is
+    // meaningless (and max <= 0) until the tall screenshot has real pixels,
+    // and a cached image resolves before this effect first runs.
     if (!isTall || !active || !el || isZoomed) return;
+    if (status !== "loaded") return;
 
     const max = el.scrollHeight - el.clientHeight;
     if (max <= 0) return;
@@ -185,7 +228,7 @@ function ProjectSlide({
       el.removeEventListener("touchstart", onInteract);
       el.removeEventListener("pointerdown", onInteract);
     };
-  }, [isTall, active, isZoomed]);
+  }, [isTall, active, isZoomed, status]);
 
   return (
     <div
@@ -196,6 +239,10 @@ function ProjectSlide({
       <div
         ref={scrollRef}
         className={`project-modal-scroll${zoomed ? " is-zoom-out" : ""}`}
+        // Shimmer state for the SCSS placeholder — "loading" fills the slot
+        // with the shared shimmer, "error" settles it to a static surface
+        // (omitted entirely once the pixels are here).
+        data-loading={status === "loaded" ? undefined : status}
         // When runtime-zoomed the (icon-less) image itself becomes the zoom-
         // out control — click/tap or Enter/Space returns it to the fit view.
         // Default-zoomed images (`zoom` prop) never set `zoomed`, so they
@@ -215,12 +262,15 @@ function ProjectSlide({
         }}
       >
         <img
+          ref={imageRef}
           src={src}
           alt={`${alt} — image ${index + 1}`}
           loading="lazy"
           decoding="async"
           draggable={false}
           onLoad={(e) => {
+            markLoaded();
+
             const img = e.currentTarget;
             // Landscape / ≈16:9 shots already fill the frame — no zoom
             // affordance for them.
@@ -233,6 +283,7 @@ function ProjectSlide({
             }
             setIsTall(img.naturalHeight / img.naturalWidth >= TALL_RATIO);
           }}
+          onError={markError}
         />
       </div>
 
@@ -269,12 +320,43 @@ function ProjectSlide({
   );
 }
 
+/**
+ * One thumbnail in the strip — same shimmer-until-loaded treatment as the
+ * main slide, at 96×62. Thumbs use `loading="lazy"` too, so they routinely
+ * paint after the slide they jump to.
+ */
+function ProjectThumb({ src, alt }: { src: string; alt: string }) {
+  const imageStatus = useImageStatus(src);
+
+  return (
+    <div
+      className={`swiper-slide project-modal-thumb${
+        imageStatus.status === "loading" ? " is-loading" : ""
+      }`}
+    >
+      <img
+        ref={imageStatus.ref}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={imageStatus.markLoaded}
+        onError={imageStatus.markError}
+      />
+    </div>
+  );
+}
+
 /** Full-screen lightbox that showcases a multi-image project with a slider. */
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const mainSliderRef = useRef<HTMLDivElement | null>(null);
   const thumbsSliderRef = useRef<HTMLDivElement | null>(null);
   const mainSwiper = useRef<SwiperCore | null>(null);
   const thumbsSwiper = useRef<SwiperCore | null>(null);
+
+  // Timer for the sentinel history pop the close-cleanup schedules — kept in
+  // a ref so the effect's next setup can cancel it (see the history effect).
+  const sentinelPopTimerRef = useRef<number | null>(null);
 
   // 1-based active slide, for the "current / total" counter.
   const [activeIndex, setActiveIndex] = useState(0);
@@ -330,9 +412,31 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    window.history.pushState({ projectModalOpen: true }, "");
+    // Cancel a sentinel-pop the previous cleanup just scheduled. StrictMode
+    // (dev) replays this effect on MOUNT as setup → cleanup → setup; without
+    // this cancel, the replayed setup's listener would catch the first
+    // setup's pop a tick later — a popstate that is NOT the visitor backing
+    // out — and the lightbox would close itself the instant it opens (first
+    // open dies, every open after it survives, because only mount replays).
+    if (sentinelPopTimerRef.current !== null) {
+      window.clearTimeout(sentinelPopTimerRef.current);
+      sentinelPopTimerRef.current = null;
+    }
 
-    const onPopState = () => onCloseRef.current();
+    // Same replay, other half: the first setup already pushed the sentinel —
+    // don't stack a second one on top of it.
+    if (!window.history.state?.projectModalOpen) {
+      window.history.pushState({ projectModalOpen: true }, "");
+    }
+
+    const onPopState = (event: PopStateEvent) => {
+      // Arriving on an entry that still carries the sentinel flag is leftover
+      // history plumbing, not a back press — only the unflagged entry BELOW
+      // the sentinel means the visitor actually left the lightbox's entry.
+      if (event.state?.projectModalOpen) return;
+
+      onCloseRef.current();
+    };
 
     window.addEventListener("popstate", onPopState);
 
@@ -340,8 +444,18 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
       window.removeEventListener("popstate", onPopState);
 
       // Only undo our own sentinel — after a popstate close it's already gone.
+      // Deferred one tick (rather than history.back() inline) precisely so the
+      // replayed setup above can cancel it: back() resolves asynchronously, so
+      // an inline call survives long enough to fire against the re-armed
+      // listener and be misread as the visitor pressing back.
       if (window.history.state?.projectModalOpen) {
-        window.history.back();
+        sentinelPopTimerRef.current = window.setTimeout(() => {
+          sentinelPopTimerRef.current = null;
+
+          if (window.history.state?.projectModalOpen) {
+            window.history.back();
+          }
+        }, 0);
       }
     };
   }, [isOpen]);
@@ -491,17 +605,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   >
                     <div className="swiper-wrapper">
                       {images.map(({ src }, index) => (
-                        <div
-                          className="swiper-slide project-modal-thumb"
+                        <ProjectThumb
                           key={`${project.title}-thumb-${index}`}
-                        >
-                          <img
-                            src={src}
-                            alt={`${project.alt} thumbnail ${index + 1}`}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </div>
+                          src={src}
+                          alt={`${project.alt} thumbnail ${index + 1}`}
+                        />
                       ))}
                     </div>
                   </div>

@@ -1,7 +1,13 @@
 import customadeLanding from "../assets/images/projects/customade-landing.png";
 import bushehrKhormaLanding from "../assets/images/projects/bushehr-khorma-landing.png";
 import netflixLoginPage from "../assets/images/projects/netflix-login-page.png";
-import bmwI8magazine from "../assets/images/projects/bmw-i8-magazine.png";
+import bmwI8magazine1 from "../assets/images/projects/bmw-i8-magazine-1.png";
+import bmwI8magazine2 from "../assets/images/projects/bmw-i8-magazine-2.png";
+import bmwI8magazine3 from "../assets/images/projects/bmw-i8-magazine-3.png";
+import bmwI8magazine4 from "../assets/images/projects/bmw-i8-magazine-4.png";
+import bmwI8magazine5 from "../assets/images/projects/bmw-i8-magazine-5.png";
+import bmwI8magazine6 from "../assets/images/projects/bmw-i8-magazine-6.png";
+import bmwI8magazine7 from "../assets/images/projects/bmw-i8-magazine-7.png";
 import swiperJsExperiment from "../assets/images/projects/swiper-js-experiment.png";
 import chakodHome from "../assets/images/projects/chakod-home.png";
 
@@ -99,7 +105,7 @@ export const projectsData: Project[] = [
     image: zervaHomeDesktop,
     alt: "Zerva website UI design",
     title: "Zerva — Architecture Studio ",
-    desc: "Designed a complete website UI for an architecture studio, including the homepage, about, projects, and contact pages, with responsive layouts for desktop, tablet, and mobile. The original studio name, images, and content have been replaced with fictional branding and assets for portfolio presentation and confidentiality purposes.",
+    desc: "Designed a complete website UI for an architecture studio as part of the Civiko team, including the homepage, about, projects, and contact pages, with responsive layouts for desktop, tablet, and mobile. Mohammad Gharibi led the UI design process. The original studio name, images, and content have been replaced with fictional branding and assets for portfolio presentation and confidentiality purposes.",
     tech: ["Figma"],
     date: "2026-10",
     gallery: [
@@ -205,17 +211,31 @@ export const projectsData: Project[] = [
   },
   {
     isPractice: true,
-    showWide: true,
+    showWide: false,
     category: "Figma",
     activeLink: false,
-    width: 3628,
-    height: 1711,
+    width: 2541,
+    height: 3596,
     link: "#",
-    image: bmwI8magazine,
+    image: bmwI8magazine1,
     alt: "BMW i8 Magazine",
     title: "BMW i8 - Super Cars Magazine",
     desc: "This BMW i8 supercar magazine is a concept created for a college assignment, designed to show my ability to craft clean editorial layouts and present automotive content with a professional, modern style.",
     tech: ["Figma", "Adobe Ilustrator"],
     date: "2025-11",
+    gallery: [
+      // Fit-to-frame first: the pages open showing the WHOLE spread, not the
+      // zoomed auto-scroll view — the slide's zoom button still dives into
+      // 1:1 detail on demand.
+      { src: bmwI8magazine1, tall: false },
+      { src: bmwI8magazine2, tall: false },
+      { src: bmwI8magazine3, tall: false },
+      { src: bmwI8magazine4, tall: false },
+      { src: bmwI8magazine5, tall: false },
+      // Double-page landscape spreads — below the tall ratio already, so they
+      // fit the frame natively and need no override.
+      bmwI8magazine6,
+      bmwI8magazine7,
+    ],
   },
 ];

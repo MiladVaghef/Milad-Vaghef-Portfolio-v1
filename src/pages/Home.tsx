@@ -8,11 +8,14 @@ import { useNavigation } from "../hooks/navigationContext";
 import useAppReady from "../hooks/useAppReady";
 import PageLayout from "../components/PageLayout";
 import Reveal from "../components/Reveal";
-import ProjectModal from "../components/ProjectModal";
-import { WorkHistorySkeleton } from "../components/Skeleton";
+import { ProjectModalSkeleton, WorkHistorySkeleton } from "../components/Skeleton";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
+// The lightbox (and its Swiper dependency) is its own chunk. It only starts
+// downloading the first time a card is opened, so the landing page never pays
+// for it — see `modalRequested` below.
+const ProjectModal = lazy(() => import("../components/ProjectModal"));
 
 interface HomeProps {
   setInViewSections?: React.Dispatch<React.SetStateAction<InViewSections>>;
@@ -27,6 +30,18 @@ const Home = ({ setInViewSections }: HomeProps) => {
 
   // Which project's lightbox is currently open (null = closed).
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  // Flips on the first open and stays on: the lazy ProjectModal must keep
+  // rendering after close (with project=null) so AnimatePresence can play the
+  // exit animation — unmounting it would cut the lightbox out with no fade.
+  const [modalRequested, setModalRequested] = useState(false);
+
+  const openProject = useCallback((project: Project) => {
+    setModalRequested(true);
+    setActiveProject(project);
+  }, []);
+
+  const closeProject = useCallback(() => setActiveProject(null), []);
 
   // The observers fire on threshold crossings throughout a scroll gesture.
   // Quantize each ratio to a 5% bucket and coalesce all three sections into
@@ -181,7 +196,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
                 <ProjectsRow
                   key={project.title}
                   project={project}
-                  onOpen={setActiveProject}
+                  onOpen={openProject}
                 />
               ))}
             </div>
@@ -221,11 +236,24 @@ const Home = ({ setInViewSections }: HomeProps) => {
         </div>
 
         {/* Project lightbox — opened by the row cards above. Portals to
-            document.body, so its position in the tree doesn't matter. */}
-        <ProjectModal
-          project={activeProject}
-          onClose={() => setActiveProject(null)}
-        />
+            document.body, so its position in the tree doesn't matter.
+            Suspense shows a skeleton dialog (same chrome, same footprint)
+            while the chunk streams in on the very first open; the fallback
+            goes null once closed so no skeleton lingers over the page. */}
+        {modalRequested && (
+          <Suspense
+            fallback={
+              activeProject ? (
+                <ProjectModalSkeleton
+                  project={activeProject}
+                  onClose={closeProject}
+                />
+              ) : null
+            }
+          >
+            <ProjectModal project={activeProject} onClose={closeProject} />
+          </Suspense>
+        )}
       </div>
     </PageLayout>
   );

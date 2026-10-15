@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { projectsData, type Project } from "../data/projects";
 import { formatProjectAge } from "../utils/projectDate";
 import Icon, { type IconType } from "./Icon";
 import LazyImage from "./LazyImage";
 import Reveal from "./Reveal";
-import ProjectModal from "./ProjectModal";
+import { ProjectModalSkeleton } from "./Skeleton";
+
+// The lightbox (and its Swiper dependency) is its own chunk. It only starts
+// downloading the first time a card is opened, so the projects page never pays
+// for it — see `modalRequested` below.
+const ProjectModal = lazy(() => import("./ProjectModal"));
 
 // Swiper
 import Swiper from "swiper";
@@ -23,6 +28,18 @@ const ProjectsColumn = () => {
 
   // Which project's lightbox is currently open (null = closed).
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  // Flips on the first open and stays on: the lazy ProjectModal must keep
+  // rendering after close (with project=null) so AnimatePresence can play the
+  // exit animation — unmounting it would cut the lightbox out with no fade.
+  const [modalRequested, setModalRequested] = useState(false);
+
+  const openProject = useCallback((project: Project) => {
+    setModalRequested(true);
+    setActiveProject(project);
+  }, []);
+
+  const closeProject = useCallback(() => setActiveProject(null), []);
 
   const swiperRef = useRef<HTMLDivElement | null>(null);
   const swiperInstance = useRef<SwiperCore | null>(null);
@@ -263,7 +280,7 @@ const ProjectsColumn = () => {
               <ProjectCard
                 key={project.title}
                 project={project}
-                onOpen={setActiveProject}
+                onOpen={openProject}
               />
 
             ))}
@@ -279,7 +296,7 @@ const ProjectsColumn = () => {
               <ProjectCard
                 key={project.title}
                 project={project}
-                onOpen={setActiveProject}
+                onOpen={openProject}
               />
 
             ))}
@@ -297,10 +314,24 @@ const ProjectsColumn = () => {
           come from the scroll/resize sync effect above. */}
       <div ref={thumbRef} className="projects-scroll-thumb" aria-hidden="true" />
 
-      <ProjectModal
-        project={activeProject}
-        onClose={() => setActiveProject(null)}
-      />
+      {/* Lazy lightbox behind Suspense: a skeleton dialog (same chrome, same
+          footprint) covers the gap while the chunk streams in on the first
+          open, and the fallback goes null once closed so no skeleton lingers
+          over the grid. */}
+      {modalRequested && (
+        <Suspense
+          fallback={
+            activeProject ? (
+              <ProjectModalSkeleton
+                project={activeProject}
+                onClose={closeProject}
+              />
+            ) : null
+          }
+        >
+          <ProjectModal project={activeProject} onClose={closeProject} />
+        </Suspense>
+      )}
 
     </div>
   );

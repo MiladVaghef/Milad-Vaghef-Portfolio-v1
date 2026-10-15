@@ -829,4 +829,210 @@
       list-style: none;
     }
   }
+
+  // ── Lazy-open skeleton (Suspense fallback) ────────────────────────────
+  // Shown while the ProjectModal chunk streams in on the first open. It
+  // reuses every layout class above, so only these overrides are needed to
+  // turn "content styling" into "bone styling".
+  &.project-modal--skeleton {
+    // The bones carry the animation; the dialog itself arrives without the
+    // framer-motion entrance (it isn't mounted yet), so fade it in via CSS
+    // to match the modal's 0.25s backdrop / 0.35s dialog reveal.
+    .project-modal-backdrop {
+      animation: project-modal-skeleton-fade 0.25s ease both;
+    }
+
+    .project-modal-dialog {
+      animation: project-modal-skeleton-rise 0.35s cubic-bezier(0.22, 1, 0.36, 1)
+        both;
+    }
+
+    // Thumb strip bones sit in a plain flex row instead of Swiper's wrapper.
+    .project-modal-skeleton-thumbs {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    // Not clickable yet, so the real thumbs' pointer affordance would lie.
+    // Selector depth matches the base rule (slider-area > thumbs > thumb) so
+    // this actually wins the cascade — a shallower override would lose.
+    .project-modal-slider-area .project-modal-thumbs .project-modal-thumb {
+      cursor: default;
+    }
+
+    // Block bones carry explicit inline heights; the shared .skeleton--block
+    // min-height (30px) would otherwise round the pills up and nudge the
+    // description below them out of place on the swap.
+    .skeleton--block {
+      min-height: 0;
+    }
+
+    // The stage bone drives the slider's height — cap it at the same
+    // --modal-slide-max-height the real slides use so the skeleton matches
+    // the dialog the real content lands in.
+    .project-modal-skeleton-stage {
+      max-height: var(--modal-slide-max-height);
+    }
+
+    // Chip bones: the <li> wrappers are deliberately unstyled (unlike the
+    // real `.tech` pills) so the shimmer reads as a placeholder instead of a
+    // painted orange chip. The bone's own width breaks the shrink-to-fit
+    // circle with the li, so each chip lands at a definite 84px.
+    .project-modal-chip {
+      width: 84px;
+      border-radius: 15px;
+    }
+
+    // The CTA bone borrows `.project-modal-visit` only for its footprint
+    // (margin-top: auto / stretch) — kill the gradient, lift, and the real
+    // button's 20px padding so its inline height is the whole box (~56px,
+    // matching the live CTA) instead of 56 + 40. Hover/press are neutralized
+    // too: their base rules are deeper and would otherwise glow a bone that
+    // isn't clickable yet.
+    .project-modal-visit {
+      padding: 0;
+      cursor: default;
+      background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 25%,
+        var(--skeleton-highlight) 50%,
+        var(--skeleton-base) 75%
+      );
+      background-size: 200% 100%;
+      box-shadow: none;
+      animation: shimmer 1.5s linear infinite;
+
+      &:hover,
+      &:active {
+        box-shadow: none;
+        transform: none;
+      }
+    }
+  }
+
+  // ── Per-image shimmer while the modal's own screenshots load ──────────
+  // The slide and each thumb keep their slot filled with the shared shimmer
+  // until their pixels land, then reveal with a soft fade (mirrors the
+  // .lazy-image system the project cards use).
+  .project-modal-slide {
+    .project-modal-scroll {
+      // Placeholder box while the image streams in: fills the frame at the
+      // slider's cap so the dialog never collapses to zero height (or shows
+      // a broken-image glyph) before onLoad fires. Applies to both states —
+      // a failed image must keep its slot too, or the column collapses.
+      &[data-loading] {
+        width: 100%;
+        min-height: 240px;
+        max-height: var(--modal-slide-max-height);
+        border-radius: 12px;
+
+        background: linear-gradient(
+          90deg,
+          var(--skeleton-base) 25%,
+          var(--skeleton-highlight) 50%,
+          var(--skeleton-base) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s linear infinite;
+
+        img {
+          // Hidden until the pixels land; the slight over-scale is the zoom-
+          // out half of the reveal (the base rule below eases it to 1).
+          opacity: 0;
+          transform: scale(1.04);
+        }
+      }
+
+      // Tall shots keep their fixed scroll window while loading instead of
+      // the min-height above — same shape, just shimmering.
+      &[data-tall="true"][data-loading] {
+        min-height: 0;
+      }
+
+      img {
+        // Reveal once loaded — fades in and settles from a hair of zoom,
+        // same cadence as .lazy-image (0.55s ease).
+        opacity: 1;
+        transform: scale(1);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+
+      // Error: same filled slot, but settled to a calm static surface — the
+      // shimmer stops so it doesn't imply "still coming".
+      &[data-loading="error"] {
+        animation: none;
+        background: var(--skeleton-base);
+      }
+    }
+  }
+
+  // Thumbnails — same treatment at 96×62. The strip only renders for
+  // multi-image projects, and each thumb owns its own load state.
+  .project-modal-thumb {
+    &.is-loading {
+      background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 25%,
+        var(--skeleton-highlight) 50%,
+        var(--skeleton-base) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s linear infinite;
+
+      img {
+        opacity: 0;
+      }
+    }
+
+    img {
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+  }
+}
+
+@keyframes project-modal-skeleton-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes project-modal-skeleton-rise {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Collapse every modal shimmer (skeleton dialog + per-image placeholders) to
+// a static surface for vestibular-sensitive visitors — same contract as the
+// shared .skeleton/.lazy-image rules in _skeleton.scss.
+@media (prefers-reduced-motion: reduce) {
+  .project-modal--skeleton .project-modal-backdrop,
+  .project-modal--skeleton .project-modal-dialog,
+  .project-modal--skeleton .project-modal-visit,
+  .project-modal--skeleton [class^="skeleton"],
+  .project-modal--skeleton [class*=" skeleton"],
+  .project-modal-slide .project-modal-scroll[data-loading],
+  .project-modal-thumb.is-loading {
+    animation: none;
+    background-size: 100% 100%;
+  }
+
+  .project-modal-slide .project-modal-scroll img,
+  .project-modal-thumb img {
+    transition: none;
+  }
 }
