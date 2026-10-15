@@ -368,6 +368,19 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
+  // True only when this component's FIRST render already carries a project —
+  // i.e. it mounted directly over the Suspense skeleton (cold chunk after a
+  // refresh). That first appearance must land IN PLACE: the motion.divs start
+  // at opacity 0, so animating it made the dialog vanish the instant the
+  // skeleton swapped out and then fade back in — read as "the lightbox closed
+  // and reopened". Flipped to false after the first commit so every LATER
+  // open keeps its normal entrance animation.
+  const mountedOverSkeleton = useRef(project !== null);
+
+  useEffect(() => {
+    mountedOverSkeleton.current = false;
+  }, []);
+
   // The images to show — fall back to the single cover when no gallery
   // exists. Gallery entries may be plain URLs or objects with per-image
   // options; each resolved slide gets its own `zoom` flag (the entry's own
@@ -521,7 +534,9 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         <motion.div
           className="project-modal"
           data-no-swipe
-          initial={{ opacity: 0 }}
+          // Skip the fade-in only when replacing the skeleton (see
+          // `mountedOverSkeleton` above) — otherwise it reads as a close.
+          initial={mountedOverSkeleton.current ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: EASE }}
@@ -538,7 +553,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             role="dialog"
             aria-modal="true"
             aria-label={project.title}
-            initial={{ opacity: 0, y: 32, scale: 0.97 }}
+            initial={
+              mountedOverSkeleton.current
+                ? false
+                : { opacity: 0, y: 32, scale: 0.97 }
+            }
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.35, ease: EASE }}
