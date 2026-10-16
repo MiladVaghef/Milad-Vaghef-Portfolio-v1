@@ -44,7 +44,7 @@ export const workHistoryData: Project[] = [
   },
   {
     timeline: "2026 May — 2026 July",
-    title: "Chakod",
+    title: "Shapi",
     role: ["Front-End Developer"],
     desc: "Developed the frontend of a 30+ page web platform in approximately two months, implementing page layouts and interactive elements in collaboration with a backend developer.",
     tech: ["HTML", "JavaScript", "SCSS", "Swiper.js", "Laravel Blade"],

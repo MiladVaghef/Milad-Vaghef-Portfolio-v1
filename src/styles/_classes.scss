@@ -97,6 +97,25 @@
   font-weight: 600;
 }
 
+// Attention note attached to a project (`Project.note`) — a warning-toned
+// callout so caveats (e.g. "the design has changed") read as an alert
+// instead of blending into the description. RENDERED ONLY inside the project
+// modal (lightbox details column); its spacing comes from that column's flex
+// gap, hence margin: 0.
+.project-note {
+  margin: 0;
+  padding: 8px 14px;
+
+  border-left: 3px solid var(--primary-color);
+  border-radius: 8px;
+  background-color: rgba(249, 115, 22, 0.08);
+
+  color: var(--text-color);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
 // "2 years ago" — glassy pill overlaid in the BOTTOM-LEFT corner of a
 // project's cover image (home rows and projects-page cards). Mirrors the
 // .projects-column-badge "N pages" pill (top-right) so the two corners

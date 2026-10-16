@@ -769,6 +769,12 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   {project.desc}
                 </p>
 
+                {/* Attention note (`Project.note`) — amber callout, e.g. a
+                    live site whose design has since changed. */}
+                {project.note && (
+                  <p className="project-note">{project.note}</p>
+                )}
+
                 <ul className="project-modal-tech row">
                   {project.tech.map((tech) => (
                     <li className="tech" key={tech}>
@@ -776,6 +782,9 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     </li>
                   ))}
                   {project.isPractice && (
+                    <li className="concept-tag">Experiment</li>
+                  )}
+                  {project.isConcept && (
                     <li className="concept-tag">Concept</li>
                   )}
                 </ul>

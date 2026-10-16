@@ -817,6 +817,17 @@
       }
     }
 
+    // Attention note tracks the description's size so the callout reads as
+    // part of the same details stack (spacing comes from the info column's
+    // flex gap).
+    .project-note {
+      font-size: 14px;
+
+      @include device("mobile") {
+        font-size: 12px;
+      }
+    }
+
     .project-modal-tech {
       display: flex;
       flex-wrap: wrap;

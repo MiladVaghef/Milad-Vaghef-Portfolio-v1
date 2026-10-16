@@ -10,7 +10,7 @@ interface ProjectsRowProps {
 }
 
 const ProjectsRow = ({ project, onOpen }: ProjectsRowProps) => {
-  const { isPractice, image, alt, title, desc, tech } = project;
+  const { isPractice, isConcept, image, alt, title, desc, tech } = project;
 
   return (
     // Reveal animates the row in the first time it scrolls into view.
@@ -51,7 +51,12 @@ const ProjectsRow = ({ project, onOpen }: ProjectsRowProps) => {
                   {tech}
                 </li>
               ))}
-              <li className={isPractice ? "concept-tag" : "remove"}>Concept</li>
+              <li className={isPractice ? "concept-tag" : "remove"}>
+                Experiment
+              </li>
+              <li className={isConcept ? "concept-tag" : "remove"}>
+                Concept
+              </li>
             </ul>
           </div>
         </div>
