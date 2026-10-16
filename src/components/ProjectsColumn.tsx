@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { projectsData, type Project } from "../data/projects";
-import { formatProjectAge } from "../utils/projectDate";
+import { formatProjectAge, projectDateValue } from "../utils/projectDate";
 import Icon, { type IconType } from "./Icon";
 import LazyImage from "./LazyImage";
 import Reveal from "./Reveal";
@@ -189,17 +189,166 @@ const ProjectsColumn = () => {
     window.addEventListener("resize", sync);
     sync();
 
+    // --- Thumb interaction --------------------------------------------------
+    // The thumb used to be pure decoration (pointer-events: none, no JS at
+    // all — it was only positioned), so grabbing it did nothing and the grid
+    // only scrolled via wheel/touch. It now behaves like the native
+    // scrollbar it replaced: drag the thumb, click the track to page.
+
+    // Same geometry `sync` uses — thumb travel vs. the wrapper's full
+    // scrollable range; the ratio maps pointer delta onto scroll delta.
+    const metrics = () => {
+      const trackTop = bar.offsetHeight + TRACK_TOP_GAP;
+      const trackH = container.offsetHeight - trackTop - TRACK_BOTTOM_GAP;
+      const { scrollHeight, clientHeight } = wrapper;
+
+      return {
+        trackTop,
+        trackH,
+        scrollable: scrollHeight - clientHeight,
+        travel: trackH - thumb.offsetHeight,
+      };
+    };
+
+    // Drag: pointer events (not mouse) so touchscreens and touchpad taps
+    // drag too — the thumb is desktop-only anyway (`display: none` ≤ tablet).
+    let dragging = false;
+    let dragStartY = 0;
+    let dragStartScroll = 0;
+
+    const moveDrag = (e: PointerEvent) => {
+      if (!dragging) return;
+
+      const { travel, scrollable } = metrics();
+
+      if (travel <= 0 || scrollable <= 0) return;
+
+      wrapper.scrollTop =
+        dragStartScroll + ((e.clientY - dragStartY) * scrollable) / travel;
+    };
+
+    const stopDrag = (e: PointerEvent) => {
+      if (!dragging) return;
+
+      dragging = false;
+
+      if (thumb.hasPointerCapture(e.pointerId)) {
+        thumb.releasePointerCapture(e.pointerId);
+      }
+
+      window.removeEventListener("pointermove", moveDrag);
+      window.removeEventListener("pointerup", stopDrag);
+      window.removeEventListener("pointercancel", stopDrag);
+    };
+
+    const startDrag = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+
+      const { travel, scrollable } = metrics();
+
+      // Nothing to scroll (or no room to travel) — no gesture to start.
+      if (travel <= 0 || scrollable <= 1) return;
+
+      dragging = true;
+      dragStartY = e.clientY;
+      dragStartScroll = wrapper.scrollTop;
+
+      // Keep the gesture tracking outside the 4px bar, and stop the press
+      // from starting a text selection / native drag.
+      thumb.setPointerCapture(e.pointerId);
+      e.preventDefault();
+
+      window.addEventListener("pointermove", moveDrag);
+      window.addEventListener("pointerup", stopDrag);
+      window.addEventListener("pointercancel", stopDrag);
+    };
+
+    // The thumb is NOT inside the scroll wrapper, so a wheel over it would
+    // bubble past the grid into the overflow-hidden page shell and do
+    // nothing — forward it to the wrapper instead.
+    const onThumbWheel = (e: WheelEvent) => {
+      e.preventDefault();
+
+      // deltaMode 1 = lines (some Firefox/Linux setups) — normalize to px.
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+
+      wrapper.scrollTop += dy;
+    };
+
+    // Click the track — the empty strip the thumb rides in (it sits inside
+    // the wrapper's 60px right padding, never over a card) — to page a
+    // screen in that direction, like a native scrollbar track.
+    const onTrackClick = (e: MouseEvent) => {
+      if (e.button !== 0) return;
+
+      const target = e.target as Node | null;
+
+      // Only the empty chrome itself. Cards, the sticky bar, the grid and
+      // the thumb all sit deeper (or ARE the thumb) and keep their own
+      // behaviour — this also keeps modal overlays from paging the grid.
+      if (target !== container && target !== wrapper) return;
+
+      const { trackTop, trackH, scrollable } = metrics();
+
+      if (scrollable <= 1 || trackH < MIN_THUMB) return;
+
+      // Inside the thumb's column (with the widened hit-area slop)?
+      const containerRect = container.getBoundingClientRect();
+      const thumbRect = thumb.getBoundingClientRect();
+      const HIT_SLOP = 12;
+
+      if (
+        e.clientX < thumbRect.left - HIT_SLOP ||
+        e.clientX > thumbRect.right + HIT_SLOP
+      ) {
+        return;
+      }
+
+      // ...and inside the track's vertical span (not beside the category
+      // bar at the top or the footer pill zone at the bottom).
+      const y = e.clientY - containerRect.top;
+
+      if (y < trackTop || y > trackTop + trackH) return;
+
+      // Page up/down relative to where the thumb currently sits.
+      const thumbCenter = (thumbRect.top + thumbRect.bottom) / 2 - containerRect.top;
+      const direction = y < thumbCenter ? -1 : 1;
+
+      wrapper.scrollTop += direction * wrapper.clientHeight;
+    };
+
+    thumb.addEventListener("pointerdown", startDrag);
+    thumb.addEventListener("wheel", onThumbWheel, { passive: false });
+    container.addEventListener("click", onTrackClick);
+
     return () => {
       wrapper.removeEventListener("scroll", sync);
       window.removeEventListener("resize", sync);
+
+      thumb.removeEventListener("pointerdown", startDrag);
+      thumb.removeEventListener("wheel", onThumbWheel);
+      container.removeEventListener("click", onTrackClick);
+
+      window.removeEventListener("pointermove", moveDrag);
+      window.removeEventListener("pointerup", stopDrag);
+      window.removeEventListener("pointercancel", stopDrag);
     };
   }, [activeTab]);
 
 
   // Recomputed only when the category actually changes — previously these ran
   // on every render (modal opens, etc.), feeding the gesture-commit spike.
+  // Filtered AND sorted newest-first here so cards show how recently each
+  // project was added; the masonry split below inherits the order.
+  // (The Home page's projects row intentionally does NOT use this — it just
+  // takes the top 4 entries of `projectsData` as-is.)
   const filteredProjects = useMemo(
-    () => projectsData.filter((project) => project.category === activeTab),
+    () =>
+      projectsData
+        .filter((project) => project.category === activeTab)
+        .sort(
+          (a, b) => projectDateValue(b.date) - projectDateValue(a.date),
+        ),
     [activeTab],
   );
 
@@ -508,6 +657,12 @@ const ProjectContent = ({
 
 
           {project.isPractice && (
+            <li className="concept-tag">
+              Experiment
+            </li>
+          )}
+
+          {project.isConcept && (
             <li className="concept-tag">
               Concept
             </li>

@@ -18,6 +18,8 @@
   // inside a track that starts below the category bar and stops just above
   // the floating footer nav pill (gaps on both ends — geometry comes from
   // the scroll/resize sync in ProjectsColumn). Desktop only, matching the old native scrollbar.
+  // It is interactive: dragging it (or clicking the track beside it) scrolls
+  // the grid — see the pointer handlers in ProjectsColumn.
   .projects-scroll-thumb {
     position: absolute;
     top: 0;
@@ -31,13 +33,32 @@
     border-radius: 20px;
     background: var(--secondary-color);
 
-    pointer-events: none; // never intercept clicks on the cards
+    // Interactive only while it actually has something to scroll, so an
+    // invisible (opacity-0) thumb never swallows clicks. The bar sits inside
+    // the wrapper's 60px right padding — neither it nor the widened hit area
+    // below ever covers a card. Cursor stays the default (no grab icon).
+    pointer-events: none;
+
+    // Drag gestures own the pointer — no native panning/selection under it.
+    touch-action: none;
+
+    // The 4px bar is a hard target — stretch the grab zone sideways. The
+    // pseudo-element belongs to the thumb, so presses here start a drag too.
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -8px;
+      right: -8px;
+    }
 
     opacity: 0;
     transition: opacity 0.25s ease;
 
     &.is-visible {
       opacity: 1;
+      pointer-events: auto;
     }
 
     @include device("tablet") {
