@@ -180,15 +180,18 @@ const Home = ({ setInViewSections }: HomeProps) => {
             </div>
             <Reveal className="biography-paragraph home-mobile-padding row">
               <div className="icon-box">
-                <Icon name="code"></Icon>
+                <Icon name="user"></Icon>
               </div>
               <p>
-                I'm a <span className="primary-text">front-end developer</span>{" "}
-                focused on building modern, responsive, and scalable web
-                applications. I enjoy turning complex ideas into intuitive user
-                interfaces while writing clean, maintainable code that is built
-                for long-term growth. My work is driven by performance,
-                accessibility, and delivering polished user experiences.
+                I'm <span className="primary-text">Milad Vaghef</span>, a
+                <span className="primary-text"> front-end developer</span> based
+                in <span className="primary-text">Iran</span> with{" "}
+                <span className="primary-text">over 4 years</span> of experience
+                in web development. I enjoy building things from the ground up,
+                creating visually distinctive and challenging projects, and
+                turning ideas into something real. What motivates me most is
+                creating work I can look back on in the future and feel
+                genuinely proud of.
               </p>
             </Reveal>
 
@@ -197,16 +200,18 @@ const Home = ({ setInViewSections }: HomeProps) => {
               delay={0.08}
             >
               <div className="icon-box">
-                <Icon name="brush"></Icon>
+                <Icon name="code"></Icon>
               </div>
               <span className="highlight-line"></span>
               <p>
-                My background in design gives me a strong attention to detail,
-                allowing me to bridge the gap between design and development. I
-                take pride in translating UI concepts into{" "}
-                <span className="primary-text">pixel-perfect</span>,
-                production-ready interfaces while preserving the intent behind
-                every design.
+                I specialize in building responsive, maintainable web
+                applications using technologies like{" "}
+                <span className="primary-text">
+                  React, Next.js, TypeScript, and JavaScript
+                </span>
+                . I focus on clean code, performance, accessibility, and
+                reusable components to create reliable interfaces that work
+                seamlessly across devices.
               </p>
             </Reveal>
 
@@ -215,18 +220,16 @@ const Home = ({ setInViewSections }: HomeProps) => {
               delay={0.16}
             >
               <div className="icon-box">
-                <Icon name="rocket"></Icon>
+                <Icon name="brush"></Icon>
               </div>
               <p>
-                I've contributed to a variety of commercial projects, including
-                business websites, e-commerce platforms, and marketplace
-                applications. Whether developing reusable component systems,
-                improving existing products, or building new features from
-                scratch, I enjoy collaborating with designers, back-end
-                developers, and product teams to create reliable, scalable
-                solutions. I'm always looking to refine my skills and build
-                digital products that provide real value to both users and
-                businesses.
+                As a <span className="primary-text">graphic design</span> student in college, alongside my background
+                in <span className="primary-text">UI/UX</span> design, I have a
+                strong eye for detail and approach front-end development from
+                both a technical and <span className="primary-text">visual perspective</span>. I'm able to translate
+                designs into pixel-perfect, production-ready interfaces,
+                understand the reasoning behind design decisions, and
+                collaborate effectively with designers to bring ideas to life.
               </p>
             </Reveal>
           </div>
