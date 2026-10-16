@@ -4,6 +4,9 @@ import { memo, useEffect, useState } from "react";
 import { VALID_PATHS, ValidPath } from "../config/routes";
 import { InViewSections } from "../App";
 import Logo from "../components/Logo";
+// CV — bundled from src/assets so the hashed URL works in dev AND in the
+// production build (a root-folder PDF would never ship to dist).
+import resumePdf from "../assets/Milad-Vaghef-Front-End-Resume.pdf";
 
 interface AsideProps {
   inViewSections: InViewSections;
@@ -69,6 +72,37 @@ const Aside = ({ inViewSections }: AsideProps) => {
             I make modern and well-structured websites and friendly user
             interfaces.
           </p>
+
+          {/* CV — opens the PDF in a new tab; the browser's viewer doubles
+              as read + download (same convention as the lightbox's
+              target="_blank" links). */}
+          <a
+            className="cv-link"
+            href={resumePdf}
+            target="_blank"
+            rel="noreferrer"
+            title="View CV (opens in a new tab)"
+            aria-label="View CV (opens in a new tab)"
+          >
+            {/* File glyph — 24-box / 2 stroke, round joins, inlined like the
+                modal's controls (no shared Icon import at this scale);
+                color flows via currentColor. */}
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 3v5h5"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>View CV</span>
+          </a>
         </section>
 
         <div id="smart-navbar" className={isNavbarVisible ? "" : "hide"}>

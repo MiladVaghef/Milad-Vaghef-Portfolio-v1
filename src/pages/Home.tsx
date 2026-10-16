@@ -1,4 +1,11 @@
-import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Icon from "../components/Icon";
 import { InViewSections } from "../App";
 import { useInView } from "react-intersection-observer";
@@ -8,7 +15,13 @@ import { useNavigation } from "../hooks/navigationContext";
 import useAppReady from "../hooks/useAppReady";
 import PageLayout from "../components/PageLayout";
 import Reveal from "../components/Reveal";
-import { ProjectModalSkeleton, WorkHistorySkeleton } from "../components/Skeleton";
+import {
+  ProjectModalSkeleton,
+  WorkHistorySkeleton,
+} from "../components/Skeleton";
+// CV — bundled from src/assets so the hashed URL works in dev AND in the
+// production build (a root-folder PDF would never ship to dist).
+import resumePdf from "../assets/Milad-Vaghef-Front-End-Resume.pdf";
 
 const ProjectsRow = lazy(() => import("../components/ProjectsRow"));
 const WorkHistory = lazy(() => import("../components/WorkHistory"));
@@ -79,10 +92,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
     [setInViewSections],
   );
 
-  useEffect(
-    () => () => cancelAnimationFrame(inViewRafRef.current),
-    [],
-  );
+  useEffect(() => () => cancelAnimationFrame(inViewRafRef.current), []);
 
   const { ref: bioRef } = useInView({
     threshold: thresholdSteps,
@@ -129,6 +139,38 @@ const Home = ({ setInViewSections }: HomeProps) => {
               <Icon name="instagram" />
             </a>
           </div>
+          <div className="home-mobile-padding">
+            {/* CV — the same shared pill the aside carries on desktop; this
+              section only shows below desktop (base display: none, flipped
+              on ≤1024 where the aside hides), so exactly one entry point is
+              visible at any width. */}
+            <a
+              className="cv-link"
+              href={resumePdf}
+              target="_blank"
+              rel="noreferrer"
+              title="View CV (opens in a new tab)"
+              aria-label="View CV (opens in a new tab)"
+            >
+              {/* File glyph — same inline 24-box drawing as the aside pill
+                (stroke flows via currentColor from .cv-link). */}
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14 3v5h5"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>View CV</span>
+            </a>
+          </div>
         </section>
 
         <div id="home-holder" className="column">
@@ -168,7 +210,10 @@ const Home = ({ setInViewSections }: HomeProps) => {
               </p>
             </Reveal>
 
-            <Reveal className="biography-paragraph home-mobile-padding row" delay={0.16}>
+            <Reveal
+              className="biography-paragraph home-mobile-padding row"
+              delay={0.16}
+            >
               <div className="icon-box">
                 <Icon name="rocket"></Icon>
               </div>
@@ -224,10 +269,7 @@ const Home = ({ setInViewSections }: HomeProps) => {
               id="home-work-history"
             >
               {workHistoryData.map((workData, index) => (
-                <Suspense
-                  key={index}
-                  fallback={<WorkHistorySkeleton />}
-                >
+                <Suspense key={index} fallback={<WorkHistorySkeleton />}>
                   <WorkHistory {...workData} />
                 </Suspense>
               ))}

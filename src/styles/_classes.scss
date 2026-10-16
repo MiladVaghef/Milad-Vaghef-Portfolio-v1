@@ -116,6 +116,95 @@
   line-height: 1.7;
 }
 
+// "View CV" pill — the shared entry point for Milad's resume PDF. It lives
+// in two places, each owning a different width range so exactly one shows at
+// a time: the aside (desktop ≥1025, which hides below that via .remove) and
+// #introduction on Home (below desktop, base display: none). A glassy pill
+// echoing the project meta / category chips (same border token + tinted
+// orange fill), so it reads as an action without stealing focus from nav.
+.cv-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 24px;
+
+  padding: 9px 16px;
+
+  border: 1px solid var(--glass-border-color);
+  border-radius: 20px;
+
+  background: rgba(249, 115, 22, 0.08);
+
+  color: var(--primary-color);
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+
+  cursor: pointer;
+
+  // `all` (like the lightbox controls) — one property animates the fill,
+  // text/icon swap, and lift together.
+  transition: all 0.25s;
+
+  svg {
+    display: block;
+
+    flex-shrink: 0;
+
+    width: 15px;
+    height: 15px;
+
+    path {
+      stroke: currentColor;
+    }
+  }
+
+  &:hover {
+    background: var(--primary-color);
+
+    color: #fff;
+
+    transform: translateY(-2px);
+  }
+
+  // Visible focus ring for keyboard users only — mouse/touch clicks keep
+  // the clean look (same :focus-visible heuristic as the modal's CTA).
+  &:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 3px;
+  }
+
+  // No motion for vestibular-sensitive visitors — the fill/text still
+  // change contextually, just without the lift.
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  @include device("laptop") {
+    margin-top: 20px;
+
+    padding: 8px 14px;
+
+    font-size: 12px;
+  }
+  @include device("tablet") {
+    margin-top: 40px;
+
+    padding: 8px 14px;
+
+    font-size: 12px;
+  }
+
+
+}
+
 // "2 years ago" — glassy pill overlaid in the BOTTOM-LEFT corner of a
 // project's cover image (home rows and projects-page cards). Mirrors the
 // .projects-column-badge "N pages" pill (top-right) so the two corners
