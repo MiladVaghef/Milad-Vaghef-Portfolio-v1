@@ -908,6 +908,18 @@
       display: flex;
       gap: 10px;
       width: 100%;
+
+      // Mirror the real Swiper strip's geometry: bones keep their fixed
+      // size (default flex-shrink collapsed 20+ of them — e.g. Shapi's 23
+      // shots — into ONE row of shrunken slivers) and everything past the
+      // strip's edge is CLIPPED, exactly like .swiper's overflow: hidden on
+      // the loaded strip. The skeleton then previews the same handful of
+      // full-size thumbs the real layout settles on.
+      overflow: hidden;
+
+      > .project-modal-thumb {
+        flex-shrink: 0;
+      }
     }
 
     // Not clickable yet, so the real thumbs' pointer affordance would lie.
