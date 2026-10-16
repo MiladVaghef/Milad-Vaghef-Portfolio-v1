@@ -214,7 +214,7 @@ export const projectsData: Project[] = [
       shapiShopProfile,
       shapiHireAdsCategory,
       { src: shapiJobsPhone, tall: false },
-      shapiShopResults,
+      { src: shapiShopResults, tall: false },
       { src: shapiShopsPhone, tall: false },
       shapiDashboard,
       shapiCart,
