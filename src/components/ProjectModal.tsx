@@ -108,6 +108,12 @@ function ProjectSlide({
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number>(0);
+  // True while a mouse/pen drag-to-scroll gesture owns the viewport — the
+  // auto-scroll's idle-resume timer checks it so it never restarts mid-drag.
+  const draggingRef = useRef(false);
+  // Set when a drag actually moved the viewport; consumed by the click that
+  // follows the release so a drag never doubles as the zoom-out click.
+  const dragMovedRef = useRef(false);
   // Start from the explicit override when there is one; otherwise wait for
   // onLoad to auto-detect from the image's aspect ratio.
   const [isTall, setIsTall] = useState(tall ?? false);
@@ -207,6 +213,11 @@ function ProjectSlide({
       window.clearTimeout(resumeTimer);
 
       resumeTimer = window.setTimeout(() => {
+        // A drag-to-scroll gesture is in progress — don't fight the visitor
+        // by writing scrollTop behind their pointer. Their next interaction
+        // re-arms this timer anyway.
+        if (draggingRef.current) return;
+
         pos = el.scrollTop; // wherever the visitor scrolled to
         ramped = 0;
         last = performance.now();
@@ -230,6 +241,104 @@ function ProjectSlide({
     };
   }, [isTall, active, isZoomed, status]);
 
+  // Mouse/pen drag-to-scroll for the viewport — grabbing the image pans it by
+  // hand, like the scrollbar thumb on the projects grid. Touch already scrolls
+  // natively, and horizontal gestures belong to Swiper's slide swipe, which
+  // politely releases vertical-dominant moves itself (its touchAngle check),
+  // so the two never fight: this handler only commits once the gesture clearly
+  // heads vertically — past the same 5px Swiper uses before it picks an axis.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    let pointerId = -1;
+    let startX = 0;
+    let startY = 0;
+    let startScrollTop = 0;
+    // null = idle, "pending" = axis undecided, "vertical" = we own the
+    // gesture, "abandoned" = horizontal — the rest of it is Swiper's.
+    let axis: "pending" | "vertical" | "abandoned" | null = null;
+
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerId !== pointerId || !axis) return;
+
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      if (axis === "pending") {
+        // Below the commitment threshold it's just jitter — wait it out.
+        if (dx * dx + dy * dy < 25) return;
+
+        if (Math.abs(dy) > Math.abs(dx)) {
+          axis = "vertical";
+          draggingRef.current = true;
+          // Retarget the gesture at the viewport so the drag keeps tracking
+          // past its edges.
+          el.setPointerCapture(e.pointerId);
+        } else {
+          axis = "abandoned";
+        }
+
+        return;
+      }
+
+      if (axis === "vertical") {
+        // Grab semantics — the image follows the pointer. Computed from the
+        // gesture's START, so the mid-gesture capture never causes a jump.
+        el.scrollTop = startScrollTop - dy;
+        dragMovedRef.current = true;
+      }
+    };
+
+    const onUp = (e: PointerEvent) => {
+      if (e.pointerId !== pointerId) return;
+
+      draggingRef.current = false;
+      axis = null;
+
+      if (el.hasPointerCapture(e.pointerId)) {
+        el.releasePointerCapture(e.pointerId);
+      }
+
+      pointerId = -1;
+
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
+    };
+
+    const onDown = (e: PointerEvent) => {
+      // Touch keeps its native panning; secondary buttons belong to the OS.
+      if (e.pointerType === "touch" || e.button !== 0) return;
+
+      // Only when there's actually room to pan (tall pass view or 1:1 zoom) —
+      // fit-to-frame slides have nothing to scroll and must stay swipeable.
+      if (el.scrollHeight - el.clientHeight <= 1) return;
+
+      pointerId = e.pointerId;
+      startX = e.clientX;
+      startY = e.clientY;
+      startScrollTop = el.scrollTop;
+      axis = "pending";
+      dragMovedRef.current = false; // fresh gesture — clicks count again
+
+      el.addEventListener("pointermove", onMove);
+      el.addEventListener("pointerup", onUp);
+      el.addEventListener("pointercancel", onUp);
+    };
+
+    el.addEventListener("pointerdown", onDown);
+
+    return () => {
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
+
+      draggingRef.current = false;
+    };
+  }, []);
+
   return (
     <div
       className="swiper-slide project-modal-slide"
@@ -251,6 +360,13 @@ function ProjectSlide({
         tabIndex={zoomed ? 0 : undefined}
         aria-label={zoomed ? "Zoom out" : undefined}
         onClick={() => {
+          // A drag-to-scroll gesture releases with a click on this same
+          // element — it must not also count as the zoom-out control.
+          if (dragMovedRef.current) {
+            dragMovedRef.current = false;
+            return;
+          }
+
           if (zoomed) setZoomed(false);
         }}
         onKeyDown={(e) => {
