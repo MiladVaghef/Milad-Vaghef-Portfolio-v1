@@ -441,7 +441,12 @@
       }
     }
 
-    // Counter + pagination dots share one row under the big slider.
+    // Counter + pagination dots share one row under the big slider. The dots
+    // are a LEFT-TO-RIGHT SCROLL STRIP: a 20+ image gallery (e.g. Shapi's 23
+    // shots) would make a static row wider than the slider column, so the
+    // strip scrolls instead of overflowing (hidden scrollbar — it pans via
+    // touch, trackpad, shift+wheel) and the active dot auto-scrolls into
+    // view (see the bullet-follow effect in ProjectModal).
     .project-modal-slider-footer {
       display: flex;
       align-items: center;
@@ -460,12 +465,55 @@
       }
 
       .project-modal-pagination {
+        position: relative; // anchors bullets' offsetLeft (active-dot follow)
+
+        // Neutralize Swiper's `.swiper-pagination-horizontal` positioning:
+        // its `bottom: 8px` would shift a relatively-positioned strip UP by
+        // 8px — out of the footer line and on top of the page counter. With
+        // every offset auto, flex alone places the strip, vertically centered
+        // with the counter via the footer's align-items.
+        top: auto;
+        bottom: auto;
+        left: auto;
+
         display: flex;
+        // Fill the footer's remaining width — the whole strip is the scroll
+        // area, not just as wide as its dots.
+        flex: 1;
+        // Shrinks with the column instead of pushing the footer wide; the
+        // overflow below handles the rest.
+        min-width: 0;
+        overflow-x: auto;
+        // Scrollbar hidden — the strip still pans (touch / trackpad /
+        // shift+wheel) and the active dot auto-follows every page change
+        // (see the bullet-follow effect in ProjectModal).
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
         align-items: center;
-        justify-content: flex-end;
         gap: 8px;
 
+        // Right-align the dots while they all fit; the auto margin collapses
+        // to 0 once they overflow, so the strip starts at its left edge and
+        // scrolls normally. (`justify-content: flex-end` would push the
+        // overflowing START out of scrollable reach — a known flex+overflow
+        // trap.)
+        .swiper-pagination-bullet:first-child {
+          margin-left: auto;
+        }
+
         .swiper-pagination-bullet {
+          // Bullets are EMPTY flex items, so their min-content width is 0 —
+          // with the default flex-shrink the browser SQUEEZED them to fit
+          // the column instead of overflowing (dots shrank on narrow
+          // screens, overflow-x never engaged, no scrollbar ever appeared).
+          // Shrinking off keeps the row at its true width so the strip
+          // scrolls instead.
+          flex-shrink: 0;
+
           width: 8px;
           height: 8px;
 
@@ -578,18 +626,18 @@
     }
 
     @include device("tablet") {
-      // Grow to fill the phone-height dialog so the footer button's
-      // margin-top: auto always lands it near the very bottom.
+      // Grow to fill the phone-height dialog so the column reaches the
+      // screen's bottom edge — the CTA closes out its content there.
       flex: 1 0 auto;
-      // Real bottom padding (was 0): without it the tech chips — the last
-      // content when a project has no Visit bar — sat flush against the
-      // phone's bottom edge. Matches the top padding; the sticky CTA still
-      // locks to bottom: 0 while scrolling.
+      // Real bottom padding (was 0): without it the last content — the tech
+      // chips, or the CTA on projects without a visit link — sat flush
+      // against the phone's bottom edge. Matches the top padding; the CTA
+      // cancels it again via its own -24px bottom margin.
       padding: 24px 16px;
 
       // The dialog body is the scroller on phones — keep this column out of
-      // the scroll-container chain so the sticky footer can reach the
-      // body's scrollport.
+      // the scroll-container chain so the whole stacked layout scrolls as
+      // one.
       overflow-y: visible;
     }
 
@@ -630,14 +678,19 @@
       font-weight: 600;
     }
 
-    // "Visit Project" — the details column's primary CTA. On desktop it's a
-    // full-width footer button pinned to the bottom of the column
-    // (margin-top: auto) when the content is shorter than the dialog. On
-    // phones it becomes a FLUSH action bar glued to the bottom edge of the
-    // screen (bottom: 0, full bleed) while the details scroll behind it.
+    // "Visit Project" — the details column's primary CTA. A full-width button
+    // closing out the details with deliberate breathing room: a 30px top
+    // margin sits it clearly below the tech chips (the column's 14px gap
+    // stacks on top of it). Deliberately NOT sticky on any width — it
+    // scrolls away with the rest of the column. The negative bottom margin
+    // cancels the column's own bottom padding so the button sits flush
+    // against the very bottom edge whenever it lands at the end of the
+    // scroll; on phones side negative margins + square corners make it
+    // full-bleed.
     .project-modal-visit {
       flex-shrink: 0;
-      margin-top: auto;
+      margin-top: 30px;
+      margin-bottom: -32px; // cancels .project-modal-info's padding-bottom
 
       // Stretch instead of `width: 100%` — there is no global border-box
       // sizing here, so 100% + horizontal padding would overflow the column
@@ -763,24 +816,16 @@
       }
 
       @include device("tablet") {
-        // FLUSH bottom action bar — bottom: 0 (no floating gap content can
-        // peek through), full bleed across the column's side padding. Sticky
-        // against the body scrollport (the column keeps `overflow-y: visible`
-        // on phones precisely so this footer can stick there); it stays
-        // pinned until the column's own end scrolls into view.
-        position: sticky;
-        bottom: 0;
-
+        // Full-bleed and flush: the side negative margins cancel the
+        // column's horizontal padding and this -24px cancels its 24px
+        // bottom padding, so the CTA touches the screen's bottom edge (the
+        // column's padding grows to 24px 16px here — see .project-modal-info).
+        // Still NOT sticky — it scrolls away with the details.
         border-radius: 0;
 
         margin-left: -16px;
         margin-right: -16px;
-
-        // Lift the bar off the details scrolling behind it — the gradient
-        // is opaque, the shadow makes the separation read deliberately.
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.18),
-          0 -10px 24px rgba(0, 0, 0, 0.35);
+        margin-bottom: -24px;
       }
 
       // No lifts, sheens, or nudges for vestibular-sensitive visitors — the
@@ -896,7 +941,7 @@
     }
 
     // The CTA bone borrows `.project-modal-visit` only for its footprint
-    // (margin-top: auto / stretch) — kill the gradient, lift, and the real
+    // (stretch) — kill the gradient, lift, and the real
     // button's 20px padding so its inline height is the whole box (~56px,
     // matching the live CTA) instead of 56 + 40. Hover/press are neutralized
     // too: their base rules are deeper and would otherwise glow a bone that

@@ -469,6 +469,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const thumbsSliderRef = useRef<HTMLDivElement | null>(null);
   const mainSwiper = useRef<SwiperCore | null>(null);
   const thumbsSwiper = useRef<SwiperCore | null>(null);
+  // The pagination dot STRIP (scrolls left-to-right for wide galleries) —
+  // the active-dot follow effect below scrolls it to keep the current dot in
+  // view.
+  const paginationRef = useRef<HTMLDivElement | null>(null);
 
   // Timer for the sentinel history pop the close-cleanup schedules — kept in
   // a ref so the effect's next setup can cancel it (see the history effect).
@@ -644,6 +648,31 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
     };
   }, [isOpen, project]);
 
+  // Keep the active pagination dot inside its scrollable strip: galleries
+  // wider than the row (20+ shots, e.g. Shapi) pan left-to-right, so
+  // navigating via the thumb strip, keyboard, or the dots themselves would
+  // otherwise leave the active dot scrolled out of view. Centers it on every
+  // page switch (and on open) — a no-op while every dot fits. The dot is
+  // looked up by INDEX, not by Swiper's `-active` class: Swiper updates
+  // bullet classes on its own schedule, and a stale/missing class at effect
+  // time meant the strip silently never followed the page.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const strip = paginationRef.current;
+    const active = strip?.children[activeIndex];
+
+    if (!strip || !(active instanceof HTMLElement)) return;
+
+    strip.scrollTo({
+      left: Math.max(
+        0,
+        active.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2,
+      ),
+      behavior: "smooth",
+    });
+  }, [activeIndex, images.length, isOpen]);
+
   return createPortal(
     <AnimatePresence>
       {project && (
@@ -729,7 +758,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     {String(activeIndex + 1).padStart(2, "0")} /{" "}
                     {String(images.length).padStart(2, "0")}
                   </span>
-                  <div className="project-modal-pagination" />
+                  <div
+                    ref={paginationRef}
+                    className="project-modal-pagination"
+                  />
                 </div>
 
                 {/* Thumbnail strip to jump to any page */}
@@ -789,11 +821,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   )}
                 </ul>
 
-                {/* Full-width footer button — pinned to the bottom of the
-                    details column when the content is shorter than the
-                    dialog (margin-top: auto); on phones it's a flush action
-                    bar glued to the screen's bottom edge. Tooltip + aria-
-                    label disclose the new tab (best practice for
+                {/* Full-width button closing out the details column — 30px
+                    below the chips, with the column's bottom padding
+                    cancelled underneath so it sits flush when it lands at
+                    the end of the scroll (full-bleed on phones). Tooltip +
+                    aria-label disclose the new tab (best practice for
                     target="_blank"). */}
                 {project.activeLink && (
                   <a
